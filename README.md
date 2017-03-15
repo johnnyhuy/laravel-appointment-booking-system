@@ -35,6 +35,12 @@ Download PHP (VC14 x64 Thread Safe) for [Windows](http://windows.php.net/downloa
 
 For other OS's, just do a simple Google search to install PHP.
 
+#### IMPORTANT Allow the PHP extension
+
+* Got to your **directory** where you installed **PHP**
+* Find **'php.ini'**
+* Find **'extension=php_pdo_mysql.dll'** in the file
+* Make sure there isn't **';'** at the **start of the line**
 
 ### Cofigure .env for Laravel
 
@@ -75,7 +81,18 @@ php artisan serve
 * Visit [localhost:8000](localhost:8000)
   * Laravel should by default create a server at port 8000
 
-* __START DEVELOPING__
+### Using the 'dev' branch on Git
+
+* Open Git Bash or any CMD
+* CD to the repo directory (SE-PT-Assignment)
+* Checkout to the 'dev' branch with the following command
+```
+git checkout dev
+```
+* Run another command to keep the branch up to date
+```
+git pull
+```
 
 ## Troubleshooting
 
@@ -90,4 +107,6 @@ php artisan key:generate
 ### [PDOException] SQLSTATE[HY000] [14] unable to open database file
 
 The link to the database file is missing. In this case the database file is in the repo at **"database/dev-database.sqlite"**.
+
+Haven't enabled PHP extension **'extension=php_pdo_mysql.dll'** in the **'php.ini'** file.
 
