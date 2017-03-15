@@ -23,6 +23,7 @@ To allow actual development on the project code. You must require a development 
 ## Requirments
 
 * [PHP](http://php.net/manual/en/intro-whatis.php) >= 7.1.2
+* [Composer](https://getcomposer.org/download/) >= 1.4.1
 * [Git Bash](https://git-for-windows.github.io/) or any other CMD with git
 * Text Editor ([Sublime Text 3](https://www.sublimetext.com/3), Notepad++)
 * [SQLite Browser](http://sqlitebrowser.org/) or any other SQLite viewer
@@ -53,6 +54,18 @@ This will make sure the database is using **SQLite** on your machine by linking 
   * Where **{ROOT}** is the repo directory
   * e.g. 'C:/Users/Johnny/SE-PT-Assignment/database/dev-database.sqlite'
 * Save .env
+
+### Install Composer Dependancies
+
+This is needed to install all of Laravels PHP dependancies through Composer.
+
+* Open Git Bash or any CMD
+* CD to the repo directory (SE-PT-Assignment)
+* Run the following command
+
+```
+composer install
+```
 
 ### Add Application Key
 
