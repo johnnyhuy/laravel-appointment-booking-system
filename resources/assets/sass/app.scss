@@ -1,9 +1,67 @@
-
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:700|Raleway:300,400,600');
 
 // Variables
 @import "variables";
 
+// Mixins
+@import "mixins";
+
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+body {
+	padding-top: 40px;
+	padding-bottom: 40px;
+	background-color: $body-bg;
+}
+
+hr {
+	border-top: 1px solid $border-color;
+}
+
+.block {
+	background: white;
+	padding: 10px;
+	border: 1px solid $border-color;
+	border-radius: 5px;
+}
+
+.login {	
+	@include e("input") {
+		margin-bottom: $margin-base;
+	}
+}
+
+.header {
+	text-align: center;
+
+	@include e("title") {
+		font-family: $secondary-font;
+	}
+
+	@include e("subtitle") {
+		margin-top: 0px;
+		margin-bottom: $margin-x-large;
+	}
+}
+
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: $screen-sm-min) {
+	
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: $screen-md-min) {
+	.container {
+		width: 540px;
+	}
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: $screen-lg-min) {
+	
+}

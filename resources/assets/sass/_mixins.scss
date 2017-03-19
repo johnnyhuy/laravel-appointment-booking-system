@@ -1,0 +1,71 @@
+/// Block Element
+/// @access public
+/// @param {String} $element - Element's name
+@mixin e($element) {
+	&__#{$element} {
+		@content;
+	}
+}
+
+/// Block last child Element
+/// @access public
+/// @param {String} $element - Element's name
+@mixin e-last-child($element) {
+	&__#{$element}:last-child {
+		@content;
+	}
+}
+
+/// Block hover Element
+/// @access public
+/// @param {String} $element - Element's name
+@mixin e-hover($element) {
+	&__#{$element}:hover {
+		@content;
+	}
+}
+
+/// Block active Element
+/// @access public
+/// @param {String} $element - Element's name
+@mixin e-active($element) {
+	&__#{$element}:active {
+		@content;
+	}
+}
+
+/// Block visited Element
+/// @access public
+/// @param {String} $element - Element's name
+@mixin e-visited($element) {
+	&__#{$element}:visited {
+		@content;
+	}
+}
+
+/// Block visited Element
+/// @access public
+/// @param {String} $element - Element's name
+@mixin e-focus($element) {
+	&__#{$element}:focus {
+		@content;
+	}
+}
+
+/// Block Modifier
+/// @access public
+/// @param {String} $modifier - Modifier's name
+@mixin m($modifier) {
+	&--#{$modifier} {
+		@content;
+	}
+}
+
+/// Block Modifier hover Element
+/// @access public
+/// @param {String} $element - Element's name
+@mixin m-hover($element) {
+	&--#{$element}:hover {
+		@content;
+	}
+}
