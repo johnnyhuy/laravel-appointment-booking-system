@@ -24,3 +24,6 @@ Homestead.json
 .rocketeer/
 
 # End of https://www.gitignore.io/api/laravel
+
+# Other
+.DS_Store
