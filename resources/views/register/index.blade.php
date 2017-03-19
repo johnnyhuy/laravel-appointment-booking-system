@@ -8,14 +8,20 @@
 		</div>
 		<div class="block login">
 			<form class="login__form" method="POST" action="/login">
+				<label for="inputFirstName">First Name</label>
+				<input type="text" id="inputFirstName" class="form-control login__input" placeholder="First Name" required autofocus>
+				<label for="inputLastName">Last Name</label>
+				<input type="text" id="inputLastName" class="form-control login__input" placeholder="First Name" required autofocus>
 				<label for="inputUsername">Username</label>
 				<input type="text" id="inputUsername" class="form-control login__input" placeholder="Username" required autofocus>
 				<label for="inputPassword">Password</label>
 				<input type="password" id="inputPassword" class="form-control login__input" placeholder="Password" required>
-				<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+				<label for="inputPhone">Phone</label>
+				<input type="text" id="inputPhone" class="form-control login__input" placeholder="Username" required autofocus>
+				<label for="inputEmail">Email Address</label>
+				<input type="email" id="inputEmail" class="form-control login__input" placeholder="Username" required autofocus>
 			</form>
 		</div>
-		<hr>
 		<a class="btn btn-lg btn-primary btn-block" href="/register">Register</a>
 	</div>
 @endsection

@@ -12,3 +12,7 @@
  */
 
 Route::get('/', 'Auth\LoginController@index');
+Route::get('/login', 'Auth\LoginController@index');
+Route::get('/register', 'Auth\RegisterController@index');
+
+Route::post('/login', 'Auth\LoginController@create');

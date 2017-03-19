@@ -16,6 +16,10 @@ body {
 	background-color: $body-bg;
 }
 
+hr {
+	border-top: 1px solid $border-color;
+}
+
 .block {
 	background: white;
 	padding: 10px;
