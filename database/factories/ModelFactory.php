@@ -26,6 +26,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
+
 $factory->define(App\Customer::class, function (Faker\Generator $faker) {
     static $password;
 
@@ -44,7 +45,6 @@ $factory->define(App\Booking::class, function (Faker\Generator $faker) {
         'customer_id' => $faker->numberBetween(1,10),
         'booking_start_time' => \Carbon\Carbon::now(),
         'booking_end_time' => \Carbon\Carbon::now(),
-        'title' => $faker->sentence,
     ];
 });
 
