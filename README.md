@@ -22,7 +22,8 @@ To allow actual development on the project code. You must require a development 
 
 ## Requirments
 
-* [PHP](http://php.net/manual/en/intro-whatis.php) >= 7.1.2
+* [Composer](https://getcomposer.org/download/) >= 1.4.1
+* [PHP](http://php.net/manual/en/intro-whatis.php) >= 5.6.4
 * [Git Bash](https://git-for-windows.github.io/) or any other CMD with git
 * Text Editor ([Sublime Text 3](https://www.sublimetext.com/3), Notepad++)
 * [SQLite Browser](http://sqlitebrowser.org/) or any other SQLite viewer
@@ -35,6 +36,12 @@ Download PHP (VC14 x64 Thread Safe) for [Windows](http://windows.php.net/downloa
 
 For other OS's, just do a simple Google search to install PHP.
 
+PHP requires the following extensions enabled in your **php.ini** at your PHP installed directory.
+* OpenSSL PHP Extension
+* PDO PHP Extension
+* Mbstring PHP Extension
+* Tokenizer PHP Extension
+* XML PHP Extension
 
 ### Cofigure .env for Laravel
 
@@ -47,6 +54,18 @@ This will make sure the database is using **SQLite** on your machine by linking 
   * Where **{ROOT}** is the repo directory
   * e.g. 'C:/Users/Johnny/SE-PT-Assignment/database/dev-database.sqlite'
 * Save .env
+
+### Install Composer Dependancies
+
+This is needed to install all of Laravels PHP dependancies through Composer.
+
+* Open Git Bash or any CMD
+* CD to the repo directory (SE-PT-Assignment)
+* Run the following command
+
+```
+composer install
+```
 
 ### Add Application Key
 
@@ -75,7 +94,18 @@ php artisan serve
 * Visit [localhost:8000](localhost:8000)
   * Laravel should by default create a server at port 8000
 
-* __START DEVELOPING__
+### Using the 'dev' branch on Git
+
+* Open Git Bash or any CMD
+* CD to the repo directory (SE-PT-Assignment)
+* Checkout to the 'dev' branch with the following command
+```
+git checkout dev
+```
+* Run another command to keep the branch up to date
+```
+git pull
+```
 
 ## Troubleshooting
 
@@ -90,4 +120,6 @@ php artisan key:generate
 ### [PDOException] SQLSTATE[HY000] [14] unable to open database file
 
 The link to the database file is missing. In this case the database file is in the repo at **"database/dev-database.sqlite"**.
+
+Haven't enabled PHP extension **'extension=php_pdo_mysql.dll'** in the **'php.ini'** file.
 
