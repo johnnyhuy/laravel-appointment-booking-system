@@ -15,6 +15,35 @@
 </head>
 
 <body>
+	<div class="container">
+		<ul class="nav nav-pills pull-left">
+			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}""><a href="/">Home</a></li>
+			<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
+		</ul>
+		@if (Auth::check())
+			<div class="pull-right user">
+				Logged in as {{ Auth::user()->firstname }}
+				<a href="/logout">Logout</a>
+			</div>
+		@endif
+		<div class="clearfix"></div>
+		@if ($flash = session('message'))
+			<div class="alert alert-success">
+				{{ $flash }}	
+			</div>
+		@endif
+		@if ($flash = session('error'))
+			<div class="alert alert-danger">
+				{{ $flash }}	
+			</div>
+		@endif
+		<div class="header">
+			<a class="header__title" href="/">
+				<h1>Business Name</h1>
+			</a>
+			<h3 class="header__subtitle">Booking System</h3>
+		</div>
+	</div>
 	@yield('content')
 </body>
 

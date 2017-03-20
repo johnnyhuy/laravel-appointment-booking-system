@@ -11,8 +11,6 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 body {
-	padding-top: 40px;
-	padding-bottom: 40px;
 	background-color: $body-bg;
 }
 
@@ -22,13 +20,33 @@ hr {
 
 .block {
 	background: white;
-	padding: 10px;
+	padding: $padding-base $padding-base 0 $padding-base;
 	border: 1px solid $border-color;
 	border-radius: 5px;
 }
 
-.login {	
+.user {
+	padding-top: 20px;
+
+	a {
+		border-left: 1px solid $gray-light;
+		padding-left: $padding-base;
+		margin-left: $margin-min;
+	}
+}
+
+.nav-pills {
+	padding-top: $padding-base;
+}
+
+.login {
+	margin-bottom: $margin-large;
+
 	@include e("input") {
+		margin-bottom: $margin-base;
+	}
+
+	@include e("button") {
 		margin-bottom: $margin-base;
 	}
 }
@@ -40,9 +58,22 @@ hr {
 		font-family: $secondary-font;
 	}
 
+	@include e-hover("title") {
+		text-decoration: none;
+	}
+
+	@include e-visited("title") {
+		text-decoration: none;
+	}
+
+	@include e-focus("title") {
+		text-decoration: none;
+	}
+
 	@include e("subtitle") {
 		margin-top: 0px;
 		margin-bottom: $margin-x-large;
+		color: $gray-light;
 	}
 }
 

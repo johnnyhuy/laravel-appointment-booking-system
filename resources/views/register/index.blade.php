@@ -2,27 +2,32 @@
 
 @section('content')
 	<div class="container">
-		<div class="header">
-			<h1 class="header__title">Business Name</h1>
-			<h3 class="header__subtitle">Booking System</h3>
-		</div>
-		<div class="block login">
-			<form class="login__form" method="post" action="/register">
+		@if (count($errors))
+			<div class="alert alert-danger">
+				@foreach ($errors->all() as $error)
+					{{ $error }}<br>
+				@endforeach
+			</div>
+		@endif
+		<form class="login__form" method="POST" action="/register">
+			<div class="block login">
+				{{ csrf_field() }}
 				<label for="inputFirstName">First Name</label>
-				<input type="text" id="inputFirstName" class="form-control login__input" placeholder="First Name" name="firstName" required autofocus>
+				<input name="firstname" type="text" id="inputFirstName" class="form-control login__input" placeholder="First Name" required autofocus>
 				<label for="inputLastName">Last Name</label>
-				<input type="text" id="inputLastName" class="form-control login__input" placeholder="Last Name" name="lastName" required autofocus>
+				<input name="lastname" type="text" id="inputLastName" class="form-control login__input" placeholder="Last Name" required autofocus>
 				<label for="inputUsername">Username</label>
-				<input type="text" id="inputUsername" class="form-control login__input" placeholder="Username" name="username" required autofocus>
+				<input name="username" type="text" id="inputUsername" class="form-control login__input" placeholder="Username" required autofocus>
 				<label for="inputPassword">Password</label>
-				<input type="password" id="inputPassword" class="form-control login__input" placeholder="Password" name="password" required>
+				<input name="password" type="password" id="inputPassword" class="form-control login__input" placeholder="Password" required>
+				<label for="inputPasswordConfirmation">Password Confirmation</label>
+				<input name="password_confirmation" type="password" id="inputPasswordConfirmation" class="form-control login__input" placeholder="Password" required>
 				<label for="inputPhone">Phone</label>
-				<input type="text" id="inputPhone" class="form-control login__input" placeholder="Phone" name="phone" required autofocus>
+				<input name="phone" type="text" id="inputPhone" class="form-control login__input" placeholder="Phone" required autofocus>
 				<label for="inputAddress">Address</label>
-				<input type="text" id="inputAddress" class="form-control login__input" placeholder="Address" name="address" required autofocus>
-				<input type="hidden" name="_token" value="{{ csrf_token() }}">
-				<input type="submit" class="btn btn-lg btn-primary btn-block" value="Register"></input>
-			</form>
-		</div>
+				<input name="address" type="text" id="inputAddress" class="form-control login__input" placeholder="Address" required autofocus>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" href="/register">Register</a>
+		</form>
 	</div>
 @endsection
