@@ -25,6 +25,16 @@ hr {
 	border-radius: 5px;
 }
 
+.alert {
+	margin-top: $padding-base;
+}
+
+.table {
+	th {
+		border-top: none !important;
+	}
+}
+
 .user {
 	padding-top: 20px;
 
