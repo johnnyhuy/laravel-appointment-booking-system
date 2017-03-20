@@ -29,6 +29,12 @@
 				{{ $flash }}	
 			</div>
 		@endif
+		<div class="header">
+			<a class="header__title" href="/">
+				<h1>Business Name</h1>
+			</a>
+			<h3 class="header__subtitle">Booking System</h3>
+		</div>
 	</div>
 	@yield('content')
 </body>

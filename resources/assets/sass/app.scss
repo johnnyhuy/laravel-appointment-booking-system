@@ -33,6 +33,10 @@ hr {
 	@include e("input") {
 		margin-bottom: $margin-base;
 	}
+
+	@include e("button") {
+		margin-bottom: $margin-base;
+	}
 }
 
 .header {
@@ -42,9 +46,22 @@ hr {
 		font-family: $secondary-font;
 	}
 
+	@include e-hover("title") {
+		text-decoration: none;
+	}
+
+	@include e-visited("title") {
+		text-decoration: none;
+	}
+
+	@include e-focus("title") {
+		text-decoration: none;
+	}
+
 	@include e("subtitle") {
 		margin-top: 0px;
 		margin-bottom: $margin-x-large;
+		color: $gray-light;
 	}
 }
 
