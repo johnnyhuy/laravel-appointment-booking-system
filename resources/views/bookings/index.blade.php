@@ -8,6 +8,15 @@
 		</div>
 		<div class="block">
 			<table class="table">
+				<?php
+					#use factory to create dummy data since login isnt completed at time of writing
+					$customer = factory(App\Customer::class)->create();
+					$booking1 = factory(App\Booking::class)->create();
+					$booking2 = factory(App\Booking::class)->create();
+					$booking3 = factory(App\Booking::class)->create();
+
+					#$bookings = array(booking1, booking2, booking3);
+				?>
 				<tr>
 					<th>Title</th>
 					<th>Date</th>
