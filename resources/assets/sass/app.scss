@@ -11,8 +11,6 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 body {
-	padding-top: 40px;
-	padding-bottom: 40px;
 	background-color: $body-bg;
 }
 
@@ -25,6 +23,20 @@ hr {
 	padding: $padding-base $padding-base 0 $padding-base;
 	border: 1px solid $border-color;
 	border-radius: 5px;
+}
+
+.user {
+	padding-top: 20px;
+
+	a {
+		border-left: 1px solid $gray-light;
+		padding-left: $padding-base;
+		margin-left: $margin-min;
+	}
+}
+
+.nav-pills {
+	padding-top: $padding-base;
 }
 
 .login {

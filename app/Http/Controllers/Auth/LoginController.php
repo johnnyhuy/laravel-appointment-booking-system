@@ -20,11 +20,14 @@ class LoginController extends Controller
 
     public function create()
     {
+        // dd(Auth::attempt(request(['username' => 'test123321', 'password' => 'aids123321'])));
+        
         // Sign in
         if (! Auth::attempt(request(['username', 'password']))) 
         {
             // Session flash
             session()->flash('error', 'Error! Invalid credentials.');
+
             // Failed to login
             return back();
         }

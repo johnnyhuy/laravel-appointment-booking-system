@@ -16,9 +16,17 @@
 
 <body>
 	<div class="container">
+		<ul class="nav nav-pills pull-left">
+			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}""><a href="/">Home</a></li>
+			<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
+		</ul>
 		@if (Auth::check())
-		Logged in as {{ Auth::user()->firstname }}
+			<div class="pull-right user">
+				Logged in as {{ Auth::user()->firstname }}
+				<a href="/logout">Logout</a>
+			</div>
 		@endif
+		<div class="clearfix"></div>
 		@if ($flash = session('message'))
 			<div class="alert alert-success">
 				{{ $flash }}	
