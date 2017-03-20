@@ -15,6 +15,21 @@
 </head>
 
 <body>
+	<div class="container">
+		@if (Auth::check())
+		Logged in as {{ Auth::user()->firstname }}
+		@endif
+		@if ($flash = session('message'))
+			<div class="alert alert-success">
+				{{ $flash }}	
+			</div>
+		@endif
+		@if ($flash = session('error'))
+			<div class="alert alert-danger">
+				{{ $flash }}	
+			</div>
+		@endif
+	</div>
 	@yield('content')
 </body>
 

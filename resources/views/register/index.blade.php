@@ -6,22 +6,34 @@
 			<h1 class="header__title">Business Name</h1>
 			<h3 class="header__subtitle">Booking System</h3>
 		</div>
-		<div class="block login">
-			<form class="login__form" method="POST" action="/login">
+		@if ($errors)
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+		@endif
+		<form class="login__form" method="POST" action="/register">
+			<div class="block login">
+				{{ csrf_field() }}
 				<label for="inputFirstName">First Name</label>
-				<input type="text" id="inputFirstName" class="form-control login__input" placeholder="First Name" required autofocus>
+				<input name="firstname" type="text" id="inputFirstName" class="form-control login__input" placeholder="First Name" required autofocus>
 				<label for="inputLastName">Last Name</label>
-				<input type="text" id="inputLastName" class="form-control login__input" placeholder="Last Name" required autofocus>
+				<input name="lastname" type="text" id="inputLastName" class="form-control login__input" placeholder="Last Name" required autofocus>
 				<label for="inputUsername">Username</label>
-				<input type="text" id="inputUsername" class="form-control login__input" placeholder="Username" required autofocus>
+				<input name="username" type="text" id="inputUsername" class="form-control login__input" placeholder="Username" required autofocus>
 				<label for="inputPassword">Password</label>
-				<input type="password" id="inputPassword" class="form-control login__input" placeholder="Password" required>
+				<input name="password" type="password" id="inputPassword" class="form-control login__input" placeholder="Password" required>
+				<label for="inputPasswordConfirmation">Password Confirmation</label>
+				<input name="password_confirmation" type="password" id="inputPasswordConfirmation" class="form-control login__input" placeholder="Password" required>
 				<label for="inputPhone">Phone</label>
-				<input type="text" id="inputPhone" class="form-control login__input" placeholder="Phone" required autofocus>
-				<label for="inputEmail">Email Address</label>
-				<input type="email" id="inputEmail" class="form-control login__input" placeholder="Email Address" required autofocus>
-			</form>
-		</div>
-		<a class="btn btn-lg btn-primary btn-block" href="/register">Register</a>
+				<input name="phone" type="text" id="inputPhone" class="form-control login__input" placeholder="Phone" required autofocus>
+				<label for="inputAddress">Address</label>
+				<input name="address" type="text" id="inputAddress" class="form-control login__input" placeholder="Address" required autofocus>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" href="/register">Register</a>
+		</form>
 	</div>
 @endsection
