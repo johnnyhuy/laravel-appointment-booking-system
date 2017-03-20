@@ -22,14 +22,14 @@ hr {
 
 .block {
 	background: white;
-	padding: 10px;
+	padding: $padding-base $padding-base 0 $padding-base;
 	border: 1px solid $border-color;
 	border-radius: 5px;
 }
 
 .login {
-	margin-bottom: $margin-base;
-	
+	margin-bottom: $margin-large;
+
 	@include e("input") {
 		margin-bottom: $margin-base;
 	}
