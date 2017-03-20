@@ -11,14 +11,19 @@
 |
 */
 
+use Carbon\Carbon;
+
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\Customer::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
         'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
+        'username' => $faker->userName,
         'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
+        'address' => $faker->address,
+        'phone' => $faker->phoneNumber,
+        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+        'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
     ];
 });
