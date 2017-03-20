@@ -8,27 +8,43 @@
 		</div>
 		<div class="block">
 			<table class="table">
-				<?php
-					#use factory to create dummy data since login isnt completed at time of writing
-					$customer = factory(App\Customer::class)->create();
-					$booking1 = factory(App\Booking::class)->create();
-					$booking2 = factory(App\Booking::class)->create();
-					$booking3 = factory(App\Booking::class)->create();
-
-					#$bookings = array(booking1, booking2, booking3);
-				?>
 				<tr>
 					<th>Title</th>
-					<th>Date</th>
 					<th>Start Time</th>
 					<th>End Time</th>
+					<th>Customer id</th>
 				</tr>
-				<tr>
-					<td>Example</td>
-					<td>10/14/2016</td>
-					<td>10:00AM</td>
-					<td>11:00PM</td>
-				</tr>
+				<?php
+					/*
+						Testing stuff
+							-first we fill the DB with sample data
+							-then we pick a random customerID (from 1 to 10)
+							-then display bookings with this customerid
+							-This shows the functionality of pulling bookings from the DB
+					*/
+					#fills the database with test data
+					function fillDBTest()
+					{
+						for($i = 0; $i<100; $i++)
+						{
+							factory(App\Booking::class)->create();
+						}
+					}
+					#uncomment this to have the database be filled
+					#fillDBtest();
+					$customerID = rand(1,10);
+					$bookings = DB::table('bookings')
+					->where('customer_id', '=', $customerID)
+					->get();
+				?>
+				@foreach ($bookings as $booking)
+					<tr>
+						<td>{{$booking->title}}</td>
+						<td>{{$booking->booking_start_time}}</td>
+						<td>{{$booking->booking_end_time}}</td>	
+						<td>{{$booking->customer_id}}</td>
+					</tr>
+				@endforeach
 			</table>
 		</div>
 	</div>
