@@ -2,17 +2,11 @@
 
 @section('content')
 	<div class="container">
-		<div class="header">
-			<h1 class="header__title">Business Name</h1>
-			<h3 class="header__subtitle">Booking System</h3>
-		</div>
-		@if ($errors)
+		@if (count($errors))
 			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
+				@foreach ($errors->all() as $error)
+					{{ $error }}<br>
+				@endforeach
 			</div>
 		@endif
 		<form class="login__form" method="POST" action="/register">

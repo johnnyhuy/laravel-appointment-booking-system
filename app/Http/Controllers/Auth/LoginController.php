@@ -40,6 +40,9 @@ class LoginController extends Controller
     {
         Auth::logout();
 
+        // Session flash
+        session()->flash('message', 'Successfully logged out!');
+
         return redirect('/');
     }
 }
