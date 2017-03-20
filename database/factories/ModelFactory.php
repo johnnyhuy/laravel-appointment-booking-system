@@ -26,7 +26,6 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-<<<<<<< HEAD
 $factory->define(App\Customer::class, function (Faker\Generator $faker) {
     static $password;
 
@@ -40,14 +39,6 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Booking::class, function (Faker\Generator $faker) {
-    static $password;
-
-    return [
-        'customer_id' => 1,
-        'booking_start_time' => \Carbon\Carbon::now(),
-        'booking_end_time' => \Carbon\Carbon::now(),
-=======
 $factory->define(App\Booking::class, function (Faker\Generator $faker) {
     return [
         'customer_id' => 1,
@@ -92,6 +83,5 @@ $factory->define(App\BusinessOwner::class, function (Faker\Generator $faker) {
 		'password' => 'password',
 		'address' => $faker->address,
 		'phone' => '0400 000 000'
->>>>>>> d323a48eced215f670f2db3e164d0db17ac0eeec
     ];
 });
