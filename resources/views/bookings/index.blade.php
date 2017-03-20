@@ -26,7 +26,6 @@
 				?>
 				@foreach ($bookings as $booking)
 					<tr>
-						<td>{{$booking->title}}</td>
 						<td>{{$booking->booking_start_time}}</td>
 						<td>{{$booking->booking_end_time}}</td>	
 						<td>{{$booking->customer_id}}</td>
