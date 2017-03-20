@@ -22,7 +22,7 @@ To allow actual development on the project code. You must require a development 
 
 ## Requirments
 
-* [PHP](http://php.net/manual/en/intro-whatis.php) >= 7.1.2
+* [PHP](http://php.net/manual/en/intro-whatis.php) >= 5.6.4
 * [Git Bash](https://git-for-windows.github.io/) or any other CMD with git
 * Text Editor ([Sublime Text 3](https://www.sublimetext.com/3), Notepad++)
 * [SQLite Browser](http://sqlitebrowser.org/) or any other SQLite viewer
@@ -35,6 +35,12 @@ Download PHP (VC14 x64 Thread Safe) for [Windows](http://windows.php.net/downloa
 
 For other OS's, just do a simple Google search to install PHP.
 
+PHP requires the following extensions enabled in your **php.ini** at your PHP installed directory.
+* OpenSSL PHP Extension
+* PDO PHP Extension
+* Mbstring PHP Extension
+* Tokenizer PHP Extension
+* XML PHP Extension
 
 ### Cofigure .env for Laravel
 
