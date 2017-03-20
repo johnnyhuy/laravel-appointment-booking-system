@@ -27,7 +27,9 @@ hr {
 	border-radius: 5px;
 }
 
-.login {	
+.login {
+	margin-bottom: $margin-base;
+	
 	@include e("input") {
 		margin-bottom: $margin-base;
 	}
