@@ -50,12 +50,15 @@ $factory->define(App\Availability::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Customer::class, function (Faker\Generator $faker) {
+    static $password;
     return [
-		'name' => $faker->name,
-		'username' => $faker->userName,
-		'password' => 'password',
-		'address' => $faker->address,
-		'phone' => '0400 000 000'
+        'name' => $faker->name,
+        'username' => $faker->userName,
+        'password' => $password ?: $password = bcrypt('secret'),
+        'address' => $faker->address,
+        'phone' => $faker->phoneNumber,
+        'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+        'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
     ];
 });
 
@@ -66,6 +69,6 @@ $factory->define(App\BusinessOwner::class, function (Faker\Generator $faker) {
 		'username' => $faker->userName,
 		'password' => 'password',
 		'address' => $faker->address,
-		'phone' => '0400 000 000'
+		'phone' => '0400000000'
     ];
 });
