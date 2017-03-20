@@ -46,29 +46,6 @@ class RegisterCustomerTest extends TestCase
 												$customer2->phone));
 	}
 	
-	public function testRegisterIdenticalEmailsFail() {
-		//Given 2 customers, one who registers successfully with the email 'pizza@dude.com'
-		//The 2nd customer should not also be able to register with the email 'pizza@dude.com'
-		$customer1 = factory(Customer::class)->make([
-			'email' => 'pizza@dude.com'
-		]);
-		$customer2 = factory(Customer::class)->make([
-			'email' => 'pizza@dude.com'
-		]);
-		
-		$this->assertTrue(
-			CustomerController::registerCustomer($customer1->name, 
-												$customer1->address,
-												$customer1->username,
-												$customer1->password,
-												$customer1->phone) &&
-			!CustomerController::registerCustomer($customer2->name,
-												$customer2->address,
-												$customer2->username,
-												$customer2->password,
-												$customer2->phone));
-	}
-	
 	public function testRegisterWithBlankNameFail() {
 		//Given a customer with valid registration details, customer and a blank name
 		//registration should fail
@@ -113,23 +90,11 @@ class RegisterCustomerTest extends TestCase
 				$customer->username, $customer->password, $customer->phone));
 	}
 	
-	public function testRegisterWithBlankEmailFail() {
-		//Given a customer with valid registration details, customer and a blank email
+	public function testRegisterWithBlankAddressFail() {
+		//Given a customer with valid registration details, customer and a blank address
 		//registration should fail
 		$customer = factory(Customer::class)->make([
-			'email' => ''
-		]);
-		
-		$this->assertFalse(CustomerController::registerCustomer($customer->name, $customer->address,
-				$customer->username, $customer->password, $customer->phone));
-	}
-	
-	public function testRegisterWithInvalidEmailFail() {
-		//Given a customer with valid registration details but invalid email
-		//(an email not seperated by an @ symbol)
-		//registration should fail
-		$customer = factory(Customer::class)->make([
-			'email' => 'fakeEmail'
+			'address' => ''
 		]);
 		
 		$this->assertFalse(CustomerController::registerCustomer($customer->name, $customer->address,
