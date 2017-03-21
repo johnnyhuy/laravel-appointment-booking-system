@@ -15,18 +15,6 @@ use App\Booking;
 use App\Employee;
 use App\Availability;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
-    static $password;
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
-    ];
-});
-
-
 $factory->define(App\Customer::class, function (Faker\Generator $faker) {
     static $password;
 
@@ -66,9 +54,11 @@ $factory->define(App\Availability::class, function (Faker\Generator $faker) {
 $factory->define(App\Customer::class, function (Faker\Generator $faker) {
     static $password;
     return [
-        'name' => $faker->name,
-        'username' => $faker->userName,
+        'firstname' => $faker->firstName,
+        'lastname' => $faker->lastName,
+        'username' => $faker->username,
         'password' => $password ?: $password = bcrypt('secret'),
+        'phone' => $faker->phoneNumber,
         'address' => $faker->address,
         'phone' => $faker->phoneNumber,
         'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
@@ -78,11 +68,11 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
 
 $factory->define(App\BusinessOwner::class, function (Faker\Generator $faker) {
     return [
-		'business_name' => $faker->sentence,
+		'business_name' => $faker->company,
 		'owner_name' => $faker->name,
 		'username' => $faker->userName,
-		'password' => 'password',
+		'password' => $password = bcrypt($faker->password),
 		'address' => $faker->address,
-		'phone' => '0400 000 000'
+		'phone' => $faker->phoneNumber,
     ];
 });

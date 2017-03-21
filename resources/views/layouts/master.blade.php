@@ -9,7 +9,7 @@
 	<link rel="icon" href="../../favicon.ico">
 	<title>Appointment Booking System</title>
 	<!-- Bootstrap core CSS -->
-	<link href="css/app.css" rel="stylesheet">
+	<link href="{{ asset('css/app.css') }}"" rel="stylesheet">
 	<!-- Custom styles for this template -->
 	<link href="signin.css" rel="stylesheet">
 </head>
@@ -39,7 +39,13 @@
 		@endif
 		<div class="header">
 			<a class="header__title" href="/">
-				<h1>Business Name</h1>
+				<h1>
+				@if (\App\BusinessOwner::first())
+					{{ \App\BusinessOwner::first()->business_name }}
+				@else
+					Business Placeholder
+				@endif
+				</h1>
 			</a>
 			<h3 class="header__subtitle">Booking System</h3>
 		</div>
