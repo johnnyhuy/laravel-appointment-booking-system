@@ -16,6 +16,11 @@ Route::get('/login', 'Auth\LoginController@index');
 Route::get('/register', 'Auth\RegisterController@index');
 Route::get('/bookings', 'BookingController@index');
 Route::get('/logout', 'Auth\LoginController@destroy');
+Route::get('/admin', 'BusinessOwnerController@index');
+Route::get('/admin/login', 'BusinessOwnerController@showLoginForm');
+Route::get('/admin/register', 'BusinessOwnerController@showRegisterForm');
 
 Route::post('/login', 'Auth\LoginController@create');
 Route::post('/register', 'Auth\RegisterController@create');
+Route::post('/admin/register', 'BusinessOwnerController@create');
+Route::post('/admin/login', 'BusinessOwnerController@login');
