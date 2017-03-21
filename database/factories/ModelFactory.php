@@ -15,12 +15,24 @@ use App\Booking;
 use App\Employee;
 use App\Availability;
 
+$factory->define(App\Customer::class, function (Faker\Generator $faker) {
+    static $password;
+
+    return [
+        'name' => $faker->name,
+        'email' => $faker->unique()->safeEmail,
+        'username' => $faker->username,
+        'password' => $password ?: $password = bcrypt('secret'),
+        'phone' => $faker->phoneNumber,
+        'address' => $faker->address,
+    ];
+});
+
 $factory->define(App\Booking::class, function (Faker\Generator $faker) {
     return [
         'customer_id' => $faker->numberBetween(1,10),
         'booking_start_time' => \Carbon\Carbon::now(),
         'booking_end_time' => \Carbon\Carbon::now(),
-        'title' => $faker->sentence,
     ];
 });
 
