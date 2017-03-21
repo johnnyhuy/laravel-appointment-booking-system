@@ -5,31 +5,24 @@
 		<div class="block">
 			<table class="table">
 				<tr>
-					<th>Title</th>
+					<th>Booking ID</th>
 					<th>Start Time</th>
 					<th>End Time</th>
-					<th>Customer id</th>
 				</tr>
 				<?php
-					function fillDBTest()
-					{
-						for($i = 0; $i<100; $i++)
-						{
-							factory(App\Booking::class)->create();
-						}
-					}
+					$bookings = factory(\App\Booking::class, 20)->make([
+						'customer_id' => Auth::user()->id,
+					]);
 
-					$customerID = rand(1,10);
-					$bookings = DB::table('bookings')
-						->where('customer_id', '=', $customerID)
-						->get();
+					$i = 0;
+
+					$customerID = Auth::user()->id;
 				?>
 				@foreach ($bookings as $booking)
 					<tr>
-						<td>{{$booking->title}}</td>
-						<td>{{$booking->booking_start_time}}</td>
-						<td>{{$booking->booking_end_time}}</td>	
-						<td>{{$booking->customer_id}}</td>
+						<td>{{ $i = $i + 1 }}</td>
+						<td>{{ \Carbon\Carbon::parse($booking->booking_start_time)->toDayDateTimeString() }}</td>
+						<td>{{ \Carbon\Carbon::parse($booking->booking_end_time)->toDayDateTimeString() }}</td>
 					</tr>
 				@endforeach
 			</table>
