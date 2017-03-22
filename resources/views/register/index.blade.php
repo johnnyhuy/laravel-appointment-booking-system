@@ -27,7 +27,7 @@
 				<label for="inputAddress">Address</label>
 				<input name="address" type="text" id="inputAddress" class="form-control login__input" placeholder="Address" required autofocus>
 			</div>
-			<button class="btn btn-lg btn-primary btn-block" href="/register">Register</a>
+			<button name="submit" class="btn btn-lg btn-primary btn-block" href="/register">Register</button>
 		</form>
 	</div>
 @endsection
