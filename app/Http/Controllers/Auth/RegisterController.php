@@ -21,7 +21,7 @@ class RegisterController extends Controller
             'username' => 'required|min:6|regex:[\w*\d*]',
             'password' => 'required|min:6|confirmed|regex:[\w+d+]',
             'address' => 'required|regex:[\d{1,5}\s\w{1,30}\s(\b\w*\b){1,4}\w*\s*\,*\s*\w{1,30}\s*\,*\s*\d{0,4}]',
-            'phone' => 'required|min:10|max:11|regex:[\d+]',
+            'phone' => 'required|min:4|max:22|regex:[\d+]',
         ]);
 
         // Create customer
@@ -40,7 +40,7 @@ class RegisterController extends Controller
         // Sign in
         auth()->login($customer);
 
-       return redirect('/');
+       return redirect('/bookings');
     }
 
     public function index()
