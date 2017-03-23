@@ -11,38 +11,31 @@
 |
 */
 
+// Use app classes
 use App\Booking;
+use App\Customer;
 use App\Employee;
 use App\Availability;
 
-$factory->define(App\Customer::class, function (Faker\Generator $faker) {
-    static $password;
+// Use vendor classes
+use Carbon\Carbon;
+use Faker\Generator;
 
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'username' => $faker->username,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'phone' => $faker->phoneNumber,
-        'address' => $faker->address,
-    ];
-});
-
-$factory->define(App\Booking::class, function (Faker\Generator $faker) {
+$factory->define(Booking::class, function (Generator $faker) {
     return [
         'customer_id' => $faker->numberBetween(1,10),
-        'booking_start_time' => \Carbon\Carbon::now(),
-        'booking_end_time' => \Carbon\Carbon::now(),
+        'booking_start_time' => Carbon::now(),
+        'booking_end_time' => Carbon::now(),
     ];
 });
 
-$factory->define(App\Employee::class, function (Faker\Generator $faker) {
+$factory->define(Employee::class, function (Generator $faker) {
     return [
         'name' => $faker->name
     ];
 });
 
-$factory->define(App\Availability::class, function (Faker\Generator $faker) {
+$factory->define(Availability::class, function (Generator $faker) {
     return [
 		'employee_id' => 1,
 		'day' => 'Monday',
@@ -51,7 +44,7 @@ $factory->define(App\Availability::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Customer::class, function (Faker\Generator $faker) {
+$factory->define(Customer::class, function (Generator $faker) {
     static $password;
     return [
         'firstname' => $faker->firstName,
@@ -61,12 +54,12 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
         'phone' => $faker->phoneNumber,
         'address' => $faker->address,
         'phone' => $faker->phoneNumber,
-        'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-        'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now(),
     ];
 });
 
-$factory->define(App\BusinessOwner::class, function (Faker\Generator $faker) {
+$factory->define(BusinessOwner::class, function (Generator $faker) {
     return [
 		'business_name' => $faker->company,
 		'owner_name' => $faker->name,
