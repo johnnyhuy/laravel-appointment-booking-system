@@ -35,7 +35,7 @@ class RegisterController extends Controller
         ]);
 
         // Session flash
-        session()->flash('message', 'Thank you for registering!');
+        session()->flash('message', 'Customer ' . request('firstname') . ' ' . request('lastname') . 'has been registered!');
 
         // Sign in
         auth()->login($customer);

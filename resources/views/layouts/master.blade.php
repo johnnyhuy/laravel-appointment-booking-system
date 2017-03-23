@@ -8,10 +8,12 @@
 	<meta name="author" content="">
 	<link rel="icon" href="../../favicon.ico">
 	<title>Appointment Booking System</title>
-	<!-- Bootstrap core CSS -->
 	<link href="{{ asset('css/app.css') }}"" rel="stylesheet">
-	<!-- Custom styles for this template -->
-	<link href="signin.css" rel="stylesheet">
+	<script>
+		window.myToken =  <?php echo json_encode([
+            'csrfToken' => csrf_token(),
+        ]); ?>
+	</script>
 </head>
 
 <body>
@@ -51,6 +53,7 @@
 		</div>
 	</div>
 	@yield('content')
+	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>
