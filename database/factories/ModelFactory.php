@@ -31,6 +31,7 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
 $factory->define(App\Booking::class, function (Faker\Generator $faker) {
     return [
         'customer_id' => $faker->numberBetween(1,10),
+        'title' => $faker->bs,
         'booking_start_time' => \Carbon\Carbon::now(),
         'booking_end_time' => \Carbon\Carbon::now(),
     ];

@@ -14,7 +14,7 @@ class BusinessOwnerController extends Controller
 
     public function index()
     {
-    	if (BusinessOwner::first() && Auth::check()) {
+    	if (BusinessOwner::first() /*&& Auth::check()*/) {
     		return view('admin.index');
     	}
     	elseif (BusinessOwner::first()) {
@@ -24,6 +24,7 @@ class BusinessOwnerController extends Controller
     		return redirect('/admin/register');
     	}
     }
+    /**/
 
     protected function guard()
     {
