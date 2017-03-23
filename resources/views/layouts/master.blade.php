@@ -8,18 +8,13 @@
 	<meta name="author" content="">
 	<link rel="icon" href="../../favicon.ico">
 	<title>Appointment Booking System</title>
-	<link href="{{ asset('css/app.css') }}"" rel="stylesheet">
-	<script>
-		window.myToken =  <?php echo json_encode([
-            'csrfToken' => csrf_token(),
-        ]); ?>
-	</script>
+	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
 <body>
 	<div class="container">
 		<ul class="nav nav-pills pull-left">
-			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}""><a href="/">Home</a></li>
+			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}"><a href="/">Home</a></li>
 			<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
 		</ul>
 		@if (Auth::check())
