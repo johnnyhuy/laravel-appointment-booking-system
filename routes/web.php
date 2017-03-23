@@ -20,6 +20,7 @@ Route::get('/admin', 'BusinessOwnerController@index');
 Route::get('/admin/login', 'BusinessOwnerController@showLoginForm');
 Route::get('/admin/register', 'BusinessOwnerController@showRegisterForm');
 
+
 Route::post('/login', 'Auth\LoginController@create');
 Route::post('/register', 'Auth\RegisterController@create');
 Route::post('/admin/register', 'BusinessOwnerController@create');
