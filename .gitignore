@@ -17,8 +17,10 @@ storage/*.key
 .env.*.php
 .env.php
 .env
+.env.dusk
 .env.dusk.local
 .env.dusk.testing
+.env.dusk.*
 Homestead.yaml
 Homestead.json
 
