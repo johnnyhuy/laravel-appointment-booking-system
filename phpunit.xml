@@ -27,6 +27,6 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="DB_DATABASE" value="testDB.sqlite"/> 
+        <env name="DB_DATABASE" value="C:/Users/jjohh/projects/git/SE-PT-Assignment/database/test-database.sqlite"/> 
     </php>
 </phpunit>

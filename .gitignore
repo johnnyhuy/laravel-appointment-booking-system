@@ -17,6 +17,7 @@ storage/*.key
 .env.*.php
 .env.php
 .env
+.env.dusk.local
 Homestead.yaml
 Homestead.json
 
@@ -24,6 +25,10 @@ Homestead.json
 .rocketeer/
 
 # End of https://www.gitignore.io/api/laravel
+
+# Laravel Dusk
+phpunit.dusk.xml
+phpunit.xml
 
 # Other
 .DS_Store

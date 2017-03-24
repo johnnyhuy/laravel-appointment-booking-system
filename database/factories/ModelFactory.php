@@ -49,10 +49,10 @@ $factory->define(Customer::class, function (Generator $faker) {
     return [
         'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
-        'username' => $faker->username,
+        'username' => str_replace(".", "", $faker->userName),
         'password' => $password ?: $password = bcrypt('secret'),
         'phone' => $faker->phoneNumber,
-        'address' => $faker->address,
+        'address' => $faker->streetAddress,
         'phone' => $faker->phoneNumber,
         'created_at' => Carbon::now(),
         'updated_at' => Carbon::now(),
@@ -63,9 +63,9 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
     return [
 		'business_name' => $faker->company,
 		'owner_name' => $faker->name,
-		'username' => $faker->userName,
+		'username' => str_replace(".", "", $faker->userName),
 		'password' => $password = bcrypt($faker->password),
-		'address' => $faker->address,
+		'address' => $faker->streetAddress,
 		'phone' => $faker->phoneNumber,
     ];
 });
