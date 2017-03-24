@@ -18,6 +18,7 @@ storage/*.key
 .env.php
 .env
 .env.dusk.local
+.env.dusk.testing
 Homestead.yaml
 Homestead.json
 
@@ -26,7 +27,7 @@ Homestead.json
 
 # End of https://www.gitignore.io/api/laravel
 
-# Laravel Dusk
+# PHP Unit
 phpunit.dusk.xml
 phpunit.xml
 
