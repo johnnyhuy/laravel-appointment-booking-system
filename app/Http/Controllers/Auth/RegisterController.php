@@ -16,11 +16,11 @@ class RegisterController extends Controller
 
         // Validate form
         $this->validate(request(), [
-            'firstname' => 'required|max:255|regex:[\w+]',
-            'lastname' => 'required|max:255|regex:[\w+]',
-            'username' => 'required|min:6|regex:[\w*\d*]',
-            'password' => 'required|min:6|confirmed|regex:[\w+d+]',
-            'address' => 'required|regex:[\d{1,5}\s\w{1,30}\s(\b\w*\b){1,4}\w*\s*\,*\s*\w{1,30}\s*\,*\s*\d{0,4}]',
+            'firstname' => 'required|max:255|alpha',
+            'lastname' => 'required|max:255|alpha',
+            'username' => 'required|min:6|alpha_num',
+            'password' => 'required|min:6|confirmed',
+            'address' => 'required|min:6|max:60',
             'phone' => 'required|min:4|max:22|regex:[\d+]',
         ]);
 
@@ -35,7 +35,7 @@ class RegisterController extends Controller
         ]);
 
         // Session flash
-        session()->flash('message', 'Customer ' . request('firstname') . ' ' . request('lastname') . 'has been registered!');
+        session()->flash('message', 'Customer ' . request('firstname') . ' ' . request('lastname') . ' has been registered!');
 
         // Sign in
         auth()->login($customer);
