@@ -31,7 +31,7 @@ class LoginController extends Controller
         //If not logged in, show the login page
         else 
         {
-            return view('login.index');
+            return view('customer.login');
         }
         
     }

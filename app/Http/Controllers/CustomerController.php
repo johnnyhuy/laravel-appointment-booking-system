@@ -28,10 +28,10 @@ class CustomerController extends Controller
 		}
 	}
 
-	//Opens the customer registration page
+	// Opens the customer registration page
 	public function register() 
 	{
-		return view('register.index');
+		return view('customer.register');
 	}
 
 	//Returns the guard object for customer registration
@@ -52,12 +52,12 @@ class CustomerController extends Controller
 	{
 		// Validate form
         $this->validate(request(), [
-            'firstname' => 'required|max:255|alpha',
-            'lastname' => 'required|max:255|alpha',
-            'username' => 'required|min:6|max:16|alpha_num',
-            'password' => 'required|min:6|max:16|confirmed',
+            'firstname' => "required|min:2|max:32|regex:/^[A-z\']+$/",
+            'lastname' => "required|min:2|max:32|regex:/^[A-z\']+$/",
+            'username' => 'required|min:6|max:24|alpha_num|unique:customers,username',
+            'password' => 'required|min:6|max:32|confirmed',
+            'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
             'address' => 'required|min:6|max:32',
-            'phone' => 'required|min:10|max:24|regex:[0-9\-*\+*\.*\s*]',
         ]);
 
         // Create customer
@@ -73,6 +73,6 @@ class CustomerController extends Controller
         // Session flash
         session()->flash('message', 'Thank you for registering! You can now Login!');
 
-       	return redirect('/');
+       	return redirect('/login');
 	}
 }
