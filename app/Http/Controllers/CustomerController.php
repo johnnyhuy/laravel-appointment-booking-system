@@ -52,12 +52,12 @@ class CustomerController extends Controller
 	{
 		// Validate form
         $this->validate(request(), [
-            'firstname' => 'required|max:255|regex:[\w+]',
-            'lastname' => 'required|max:255|regex:[\w+]',
-            'username' => 'required|min:6|regex:[\w*\d*]',
-            'password' => 'required|min:6|confirmed|regex:[\w+d+]',
-            'address' => 'required|regex:[\d{1,5}\s\w{1,30}\s(\b\w*\b){1,4}\w*\s*\,*\s*\w{1,30}\s*\,*\s*\d{0,4}]',
-            'phone' => 'required|min:10|max:11|regex:[\d+]',
+            'firstname' => 'required|max:255|alpha',
+            'lastname' => 'required|max:255|alpha',
+            'username' => 'required|min:6|max:16|alpha_num',
+            'password' => 'required|min:6|max:16|confirmed',
+            'address' => 'required|min:6|max:32',
+            'phone' => 'required|min:10|max:24|regex:[0-9\-*\+*\.*\s*]',
         ]);
 
         // Create customer

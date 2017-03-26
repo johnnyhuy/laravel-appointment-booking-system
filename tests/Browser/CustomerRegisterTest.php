@@ -37,7 +37,7 @@ class CustomerRegisterTest extends DuskTestCase
     }
 
     /**
-     * Test to retain user input after errors and registration as guest
+     * Test when customer is logged in and tries to visit /register
      *
      * @return void
      */
@@ -48,7 +48,39 @@ class CustomerRegisterTest extends DuskTestCase
         $this->browse(function ($browser) {
             $browser->loginAs(Customer::find(1))
                 ->visit('/register')
-                ->assertSee('NotFoundHttpException');
+                ->assertPathIs('/bookings');
+        });
+    }
+
+    /**
+     * Test when customer is logged in and tries to visit /login
+     *
+     * @return void
+     */
+    public function testLoggedCustomerCannotVisitLogin()
+    {
+        factory(Customer::class)->create();
+
+        $this->browse(function ($browser) {
+            $browser->loginAs(Customer::find(1))
+                ->visit('/login')
+                ->assertPathIs('/bookings');
+        });
+    }
+
+    /**
+     * Test when customer is logged in and tries to visit /login
+     *
+     * @return void
+     */
+    public function testLoggedCustomerCanLogout()
+    {
+        factory(Customer::class)->create();
+
+        $this->browse(function ($browser) {
+            $browser->loginAs(Customer::find(1))
+                ->visit('/logout')
+                ->assertSee('Successfully logged out!');
         });
     }
 
@@ -323,51 +355,38 @@ class CustomerRegisterTest extends DuskTestCase
 
         // Start browser
         $this->browse(function ($browser) use ($customer) {
+            // Password is required
             $browser->visit('/register')
-                // Fill the form with customer details
-                ->type('firstname', $customer->firstname)
-                ->type('lastname', $customer->lastname)
-                ->type('username', $customer->username)
                 ->type('password_confirmation', 'secretpassword123')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
 
                 // Show alerts
                 ->assertSee('The password field is required.');
 
-             // Test if password has 6 or more characters
+             // If password has 6 or more characters
             $browser->visit('/register')
-                ->type('firstname', $customer->firstname)
-                ->type('lastname', $customer->lastname)
-                ->type('username', $customer->username)
                 ->type('password', 'secret')
                 ->type('password_confirmation', 'secret')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
-                ->assertSee('Customer ' . $customer->firstname . ' ' . $customer->lastname . ' has been registered!')
-                ->visit('/logout');
+                ->assertDontSee('The password must be at least 6 characters.');
 
+            // If password is less than 6 characters
             $browser->visit('/register')
-                ->type('firstname', $customer->firstname)
-                ->type('lastname', $customer->lastname)
-                ->type('username', $customer->username)
                 ->type('password', 'secr')
                 ->type('password_confirmation', 'secr')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
                 ->assertSee('The password must be at least 6 characters.');
 
+            // If password is greater than 16 characters
             $browser->visit('/register')
-                // Fill the form with customer details
-                ->type('firstname', $customer->firstname)
-                ->type('lastname', $customer->lastname)
-                ->type('username', $customer->username)
+                ->type('password', 'verylongsecretpassword1234567890verylongsecretpassword1234567890')
+                ->type('password_confirmation', 'secr')
+                ->press('Register')
+                ->assertSee('The password may not be greater than 16 characters.');
+
+            // If password confirmation is not filled
+            $browser->visit('/register')
                 ->type('password', 'secretpassword123')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
 
                 // Show password confirmation alert
@@ -389,10 +408,30 @@ class CustomerRegisterTest extends DuskTestCase
                 ->press('Register')
                 ->assertSee('The phone field is required.');
 
+            // Phone must be at least 10 characters
             $browser->visit('/register')
-                ->type('phone', 'abc123!@#')
+                ->type('phone', '0000000000')
                 ->press('Register')
-                ->assertSee('The phone must be a number.');
+                ->assertDontSee('The phone must be at least 10 characters.');
+
+            // Phone must be less than 24 characters
+            $browser->visit('/register')
+                ->type('phone', '000000000000000000000000000000000000000000000000000000000000')
+                ->press('Register')
+                ->assertSee('The phone may not be greater than 24 characters.');
+
+            // Phone can contain spaces
+            $browser->visit('/register')
+                ->type('phone', '000 000 000 000')
+                ->press('Register')
+                ->assertDontSee('The phone format is invalid.');
+
+            // Phone contains alphabet characters
+            $browser->visit('/register')
+                ->type('phone', 'abcabcabcabc')
+                ->press('Register')
+                ->assertSee('The phone format is invalid.');
+
         });
     }
 
@@ -410,11 +449,23 @@ class CustomerRegisterTest extends DuskTestCase
 
                 ->assertSee('The address field is required.');
 
-            // When a user inputs less than 8 characters, alert
+            // Lower bound
             $browser->visit('/register')
-                ->type('address', '1 Test')
+                ->type('address', 'Lorem')
                 ->press('Register')
-                ->assertSee('The address must be at least 8 characters.');
+                ->assertSee('The address must be at least 6 characters.');
+
+            // Middle bound
+            $browser->visit('/register')
+                ->type('address', '1 Swan Street')
+                ->press('Register')
+                ->assertDontSee('The address must be at least 6 characters.');
+
+            // Upper bound
+            $browser->visit('/register')
+                ->type('address', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel gravida erat. In eleifend turpis et lacus laoreet aliquam et eu purus')
+                ->press('Register')
+                ->assertSee('The address may not be greater than 32 characters.');
         });
     }
 }
