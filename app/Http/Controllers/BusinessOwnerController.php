@@ -12,54 +12,41 @@ class BusinessOwnerController extends Controller
 {
 	use RegistersUsers;
 
+    //Returns the guard object for a business owner authentication
+    protected static function guard()
+    {
+        return Auth::guard('web_admin');
+    }
+
+    //Returns true if form information is correct to log into business owner account
+    public static function login() 
+    {
+        //Attempt to login as the business owner
+        return BusinessOwnerController::guard()->attempt(request(['username', 'password']));
+    }
+
+    //Redirect to appropriate page
     public function index()
     {
-    	if (BusinessOwner::first() /*&& Auth::check()*/) {
+        //If a business owner exists, and you are logged in as the business owner,
+        //show the business owner page
+    	if (BusinessOwner::first() && $this->guard()->check())
+        {
     		return view('admin.index');
     	}
-    	elseif (BusinessOwner::first()) {
-    		return redirect('/admin/login');
-    	}
-    	else {
-    		return redirect('/admin/register');
-    	}
-    }
-    /**/
-
-    protected function guard()
-    {
-    	return Auth::guard('web_admin');
-    }
-
-    public function showLoginForm()
-    {
-    	return view('admin.login');
-    }
-
-    public function showRegisterForm()
-    {
-    	return view('admin.register');
-    }
-
-    public function login()
-    {
-    	// Sign in
-        if (! Auth::attempt(request(['username', 'password']))) 
+        //If a business owner exists, but you are not loggined in as the bussiness
+        //owner, then redirect to the login page
+    	elseif (BusinessOwner::first()) 
         {
-            // Session flash
-            session()->flash('error', 'Error! Invalid credentials.');
-
-            // Failed to login
-            return back();
-        }
-
-    	// Session flash
-    	session()->flash('message', 'Business Owner login success.');
-
-    	// Success
-        return redirect('/');
+    		return redirect('/login');
+    	}
+        //If no business owner exists, show the business owner registration page
+    	else {
+    		return view('admin.register');
+    	}
     }
 
+    //Register's a business owner
     public function create()
     {
     	// Validate form
@@ -85,8 +72,10 @@ class BusinessOwnerController extends Controller
         // Session flash
         session()->flash('message', 'Business Owner registration success.');
 
+        //Login as the business owner
         auth()->login($businessOwner);
 
+        //Redirect to the business owner admin page
         return redirect('/admin');
     }
 }
