@@ -15,7 +15,7 @@
 Route::get('/', 'Auth\LoginController@index');
 Route::get('/login', 'Auth\LoginController@index');
 Route::get('/bookings', 'CustomerController@index');
-Route::get('/register', 'CustomerController@register');
+Route::get('/register', 'CustomerController@register')->middleware('guest');
 Route::get('/logout', 'Auth\LoginController@logout');
 //Customer form submission handling
 Route::post('/login', 'Auth\LoginController@login');
