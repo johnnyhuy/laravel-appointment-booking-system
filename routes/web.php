@@ -11,17 +11,17 @@
 |
 */
 
+//Customer handling
 Route::get('/', 'Auth\LoginController@index');
 Route::get('/login', 'Auth\LoginController@index');
-Route::get('/register', 'Auth\RegisterController@index');
-Route::get('/bookings', 'BookingController@index');
-Route::get('/logout', 'Auth\LoginController@destroy');
+Route::get('/bookings', 'CustomerController@index');
+Route::get('/register', 'CustomerController@register');
+Route::get('/logout', 'Auth\LoginController@logout');
+//Customer form submission handling
+Route::post('/login', 'Auth\LoginController@login');
+Route::post('/register', 'CustomerController@create');
+
+//Admin handling
 Route::get('/admin', 'BusinessOwnerController@index');
-Route::get('/admin/login', 'BusinessOwnerController@showLoginForm');
-Route::get('/admin/register', 'BusinessOwnerController@showRegisterForm');
-
-
-Route::post('/login', 'Auth\LoginController@create');
-Route::post('/register', 'Auth\RegisterController@create');
+//Admin form submission handling
 Route::post('/admin/register', 'BusinessOwnerController@create');
-Route::post('/admin/login', 'BusinessOwnerController@login');
