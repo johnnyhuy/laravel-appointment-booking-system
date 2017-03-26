@@ -134,7 +134,7 @@ class CustomerRegisterTest extends DuskTestCase
      *
      * @return void
      */
-    public function testRegisterCustomerNoticeAndLoggedIn()
+    public function testRegisterCustomer()
     {
         // Generate customer info
         $customer = factory(Customer::class)->make();
@@ -156,14 +156,10 @@ class CustomerRegisterTest extends DuskTestCase
                 ->press('Register')
                 
                 // Redirect to /bookings
-                ->assertPathIs('/bookings')
+                ->assertPathIs('/login')
 
                 // Get the alert after registering 
-                ->assertSee('Customer ' . $customer->firstname . ' ' . $customer->lastname . ' has been registered!')
-
-                // Alert customer is logged in
-                ->assertSee('Logged in as ' . $customer->firstname)
-                ->visit('/logout');
+                ->assertSee('Thank you for registering! You can now Login!');
         });
     }
 
@@ -174,18 +170,17 @@ class CustomerRegisterTest extends DuskTestCase
      */
     public function testShowAllValidationErrors()
     {
-        // Start browser
         $this->browse(function ($browser) {
             $browser->visit('/register')
                 ->press('Register')
 
                 // Show alerts
-                ->assertSee('The firstname field is required')
-                ->assertSee('The lastname field is required')
-                ->assertSee('The username field is required')
-                ->assertSee('The password field is required')
-                ->assertSee('The phone field is required')
-                ->assertSee('The address field is required');
+                ->assertSee('The firstname field is required.')
+                ->assertSee('The lastname field is required.')
+                ->assertSee('The username field is required.')
+                ->assertSee('The password field is required.')
+                ->assertSee('The phone field is required.')
+                ->assertSee('The address field is required.');
         });
     }
 
@@ -196,36 +191,41 @@ class CustomerRegisterTest extends DuskTestCase
      */
     public function testFirstNameInputValidate()
     {
-        // Generate customer info
-        $customer = factory(Customer::class)->make();
-
-        // Start browser
-        $this->browse(function ($browser) use ($customer) {
-            // Test if input is required
+        $this->browse(function ($browser) {
+            // If first name is required
             $browser->visit('/register')
-                // Fill the form with customer details
-                ->type('lastname', $customer->lastname)
-                ->type('username', $customer->username)
-                ->type('password', 'secretpassword123')
-                ->type('password_confirmation', 'secretpassword123')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
-
-                // Show alerts
                 ->assertSee('The firstname field is required.');
 
-            // Test if first name contains numbers or special characters throw an error
+            // If first name contains a ' symbol
+            $browser->visit('/register')
+                ->type('firstname', 'John')
+                ->press('Register')
+                ->assertDontSee('The firstname format is invalid.');
+
+            // If first name contains numbers or special characters throw an error
             $browser->visit('/register')
                 ->type('firstname', 'John123@#$%')
-                ->type('lastname', $customer->lastname)
-                ->type('username', $customer->username)
-                ->type('password', 'secretpassword123')
-                ->type('password_confirmation', 'secretpassword123')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
-                ->assertSee('The firstname may only contain letters.');
+                ->assertSee('The firstname format is invalid.');
+
+            // If first name contains a ' symbol
+            $browser->visit('/register')
+                ->type('firstname', "John'O")
+                ->press('Register')
+                ->assertDontSee('The firstname format is invalid.');
+
+            // If first name is less than 2 characters
+            $browser->visit('/register')
+                ->type('firstname', "a")
+                ->press('Register')
+                ->assertSee('The firstname must be at least 2 characters.');
+
+            // If first name is less than 32 characters
+            $browser->visit('/register')
+                ->type('firstname', "LoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLorem")
+                ->press('Register')
+                ->assertSee('The firstname may not be greater than 32 characters.');
         });
     }
 
@@ -236,35 +236,29 @@ class CustomerRegisterTest extends DuskTestCase
      */
     public function testLastNameInputValidate()
     {
-        // Generate customer info
-        $customer = factory(Customer::class)->make();
-
-        // Start browser
-        $this->browse(function ($browser) use ($customer) {
+        $this->browse(function ($browser) {
+            // If last name is required
             $browser->visit('/register')
-                // Fill the form with customer details
-                ->type('firstname', $customer->firstname)
-                ->type('username', $customer->username)
-                ->type('password', 'secretpassword123')
-                ->type('password_confirmation', 'secretpassword123')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
-
-                // Show alerts
                 ->assertSee('The lastname field is required.');
 
-             // Test if last name contains numbers or special characters throw an error
+             // If last name contains special characters and numbers
             $browser->visit('/register')
-                ->type('firstname', $customer->firstname)
                 ->type('lastname', 'Doe123@#$%')
-                ->type('username', $customer->username)
-                ->type('password', 'secretpassword123')
-                ->type('password_confirmation', 'secretpassword123')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
-                ->assertSee('The lastname may only contain letters.');
+                ->assertSee('The lastname format is invalid.');
+
+            // If last name is less than 2 characters
+            $browser->visit('/register')
+                ->type('lastname', "a")
+                ->press('Register')
+                ->assertSee('The lastname must be at least 2 characters.');
+
+            // If last name is less than 32 characters
+            $browser->visit('/register')
+                ->type('lastname', "LoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLorem")
+                ->press('Register')
+                ->assertSee('The lastname may not be greater than 32 characters.');
         });
     }
 
@@ -280,20 +274,14 @@ class CustomerRegisterTest extends DuskTestCase
 
         // Start browser
         $this->browse(function ($browser, $secondBrowser) use ($customer) {
+            // If username name is required
             $browser->visit('/register')
-                // Fill the form with customer details
-                ->type('firstname', $customer->firstname)
-                ->type('lastname', $customer->lastname)
-                ->type('password', 'secretpassword123')
-                ->type('password_confirmation', 'secretpassword123')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
 
                 // Show alerts
                 ->assertSee('The username field is required.');
 
-            // Test if last name contains special characters throw an error
+            // If username contains special characters throw an error
             $browser->visit('/register')
                 ->type('firstname', $customer->firstname)
                 ->type('lastname', $customer->lastname)
@@ -305,20 +293,13 @@ class CustomerRegisterTest extends DuskTestCase
                 ->press('Register')
                 ->assertSee('The username may only contain letters and numbers.');
 
-            // Test if last name contains special characters throw an error
+            // If username is filled correctly
             $browser->visit('/register')
-                ->type('firstname', $customer->firstname)
-                ->type('lastname', $customer->lastname)
                 ->type('username', 'johndoe123')
-                ->type('password', 'secretpassword123')
-                ->type('password_confirmation', 'secretpassword123')
-                ->type('phone', $customer->phone)
-                ->type('address', $customer->address)
                 ->press('Register')
-                ->assertSee('Customer ' . $customer->firstname . ' ' . $customer->lastname . ' has been registered!')
-                ->visit('/logout');
+                ->assertDontSee('The username may only contain letters and numbers.');
 
-            // Test if username already exists
+            // If username already exists
             $browser->visit('/register')
                 ->type('firstname', $customer->firstname)
                 ->type('lastname', $customer->lastname)
@@ -328,7 +309,7 @@ class CustomerRegisterTest extends DuskTestCase
                 ->type('phone', $customer->phone)
                 ->type('address', $customer->address)
                 ->press('Register')
-                ->assertSee('Customer ' . $customer->firstname . ' ' . $customer->lastname . ' has been registered!')
+                ->assertSee('Thank you for registering! You can now Login!')
                 ->visit('/logout');
             $secondBrowser->visit('/register')
                 ->type('firstname', $customer->firstname)
@@ -377,12 +358,12 @@ class CustomerRegisterTest extends DuskTestCase
                 ->press('Register')
                 ->assertSee('The password must be at least 6 characters.');
 
-            // If password is greater than 16 characters
+            // If password is greater than 32 characters
             $browser->visit('/register')
-                ->type('password', 'verylongsecretpassword1234567890verylongsecretpassword1234567890')
+                ->type('password', 'verylongsecretpassword1234567890verylongsecretpassword1234567890erylongsecretpassword1234567890')
                 ->type('password_confirmation', 'secr')
                 ->press('Register')
-                ->assertSee('The password may not be greater than 16 characters.');
+                ->assertSee('The password may not be greater than 32 characters.');
 
             // If password confirmation is not filled
             $browser->visit('/register')
