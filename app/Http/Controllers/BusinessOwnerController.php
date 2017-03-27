@@ -31,18 +31,26 @@ class BusinessOwnerController extends Controller
 
         //If a business owner exists, and you are logged in as the business owner,
         //show the business owner page
-    	if (BusinessOwner::first() && $this->guard()->check()) {
+    	if (BusinessOwner::first() && $this->guard()->check()) 
+        {
     		return view('admin.index', compact('business'));
     	}
         //If a business owner exists, but you are not loggined in as the bussiness
         //owner, then redirect to the login page
-    	elseif (BusinessOwner::first()) {
+    	elseif (BusinessOwner::first()) 
+        {
     		return redirect('/login');
     	}
-        //If no business owner exists, show the business owner registration page
-    	else {
-    		return view('admin.register', compact('business'));
+        //If a user is logged in, they should not be able to access this page
+    	elseif (Auth::guard('web_user')->check()) 
+        {
+    		return redirect('/');
     	}
+        //If no business owner exists, show the business owner registration page
+        else 
+        {
+            return view('admin.register', compact('business'));
+        }
     }
 
     //Register's a business owner
@@ -51,11 +59,11 @@ class BusinessOwnerController extends Controller
     	// Validate form
         $this->validate(request(), [
             'businessname' => 'required|max:255|regex:[\w+]',
-            'fullname' => 'required|max:255|regex:[\w+]',
-            'username' => 'required|min:6|regex:[\w*\d*]',
-            'password' => 'required|min:6|confirmed|regex:[\w+d+]',
-            'address' => 'required|regex:[\d{1,5}\s\w{1,30}\s(\b\w*\b){1,4}\w*\s*\,*\s*\w{1,30}\s*\,*\s*\d{0,4}]',
-            'phone' => 'required|min:8|max:11|regex:[\d+]',
+            'fullname' => 'required|max:255|regex:/^[A-z\-\. ]+$/',
+            'username' => 'required|min:6|max:24|alpha_num',
+            'password' => 'required|min:6|max:32|confirmed',
+            'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
+            'address' => 'required|min:6|max:32',
         ]);
 
     	// Create customer
@@ -69,12 +77,12 @@ class BusinessOwnerController extends Controller
         ]);
 
         // Session flash
-        session()->flash('message', 'Business Owner registration success.');
+        session()->flash('message', 'Business Owner registration success');
 
         //Login as the business owner
         auth()->login($businessOwner);
 
         //Redirect to the business owner admin page
-        return redirect('/admin');
+        return redirect('/');
     }
 }
