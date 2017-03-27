@@ -19,7 +19,7 @@
 		</ul>
 		@if (Auth::check())
 			<div class="pull-right user">
-				Logged in as {{ Auth::user()->firstname }}
+				Logged in as {{ Auth::user()->username }}
 				<a href="/logout">Logout</a>
 			</div>
 		@endif
