@@ -52,7 +52,7 @@ class BookingsTest extends TestCase
      *
      * @return void
      */
-	public function testBookingsHasBookingStartTime()
+	public function testBookingsHasBookingEndTime()
 	{
 		// Generate fake data
 		$factory = factory(Booking::class)->make();
