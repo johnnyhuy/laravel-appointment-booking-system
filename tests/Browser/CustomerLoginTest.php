@@ -8,5 +8,5 @@ use Tests\DuskTestCase;
 
 class CustomerLoginTest extends DuskTestCase
 {
-	
+
 }

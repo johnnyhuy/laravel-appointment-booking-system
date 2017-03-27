@@ -7,8 +7,7 @@ use App\Customer;
 use Tests\DuskTestCase;
 
 class CustomerRegisterTest extends DuskTestCase
-{
-    
+{ 
     /**
      * Test registering button to exist at the homepage
      *
@@ -46,7 +45,7 @@ class CustomerRegisterTest extends DuskTestCase
         factory(Customer::class)->create();
 
         $this->browse(function ($browser) {
-            $browser->loginAs(Customer::find(1))
+            $browser->loginAs(Customer::first())
                 ->visit('/register')
                 ->assertPathIs('/bookings');
         });

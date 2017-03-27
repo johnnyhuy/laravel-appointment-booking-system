@@ -19,7 +19,7 @@ class LoginController extends Controller
     public function index()
     {
         //If already logged in as a user, redirect to user's page
-        if(Auth::guard('web')->Check()) 
+        if(Auth::guard('web_user')->Check()) 
         {
             return redirect('/bookings');
         }
@@ -68,9 +68,9 @@ class LoginController extends Controller
     public function logout()
     {
         //If logged in as a customer, log out from customer
-        if(Auth::guard('web')->Check()) 
+        if(Auth::guard('web_user')->Check()) 
         {
-            Auth::guard('web')->logout();
+            Auth::guard('web_user')->logout();
         }
         //If already logged in as a business owner, log out from buisness owner
         else if(Auth::guard('web_admin')->Check()) 

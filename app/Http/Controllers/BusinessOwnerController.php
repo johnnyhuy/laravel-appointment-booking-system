@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class BusinessOwnerController extends Controller
 {
-	use RegistersUsers;
-
     //Returns the guard object for a business owner authentication
     protected static function guard()
     {
@@ -28,21 +26,22 @@ class BusinessOwnerController extends Controller
     //Redirect to appropriate page
     public function index()
     {
+        // Get first record of business owner
+        $business = BusinessOwner::first();
+
         //If a business owner exists, and you are logged in as the business owner,
         //show the business owner page
-    	if (BusinessOwner::first() && $this->guard()->check())
-        {
-    		return view('admin.index');
+    	if (BusinessOwner::first() && $this->guard()->check()) {
+    		return view('admin.index', compact('business'));
     	}
         //If a business owner exists, but you are not loggined in as the bussiness
         //owner, then redirect to the login page
-    	elseif (BusinessOwner::first()) 
-        {
+    	elseif (BusinessOwner::first()) {
     		return redirect('/login');
     	}
         //If no business owner exists, show the business owner registration page
     	else {
-    		return view('admin.register');
+    		return view('admin.register', compact('business'));
     	}
     }
 
