@@ -13,10 +13,7 @@
 	        </tr>
 	      </thead>
 	      <tbody>
-	      	<?php
-	            $bookings = DB::table('bookings')->get()->alL();
-	      	?>
-	    	@foreach($bookings as $booking)
+	    	@foreach(DB::table('bookings')->get()->all() as $booking)
 	        	<tr>
 	        		<td> {{$booking->id }}</td>
 	        		<td>{{ \Carbon\Carbon::parse($booking->booking_start_time)->toDayDateTimeString() }}</td>

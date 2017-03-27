@@ -11,11 +11,16 @@ use App\Customer;
 
 class CustomerController extends Controller
 {
+	protected static function guard()
+    {
+        return Auth::guard('web_user');
+    }
+
 	//Redirects user to approiate page
 	public function index() 
 	{
 		//If user already logged in
-		if(Auth::guard('web')->Check()) 
+		if(Auth::guard('web_user')->Check()) 
 		{
 			//Redirect to the bookings page, as user is already logged in
 			return view('bookings.index');
@@ -33,12 +38,6 @@ class CustomerController extends Controller
 	{
 		return view('customer.register');
 	}
-
-	//Returns the guard object for customer registration
-	protected static function guard()
-    {
-    	return Auth::guard('web');
-    }
 
     //Attempts to login using post data from a form, returns true if successful
     public static function login() 

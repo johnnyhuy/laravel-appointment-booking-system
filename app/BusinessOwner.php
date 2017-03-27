@@ -10,7 +10,5 @@ class BusinessOwner extends Model implements Authenticatable
 {
     use AuthenticableTrait;
 
-    protected $guard = 'web_admin';
-
 	protected $guarded = [];
 }

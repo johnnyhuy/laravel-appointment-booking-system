@@ -16,6 +16,7 @@ use App\Booking;
 use App\Customer;
 use App\Employee;
 use App\Availability;
+use App\BusinessOwner;
 
 // Use vendor classes
 use Carbon\Carbon;
