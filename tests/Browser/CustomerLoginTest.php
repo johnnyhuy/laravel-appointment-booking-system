@@ -6,7 +6,7 @@ use App\Customer;
 
 use Tests\DuskTestCase;
 
-class CustomerRegisterTest extends DuskTestCase
+class CustomerLoginTest extends DuskTestCase
 {
 	
 }
