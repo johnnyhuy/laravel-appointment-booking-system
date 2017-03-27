@@ -40,9 +40,9 @@
 	}
 
 	@include e("table") {
-		border-radius: $border-radius;
+		border-radius: $border-radius-large;
 		overflow: hidden;
-			
+
 		th {
 			font-size: 16px;
 			background-color: $gray-lightest;
