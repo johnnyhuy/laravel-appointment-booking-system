@@ -22,14 +22,6 @@ use App\BusinessOwner;
 use Carbon\Carbon;
 use Faker\Generator;
 
-$factory->define(Booking::class, function (Generator $faker) {
-    return [
-        'customer_id' => $faker->numberBetween(1,10),
-        'booking_start_time' => Carbon::now(),
-        'booking_end_time' => Carbon::now(),
-    ];
-});
-
 $factory->define(Employee::class, function (Generator $faker) {
     return [
         'name' => $faker->name
@@ -68,5 +60,15 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
 		'password' => $password = bcrypt($faker->password),
 		'address' => $faker->streetAddress,
 		'phone' => $faker->phoneNumber,
+    ];
+});
+
+$factory->define(Booking::class, function (Generator $faker) {
+    $customer = factory(Customer::class)->make();
+
+    return [
+        'customer_id' => $customer->id,
+        'booking_start_time' => Carbon::now(),
+        'booking_end_time' => Carbon::now(),
     ];
 });
