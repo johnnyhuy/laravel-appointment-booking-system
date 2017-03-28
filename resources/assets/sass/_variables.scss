@@ -8,7 +8,10 @@ $gray-darker:            lighten($gray-base, 13.5%) !default; // #222
 $gray-dark:              lighten($gray-base, 20%) !default;   // #333
 $gray:                   lighten($gray-base, 33.5%) !default; // #555
 $gray-light:             lighten($gray-base, 46.7%) !default; // #777
-$gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
+$gray-lighter:           lighten($gray-base, 70%) !default; // #eee
+$gray-lightest:          lighten($gray-base, 93.5%) !default; // #eee
+
+$white: white;
 
 // Borders
 $border-color: darken($body-bg, 10%);
@@ -19,10 +22,16 @@ $panel-inner-border: $border-color;
 
 // Brands
 $brand-primary: lighten(#0a50db, 13.5%);
+$brand-secondary: #0a50db;
 $brand-info: #8eb4cb;
 $brand-success: #2ab27b;
 $brand-warning: #cbb956;
 $brand-danger: #bf5329;
+
+// Border-radius
+$border-radius: 8px;
+$border-radius-large: 10px;
+$border-radius-circle: 100%;
 
 // Typography
 $primary-font: "Raleway", sans-serif;
@@ -58,3 +67,6 @@ $margin-min:			5px;
 $margin-mid:			8px;
 $margin-large:			15px;
 $margin-x-large:		20px;
+
+// Dashboard variables
+$navbar-height:			70px;

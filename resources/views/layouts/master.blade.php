@@ -8,21 +8,18 @@
 	<meta name="author" content="">
 	<link rel="icon" href="../../favicon.ico">
 	<title>Appointment Booking System</title>
-	<!-- Bootstrap core CSS -->
-	<link href="{{ asset('css/app.css') }}"" rel="stylesheet">
-	<!-- Custom styles for this template -->
-	<link href="signin.css" rel="stylesheet">
+	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
 <body>
 	<div class="container">
 		<ul class="nav nav-pills pull-left">
-			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}""><a href="/">Home</a></li>
+			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}"><a href="/">Home</a></li>
 			<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
 		</ul>
 		@if (Auth::check())
 			<div class="pull-right user">
-				Logged in as {{ Auth::user()->firstname }}
+				Logged in as {{ Auth::user()->username }}
 				<a href="/logout">Logout</a>
 			</div>
 		@endif
@@ -51,6 +48,7 @@
 		</div>
 	</div>
 	@yield('content')
+	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

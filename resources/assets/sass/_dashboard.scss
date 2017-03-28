@@ -1,0 +1,118 @@
+// Body class
+
+.dashboard {
+	padding-top: $navbar-height;
+}
+
+// Sidebar class
+
+.sidebar {
+	display: none;
+}
+
+@media (min-width: $screen-sm-min) {
+	.sidebar {
+		position: fixed;
+		top: $navbar-height;
+		bottom: 0;
+		left: 0;
+		z-index: 1000;
+		display: block;
+		padding: 20px;
+		overflow-x: hidden;
+		overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+		background-color: $gray-lightest;
+		border-right: 1px solid $gray-lighter;
+	}
+}
+
+// Main container
+
+.main {
+	padding: 20px;
+
+	@include e("header") {
+		font-family: $secondary-font;
+		font-weight: 600;
+		margin-top: 0;
+		margin-bottom: $margin-base;
+		color: $gray-dark;
+	}
+
+	@include e("table") {
+		border-radius: $border-radius-large;
+		overflow: hidden;
+
+		th {
+			font-size: 16px;
+			background-color: $gray-lightest;
+		}
+	}
+}
+
+.main .page-header {
+	margin-top: 0;
+}
+
+// Table
+
+.table > thead > tr > th {
+	border-bottom: none;
+}
+
+// Navbar
+
+.navbar {
+	background-color: $brand-primary;
+	min-height: $navbar-height;
+}
+
+.navbar-brand {
+	color: $white;
+	font-family: $primary-font;
+	font-weight: 600;
+	font-size: 24px;
+}
+
+.navbar-brand:hover {
+	color: $white;
+}
+
+.nav-sidebar {
+	margin: -20px;
+}
+
+.nav-sidebar > li > a {
+	padding-right: 20px;
+	padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+	color: #fff;
+	background-color: #428bca;
+}
+
+.navbar-nav a {
+	color: $white;
+}
+
+.navbar-nav > li > a:hover, .navbar-nav > li > a:focus {
+	background-color: $brand-secondary;
+}
+
+.nav-sidebar a {
+	color: $gray-dark;
+	font-family: $secondary-font;
+	font-size: 18px;
+}
+
+.nav-sidebar > li > a:hover, .nav-sidebar > li > a:focus {
+	background-color: $gray-lighter;
+}
+
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+	background-color: $gray-dark;
+}
