@@ -17,8 +17,9 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        // Redirect if customer is logged in
         if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+            return redirect('/bookings');
         }
 
         return $next($request);

@@ -10,6 +10,8 @@
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
+@import "dashboard";
+
 body {
 	background-color: $body-bg;
 }
@@ -27,6 +29,10 @@ hr {
 
 .alert {
 	margin-top: $padding-base;
+}
+
+.form-group {
+	margin-bottom: $margin-base;
 }
 
 .table {
@@ -49,7 +55,7 @@ hr {
 	padding-top: $padding-base;
 }
 
-.login {
+.request {
 	margin-bottom: $margin-large;
 
 	@include e("input") {
@@ -58,6 +64,10 @@ hr {
 
 	@include e("button") {
 		margin-bottom: $margin-base;
+	}
+
+	@include e("validate") {
+		color: $gray-lighter;
 	}
 }
 

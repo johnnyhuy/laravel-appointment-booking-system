@@ -3,78 +3,75 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use App\Customer;
 
 class CustomerController extends Controller
 {
-    public static function loginCustomer($username, $password) {
-		return false;
-	}
-	
-	public static function registerCustomer($name, $address, $username, $password, $phone) {
-		//Make sure there are no empty fields
-		if(empty(trim($name)) ||
-			empty(trim($address)) ||
-			empty(trim($username)) ||
-			empty(trim($password)) ||
-			empty(trim($phone))) {
-			return false;
+	protected static function guard()
+    {
+        return Auth::guard('web_user');
+    }
+
+	//Redirects user to approiate page
+	public function index() 
+	{
+		//If user already logged in
+		if(Auth::guard('web_user')->Check()) 
+		{
+			//Redirect to the bookings page, as user is already logged in
+			return view('bookings.index');
 		}
-		
-		//Check the phone number is valid (regex for all phone numbers generted by faker class)
- 		if(!preg_match('/\A[+]{0,1}[0-9 ()-.]{8,20}[x]{0,1}[0-9]{1,6}\z/', $phone)) {
-			return false;
+		//If the user is not logged in
+		else
+		{
+			//Go to the login page
+			return redirect('/login');
 		}
-		
-		//Check for conflicting usernames in the customers and business_owners database tables
-		
-		//SELECT * FROM Customers WHERE username = $username
-		$conflictingCustomers = DB::table('customers')->where('username', '=', $username)->get();
-		if(count($conflictingCustomers) > 0) {
-			echo 'username already in use <br>';
-			return false;
-		}
-		//SELECT * FROM BusinessOwner WHERE username = $username
-		$conflictingCustomers = DB::table('business_owners')->where('username', '=', $username)->get();
-		if(count($conflictingCustomers) > 0) {
-			echo "username already in use <br>";
-			return false;
-		}
-		
-		//Validation successful, create customer object
-		$customer = new Customer;
-		$customer->name = $name;
-		$customer->address = $address;
-		$customer->username = $username;
-		$customer->password = $password;
-		$customer->phone = $phone;
-		//Push customer data to the database
-		$customer->save();
-		
-		//Otherwise registration was successful, push data to database
-		return true;
 	}
 
-	
-	public function create() {
-		$customer_name = request('firstName') . ' ' . request('lastName');
-		$customer_address = request('address');
-		$customer_username = request('username');
-		$customer_password = request('password');
-		$customer_phone = request('phone');
-		
-		if(CustomerController::registerCustomer($customer_name, 
-							$customer_address,
-							$customer_username,
-							$customer_password,
-							$customer_phone)) {
-			//TODO: Implement what to do when registration is successful
-			return view('login.index');
-		}
-		else {
-			echo 'registration_unsuccessful';
-			return view('register.index');
-		}
+	// Opens the customer registration page
+	public function register() 
+	{
+		return view('customer.register');
+	}
+
+    //Attempts to login using post data from a form, returns true if successful
+    public static function login() 
+    {
+    	//Uses 'username' and 'password' data from form to attempt to log in
+		return CustomerController::guard()->attempt(request(['username', 'password']));
+	}
+
+	//Registers a new customer account
+	public function create() 
+	{
+		// Validate form
+        $this->validate(request(), [
+            'firstname' => "required|min:2|max:32|regex:/^[A-z\']+$/",
+            'lastname' => "required|min:2|max:32|regex:/^[A-z\']+$/",
+            'username' => 'required|min:6|max:24|alpha_num|unique:customers,username',
+            'password' => 'required|min:6|max:32|confirmed',
+            'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
+            'address' => 'required|min:6|max:32',
+        ]);
+
+        // Create customer
+        $customer = Customer::create([
+            'firstname' => request('firstname'),
+            'lastname' => request('lastname'),
+            'username' => request('username'),
+            'password' => bcrypt(request('password')),
+            'address' => request('address'),
+            'phone' => request('phone'),
+        ]);
+
+        // Session flash
+        session()->flash('message', 'Thank you for registering! You can now Login!');
+
+       	return redirect('/login');
 	}
 }
