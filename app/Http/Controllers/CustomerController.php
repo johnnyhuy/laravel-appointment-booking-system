@@ -22,8 +22,13 @@ class CustomerController extends Controller
 		//If user already logged in
 		if(Auth::guard('web_user')->Check()) 
 		{
+			// Get logged in customer bookings
+			// $bookings = Customer::find(Auth::id())->bookings;
+			// $bookings = factory(Customer::class, 15)->make();
+
 			//Redirect to the bookings page, as user is already logged in
 			return view('bookings.index');
+			// return view('bookings.index', compact('bookings'));
 		}
 		//If the user is not logged in
 		else

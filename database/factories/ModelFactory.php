@@ -66,9 +66,20 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
 $factory->define(Booking::class, function (Generator $faker) {
     $customer = factory(Customer::class)->make();
 
+    // Get random times before and after
+    if (ceil(rand(0,1)) == 1) {
+        $startTime = Carbon::today()->addHours(ceil(rand(0,12)))->toDateTimeString();
+        $endTime = Carbon::today()->addHours(ceil(rand(13,24)))->toDateTimeString();
+    }
+    else {
+        $startTime = Carbon::yesterday()->addHours(ceil(rand(0,12)))->toDateTimeString();
+        $endTime = Carbon::yesterday()->addHours(ceil(rand(13,24)))->toDateTimeString();
+    }
+
     return [
+        'id' => ceil(rand(0, 1024)),
         'customer_id' => $customer->id,
-        'booking_start_time' => Carbon::now(),
-        'booking_end_time' => Carbon::now(),
+        'booking_start_time' => $startTime,
+        'booking_end_time' => $endTime,
     ];
 });

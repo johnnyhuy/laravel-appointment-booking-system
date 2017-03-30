@@ -1,0 +1,13 @@
+.customer_bookings {
+	@include e("left-solid") {
+		border-right: 1px solid $border-color;
+	}
+
+	@include e("left-dotted") {
+		border-right: 1px dotted $border-color;
+	}
+
+	@include e("left-dashed") {
+		border-right: 1px dashed $border-color;
+	}
+}

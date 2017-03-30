@@ -2,27 +2,22 @@
 
 @section('content')
 	<div class="container">
-		<div class="block">
-			<table class="table">
+		<div class="block block--no-padding">
+			<table class="table table--no-margin customer_bookings">
 				<tr>
-					<th>Booking ID</th>
+					<th class="customer_bookings__left-solid">Booking ID</th>
 					<th>Start Time</th>
 					<th>End Time</th>
+					<th>Date</th>
+					<th>Duration</th>
 				</tr>
-				<?php
-					$bookings = factory(\App\Booking::class, 20)->make([
-						'customer_id' => Auth::user()->id,
-					]);
-
-					$i = 0;
-
-					$customerID = Auth::user()->id;
-				?>
-				@foreach ($bookings as $booking)
+				@foreach (factory(App\Booking::class, 15)->make() as $booking)
 					<tr>
-						<td>{{ $i = $i + 1 }}</td>
-						<td>{{ \Carbon\Carbon::parse($booking->booking_start_time)->toDayDateTimeString() }}</td>
-						<td>{{ \Carbon\Carbon::parse($booking->booking_end_time)->toDayDateTimeString() }}</td>
+						<td class="customer_bookings__left-solid">{{ $booking->id }}</td>
+						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_start_time)->format('h:i A') }}</td>
+						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_end_time)->format('h:i A') }}</td>
+						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_end_time)->toDateString() }}</td>
+						<td>{{ gmdate('G:i', $booking->duration()) }}</td>
 					</tr>
 				@endforeach
 			</table>
