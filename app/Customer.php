@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
+use Illuminate\Support\Facades\Validator;
+
+use App\Booking;
 
 class Customer extends Model implements Authenticatable
 {
@@ -12,7 +15,13 @@ class Customer extends Model implements Authenticatable
 
 	protected $guarded = [];
 
-	public function scopeGetBookings($query, $id) {
-		return false;
+	/**
+	 *
+	 * Get bookings for customer
+	 *
+	 */
+	public function bookings()
+	{
+		return $this->hasMany(Booking::class);
 	}
 }
