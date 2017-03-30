@@ -42,8 +42,8 @@ $factory->define(Customer::class, function (Generator $faker) {
     return [
         'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
-        'username' => str_replace(".", "", $faker->userName),
-        'password' => $password ?: $password = bcrypt('secret'),
+        'username' => str_replace(".", "", $faker->userName(6,10)),
+        'password' => bcrypt($faker->password),
         'phone' => $faker->phoneNumber,
         'address' => $faker->streetAddress,
         'phone' => $faker->phoneNumber,
@@ -56,8 +56,8 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
     return [
 		'business_name' => $faker->company,
 		'owner_name' => $faker->name,
-		'username' => str_replace(".", "", $faker->userName),
-		'password' => $password = bcrypt($faker->password),
+		'username' => str_replace(".", "", $faker->userName(6,10)),
+		'password' => bcrypt($faker->password),
 		'address' => $faker->streetAddress,
 		'phone' => $faker->phoneNumber,
     ];
