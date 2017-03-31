@@ -56,7 +56,7 @@ class BookingHistory extends TestCase
     {
         //create a few bookings and make sure they are all being displayed
         $booking = factory(Booking::class, 20)->create([
-            'booking_start_time' => Carbon::now()]);
+            'booking_start_time' => Carbon::now()->subWeek()]);
 
         $history = Booking::getHistory();
 
