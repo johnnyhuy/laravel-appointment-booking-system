@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Booking;
+use Carbon\Carbon;
 
 class BookingHistory extends TestCase
 {
@@ -18,17 +19,18 @@ class BookingHistory extends TestCase
     {
         //a previous booking 
     	$validBooking = factory(Booking::class)->create([
-            'booking_start_date' => Carbon::now()->subWeek()]);
+            'booking_start_time' => Carbon::now()->subWeek()]);
 
         //a future booking (should not be displayed)
-        $invalidBooking = factory(Booking::class->create([
-            'booking_start_date'] => Carbon::now()->addWeek()));
+        $invalidBooking = factory(Booking::class)->create([
+            'booking_start_time' => Carbon::now()->addWeek()
+            ]);
 
         $history = Booking::getHistory();
 
         //check if the valid booking is contained but not the invalid one
         $this->assertContains($validBooking, $history);
-        $this->assertNotContains($invalidBooking, $history)
+        $this->assertNotContains($invalidBooking, $history);
     }
 
     public function testDontShowNowBookings()
@@ -37,7 +39,7 @@ class BookingHistory extends TestCase
         //a form of boundry testing for the middle since startTime < now
 
         $nowBooking = factory(Booking::class)->create([
-            'booking_start_date' => Carbon::now()]);
+            'booking_start_time' => Carbon::now()]);
 
         $history = Booking::getHistory();
 
@@ -54,7 +56,7 @@ class BookingHistory extends TestCase
     {
         //create a few bookings and make sure they are all being displayed
         $booking = factory(Booking::class, 20)->create([
-            'booking_start_date' => Carbon::now()]);
+            'booking_start_time' => Carbon::now()]);
 
         $history = Booking::getHistory();
 
