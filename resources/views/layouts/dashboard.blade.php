@@ -21,7 +21,20 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">{{ $business->business_name }}: Dashboard</a>
+				<a class="navbar-brand" href="#">{{ $business->business_name }}: 
+				<?php 
+				 $url = $_SERVER['REQUEST_URI'];
+				 $subtitle = substr ($url,7);
+				 if ($subtitle=="")
+				 {
+				 		echo "Dashboard";
+				 }
+				 else
+				 {
+				 		echo ucfirst ($subtitle);
+				 }
+				 ?>	
+				 </a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
