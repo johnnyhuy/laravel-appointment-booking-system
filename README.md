@@ -17,6 +17,9 @@ For team members, please add more details to your role if needed.
   * User stories
   * Unit testing
 
+# Tutor and Product Manager
+**A Homy Ash** amirhomayoon.ashrafzadeh@rmit.edu.au 
+
 # Development Environment
 To allow actual development on the project code. You must require a development environment for Laravel (PHP Framework) to function properly on your local device.
 
