@@ -17,7 +17,7 @@ For team members, please add more details to your role if needed.
   * User stories
   * Unit testing
 
-# Tutor and Product Manager
+# Tutor & Product Manager
 **A Homy Ash** amirhomayoon.ashrafzadeh@rmit.edu.au
 
 **Tuesday 8:30 Tutorial** - 014.06.013
