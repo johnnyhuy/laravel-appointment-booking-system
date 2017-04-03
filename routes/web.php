@@ -26,6 +26,8 @@ Route::post('/register', 'CustomerController@create');
 Route::get('/admin', 'BusinessOwnerController@index');
 Route::get('/admin/employees/', 'BusinessOwnerController@employees');
 Route::get('/admin/history/', 'BusinessOwnerController@history');
+Route::get('/admin/roster', 'BusinessOwnerController@roster');
 //Admin form submission handling
 Route::post('/admin/register', 'BusinessOwnerController@create');
 Route::post('/admin/employees', 'EmployeeController@create');
+Route::post('/admin/roster', 'WorkingHoursController@create');
