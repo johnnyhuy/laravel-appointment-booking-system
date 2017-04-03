@@ -25,7 +25,7 @@ For team members, please add more details to your role if needed.
 # Development Environment
 To allow actual development on the project code. You must require a development environment for Laravel (PHP Framework) to function properly on your local device.
 
-## Requirments
+## Requirements
 
 * [Composer](https://getcomposer.org/download/) >= 1.4.1
 * [PHP](http://php.net/manual/en/intro-whatis.php) >= 5.6.4
