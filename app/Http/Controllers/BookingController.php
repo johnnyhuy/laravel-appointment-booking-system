@@ -15,4 +15,11 @@ class BookingController extends Controller
 	{
 		return view('bookings.index');
 	}
+
+	public static function getHistory()
+	{
+		$bookings = DB::table('bookings')->whereDate('booking_start_time', '<', \Carbon\Carbon::now())->get();
+
+		return $bookings;
+	}
 }
