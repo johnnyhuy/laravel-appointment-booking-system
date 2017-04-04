@@ -67,11 +67,48 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
 });
 
 $factory->define(Booking::class, function (Generator $faker) {
-    $customer = factory(Customer::class)->make();
+    $customer = factory(Customer::class)->create();
+
+    // Loop so that start time is always earlier than end time in hours
+    while (true) {
+        $startHour = rand(0, 24);
+        $startMinute = rand(0, 1) == 1 ? 0 : 30;
+        $endHour = rand(0, 24);
+        $endMinute = rand(0, 1) == 1 ? 0 : 30;
+
+        if ($startHour < $endHour) {
+            break;
+        }
+    }
+
+    // Give a random day
+    $day = rand(0, 365);
+
+     // Get the start of today
+    $startTime = Carbon::now()->startOfDay();
+    $endTime = Carbon::now()->startOfDay();
+
+    // Set future or past booking by one year
+    if (rand(0, 1) == 1) {
+        $startTime->subYears(1);
+        $endTime->subYears(1);
+    }
+
+    // Add days and hours
+    $startTime->addDays($day)
+        ->addHours($startHour)
+        ->addMinutes($startMinute);
+    $endTime->addDays($day)
+        ->addHours($endHour)
+        ->addMinutes($endMinute);
+
+    // Convert Carbon object to DateTime string
+    $startTime = $startTime->toDateTimeString();
+    $endTime = $endTime->toDateTimeString();
 
     return [
         'customer_id' => $customer->id,
-        'booking_start_time' => Carbon::now(),
-        'booking_end_time' => Carbon::now(),
+        'booking_start_time' => $startTime,
+        'booking_end_time' => $endTime,
     ];
 });
