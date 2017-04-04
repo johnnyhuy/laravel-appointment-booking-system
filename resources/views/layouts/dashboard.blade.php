@@ -27,6 +27,9 @@
 
 					// Check url for title
 					if (Request::is('admin')) {
+						$title .= "Business Information";
+					}
+					elseif (Request::is('admin/summary')) {
 						$title .= "Summary of Bookings";
 					}
 					elseif (Request::is('admin/history')) {
@@ -57,7 +60,8 @@
 		<div class="row">
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
-					<li class="{{ Request::is('admin') ? 'active' : null }}"><a href="/admin">Summary<span class="sr-only">(current)</span></a></li>
+					<li class="{{ Request::is('admin') ? 'active' : null }}"><a href="/admin">Information<span class="sr-only">(current)</span></a></li>
+					<li class="{{ Request::is('admin/summary') ? 'active' : null }}"><a href="/admin/summary">Summary<span class="sr-only">(current)</span></a></li>
 					<li class="{{ Request::is('admin/history') ? 'active' : null }}"><a href="/admin/history">History</a></li>
 					<li class="{{ Request::is('admin/roster') ? 'active' : null }}"><a href="/admin/roster">Roster</a></li>
 					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a href="/admin/employees">Employees</a></li>
