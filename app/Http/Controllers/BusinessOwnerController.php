@@ -53,6 +53,93 @@ class BusinessOwnerController extends Controller
         }
     }
 
+    public function employees() 
+    {
+        // Get first record of business owner
+        $business = BusinessOwner::first();
+
+        //If a business owner exists, and you are logged in as the business owner,
+        //show the business owner page
+        if (BusinessOwner::first() && $this->guard()->check()) 
+        {
+            return view('admin.employees', compact('business'));
+        }
+        //If a business owner exists, but you are not loggined in as the bussiness
+        //owner, then redirect to the login page
+        elseif (BusinessOwner::first()) 
+        {
+            return redirect('/login');
+        }
+        //If a user is logged in, they should not be able to access this page
+        elseif (Auth::guard('web_user')->check()) 
+        {
+            return redirect('/');
+        }
+        //If no business owner exists, show the business owner registration page
+        else 
+        {
+            return redirect('/admin');
+        }
+    }
+
+    public function history() 
+    {
+        // Get first record of business owner
+        $business = BusinessOwner::first();
+
+        //If a business owner exists, and you are logged in as the business owner,
+        //show the business owner page
+        if (BusinessOwner::first() && $this->guard()->check()) 
+        {
+            return view('admin.history', compact('business'));
+        }
+        //If a business owner exists, but you are not loggined in as the bussiness
+        //owner, then redirect to the login page
+        elseif (BusinessOwner::first()) 
+        {
+            return redirect('/login');
+        }
+        //If a user is logged in, they should not be able to access this page
+        elseif (Auth::guard('web_user')->check()) 
+        {
+            return redirect('/');
+        }
+        //If no business owner exists, show the business owner registration page
+        else 
+        {
+            return redirect('/admin');
+        }
+    }
+
+    public function roster() 
+    {
+        // Get first record of business owner
+        $business = BusinessOwner::first();
+
+        //If a business owner exists, and you are logged in as the business owner,
+        //show the business owner page
+        if (BusinessOwner::first() && $this->guard()->check()) 
+        {
+            return view('admin.roster', compact('business'));
+        }
+        //If a business owner exists, but you are not loggined in as the bussiness
+        //owner, then redirect to the login page
+        elseif (BusinessOwner::first()) 
+        {
+            return redirect('/login');
+        }
+        //If a user is logged in, they should not be able to access this page
+        elseif (Auth::guard('web_user')->check()) 
+        {
+            return redirect('/');
+        }
+        //If no business owner exists, show the business owner registration page
+        else 
+        {
+            return redirect('/admin');
+        }
+    }
+
     //Register's a business owner
     public function create()
     {
