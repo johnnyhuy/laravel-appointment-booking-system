@@ -21,6 +21,12 @@ hr {
 	border-top: 1px solid $border-color;
 }
 
+footer {
+	margin-top: 50px;
+	margin-bottom: $margin-base;
+	text-align: center;
+}
+
 .block {
 	background: white;
 	padding: $padding-base $padding-base 0 $padding-base;

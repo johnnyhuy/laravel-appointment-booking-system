@@ -49,6 +49,9 @@
 	</div>
 	@yield('content')
 	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+	<footer>
+		LCJJ Development Team
+	</footer>
 </body>
 
 </html>
