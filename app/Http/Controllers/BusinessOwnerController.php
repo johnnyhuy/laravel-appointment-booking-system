@@ -33,7 +33,26 @@ class BusinessOwnerController extends Controller
     // Redirects 
     public function index()
     {
-        return view('admin.index', ['business' => $this->business]);
+        if (BusinessOwner::first() && $this->guard()->check()) 
+        {
+            return view('admin.index', ['business' => $this->business]);
+        }
+          //If a business owner exists, but you are not loggined in as the bussiness
+        //owner, then redirect to the login page
+        elseif (BusinessOwner::first()) 
+        {
+            return redirect('/login');
+        }
+        //If a user is logged in, they should not be able to access this page
+        elseif (Auth::guard('web_user')->check()) 
+        {
+            return redirect('/');
+        }
+        //If no business owner exists, show the business owner registration page
+        else 
+        {
+            return view('admin.register', compact('business'));
+        }
     }
 
     public function summary() {
