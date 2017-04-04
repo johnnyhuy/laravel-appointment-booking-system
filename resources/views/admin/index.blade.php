@@ -31,7 +31,7 @@
 		<div class="table-responsive">
 		    <table class="table main__table">
 		        <tr>
-					<th>Employee ID</th>
+					<th>Employee Name</th>
 					<th>Monday</th>
 					<th>Tuesday</th>
 					<th>Wednesday</th>
@@ -40,6 +40,18 @@
 					<th>Saturday</th>
 					<th>Sunday</th>
 				</tr>
+				@foreach(DB::table('employees')->get() as $employee)
+					<tr>
+						<td> {{$employee->firstname . ' ' . $employee->lastname}} </td>
+						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Monday')}} </td>
+						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Tuesday')}} </td>
+						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Wednesday')}} </td>
+						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Thursday')}} </td>
+						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Friday')}} </td>
+						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Saturday')}} </td>
+						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Sunday')}} </td>
+					</tr>
+				@endforeach
 		    </table>
 		</div>
 	</div>

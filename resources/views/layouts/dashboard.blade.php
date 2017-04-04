@@ -21,7 +21,30 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">{{ $business->business_name }}: Dashboard</a>
+				@php
+					// Dynamic page titles
+					$title = ": ";
+
+					// Check url for title
+					if (Request::is('admin')) {
+						$title .= "Summary of Bookings";
+					}
+					elseif (Request::is('admin/history')) {
+						$title .= "History";
+					}
+					elseif (Request::is('admin/roster')) {
+						$title .= "Roster";
+					}
+					elseif (Request::is('admin/employees')) {
+						$title .= "Employees";
+					}
+					else {
+						// Else default
+						$title = "";
+					}
+				@endphp
+				<a class="navbar-brand" href="#">{{ $business->business_name . $title }}: 
+				 </a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
@@ -35,10 +58,14 @@
 		<div class="row">
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
-					<li class="active"><a href="#">Bookings<span class="sr-only">(current)</span></a></li>
-					<li><a href="#">Employees</a></li>
-					<li><a href="#">Roster</a></li>
+					<li class="{{ Request::is('admin') ? 'active' : null }}"><a href="/admin">Summary<span class="sr-only">(current)</span></a></li>
+					<li class="{{ Request::is('admin/history') ? 'active' : null }}"><a href="/admin/history">History</a></li>
+					<li class="{{ Request::is('admin/roster') ? 'active' : null }}"><a href="/admin/roster">Roster</a></li>
+					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a href="/admin/employees">Employees</a></li>
 				</ul>
+				<footer class="dashboard">
+					LCJJ Development Team
+				</footer>
 			</div>
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				@yield('content')

@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Customer;
+use App\BusinessOwner;
+use App\Booking;
 
 class CustomerTest extends TestCase
 {
