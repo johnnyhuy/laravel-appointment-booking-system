@@ -4,13 +4,6 @@ Major group assignment for COSC2299 Software Engineering: Process and Tools at R
 ## Team Members & Contributions
 For team members, please add more details to your role if needed.
 
-* **Johnny Huynh** S3604367 - **25%**
-  * Manage Trello board
-  * Setup/manage live server
-  * Dusk testing
-  * Integration testing
-  * Structured pages: customer login/registration, business owner login/registration
-  * Wireframe design
 * **Lachlan Porter** S3537901 - **25%**
   * Wireframe design
   * User stories
@@ -20,6 +13,13 @@ For team members, please add more details to your role if needed.
   * Intergration testing
   * Database planning
   * Structured pages: add working time, add employee, business owner login/registration, roster
+* **Johnny Huynh** S3604367 - **25%**
+  * Manage Trello board
+  * Setup/manage live server
+  * Dusk testing
+  * Integration testing
+  * Structured pages: customer login/registration, business owner login/registration
+  * Wireframe design
 * **Jarry Chen** S3600396 - **25%**
   * User stories
   * Integration testing
