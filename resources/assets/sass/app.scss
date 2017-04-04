@@ -11,6 +11,7 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 @import "dashboard";
+@import "customer_bookings";
 
 body {
 	background-color: $body-bg;
@@ -20,11 +21,21 @@ hr {
 	border-top: 1px solid $border-color;
 }
 
+footer {
+	margin-top: 50px;
+	margin-bottom: $margin-base;
+	text-align: center;
+}
+
 .block {
 	background: white;
 	padding: $padding-base $padding-base 0 $padding-base;
 	border: 1px solid $border-color;
 	border-radius: 5px;
+
+	@include m("no-padding") {
+		padding: 0px !important;
+	}
 }
 
 .alert {
@@ -38,6 +49,22 @@ hr {
 .table {
 	th {
 		border-top: none !important;
+		border-bottom: 1px solid $border-color;
+		font-family: $secondary-font;
+		font-size: 18px;
+		text-align: center;
+		color: $gray-dark;
+	}
+
+	td {
+		border-top: none !important;
+		text-align: center;
+		font-size: 16px;
+		color: $gray;
+	}
+
+	@include m('no-margin') {
+		margin: 0 !important;
 	}
 }
 
@@ -53,6 +80,11 @@ hr {
 
 .nav-pills {
 	padding-top: $padding-base;
+}
+
+.nav-pills > li > a:hover, .nav-pills > li > a:focus {
+	background-color: $brand-secondary;
+	color: $white;
 }
 
 .request {

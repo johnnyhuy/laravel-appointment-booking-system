@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Booking;
 use App\Http\Controllers\CustomerController;
+use Carbon\Carbon;
 
 class BookingsTest extends TestCase
 {
@@ -62,5 +63,25 @@ class BookingsTest extends TestCase
 
 		// Booking has end time?
 		$this->assertEquals($factory->booking_end_time, $booking->booking_end_time);
+	}
+
+	/**
+     * Get the total duration of the booking
+     *
+     * @return void
+     */
+	public function testGetDurationOfBooking() {
+		// Given booking exists
+		// and duration is two hours
+		$booking = new Booking([
+			'booking_start_time' => Carbon::now()->subHour(4),
+			'booking_end_time' => Carbon::now()->subHour(2),
+		]);
+
+		// Calculate duration of booking
+		$duration = $booking->duration();
+
+		// Return expected result in seconds
+		$this->assertEquals(7200, $duration);
 	}
 }

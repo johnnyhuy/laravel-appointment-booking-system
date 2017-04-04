@@ -274,7 +274,7 @@ class BusinessOwnerRegisterTest extends DuskTestCase
             // If password is greater than 32 characters
             $browser->visit('/admin')
                 ->type('password', 'verylongsecretpassword1234567890verylongsecretpassword1234567890erylongsecretpassword1234567890')
-                ->type('password_confirmation', 'secr')
+                ->type('password_confirmation', 'verylongsecretpassword1234567890verylongsecretpassword1234567890erylongsecretpassword1234567890')
                 ->press('Register')
                 ->assertSee('The password may not be greater than 32 characters.');
 
