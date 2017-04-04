@@ -8,7 +8,7 @@
 	<meta name="author" content="">
 	<link rel="icon" href="../../favicon.ico">
 	<title>{{ $business->business_name }}: Dashboard</title>
-	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/app.css') }}?{{ time() }}" rel="stylesheet">
 </head>
 
 <body class="dashboard">

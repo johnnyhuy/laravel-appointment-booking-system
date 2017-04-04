@@ -5,7 +5,7 @@
 		<div class="block block--no-padding">
 			<table class="table table--no-margin customer_bookings">
 				<tr>
-					<th class="customer_bookings__left-solid">Booking ID</th>
+					<th class="customer_bookings__left-solid">ID</th>
 					<th>Start Time</th>
 					<th>End Time</th>
 					<th>Date</th>
