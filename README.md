@@ -7,15 +7,23 @@ For team members, please add more details to your role if needed.
 * **Johnny Huynh** S3604367 - **25%**
   * Manage Trello board
   * Setup/manage live server
+  * Dusk testing
+  * Integration testing
+  * Structured pages: customer login/registration, business owner login/registration
+  * Wireframe design
 * **Lachlan Porter** S3537901 - **25%**
-  * UI design
+  * Wireframe design
   * User stories
+  * Structured pages: admin dashboard, history of bookings, customer bookings
 * **Craig Barry** S3601725 - **25%**
-  * Unit testing
+  * Dusk testing
+  * Intergration testing
   * Database planning
+  * Structured pages: add working time, add employee, business owner login/registration, roster
 * **Jarry Chen** S3600396 - **25%**
   * User stories
-  * Unit testing
+  * Integration testing
+  * Structured pages: business information
 
 # Tutor & Product Manager
 **A Homy Ash** amirhomayoon.ashrafzadeh@rmit.edu.au
