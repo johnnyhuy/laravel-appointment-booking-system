@@ -44,7 +44,29 @@
 				@endif
 				</h1>
 			</a>
-			<h3 class="header__subtitle">Booking System</h3>
+			@php
+				// Dynamic page titles
+				$title = ": ";
+
+				// Check url for title
+				if (Request::is('bookings')) {
+					$title .= "Customer Bookings";
+				}
+				elseif (Request::is('login')) {
+					$title .= "Login";
+				}
+				elseif (Request::is('register')) {
+					$title .= "Customer Registration";
+				}
+				elseif (Request::is('admin')) {
+					$title .= "Admin";
+				}
+				else {
+					// Else default
+					$title = "";
+				}
+			@endphp
+			<h3 class="header__subtitle">Booking System{{ $title }}</h3>
 		</div>
 	</div>
 	@yield('content')
