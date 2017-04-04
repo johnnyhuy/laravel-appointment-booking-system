@@ -12,14 +12,22 @@
 					<th>Start time</th>
 					<th>End time</th>
 					<th>Date</th>
-					<th>Duration</th>
 				</tr>
-				@foreach(DB::table('bookings')->whereDate('booking_start_time', '<', \Carbon\Carbon::now())->get() as $booking)
+				<?php 
+					// TESTING DATA PLS IGNORE
+				 	/*$booking->customer_id = 1;
+				 	$booking->day = \Carbon\Carbon::now();
+				 	$booking->booking_start_time = \Carbon\Carbon::now();
+				 	$booking->booking_end_time = \Carbon\Carbon::now();
+				 	$booking->save();*/
+				 ?>
+				@foreach(App\Booking::whereDate('booking_start_time', '<', Carbon\Carbon::now())->get() as $booking)
 					<tr>
-						<td> {{	$booking->id }}</td>
-						<td>{{ \Carbon\Carbon::parse($booking->booking_start_time)->toDayDateTimeString() }}</td>
-						<td>{{ \Carbon\Carbon::parse($booking->booking_start_time)->toDayDateTimeString() }}</td>
+						<td>{{ $booking->id }}</td>
 						<td>{{ $booking->customer_id }}</td>
+						<td>{{ Carbon\Carbon::parse($booking->booking_start_time)->format('h:i A') }}</td>
+						<td>{{ Carbon\Carbon::parse($booking->booking_end_time)->format('h:i A') }}</td>
+						<td>{{ Carbon\Carbon::parse($booking->booking_start_time)->toDateString() }}</td>
 					</tr>
 				@endforeach
 		    </table>

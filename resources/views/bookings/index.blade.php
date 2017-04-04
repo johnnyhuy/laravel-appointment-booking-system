@@ -12,8 +12,11 @@
 					<th>Duration</th>
 				</tr>
 				@foreach (factory(App\Booking::class, 15)->make() as $booking)
+					@php
+						$bookingID = rand(0, 999);
+					@endphp
 					<tr>
-						<td class="customer_bookings__left-solid">{{ $booking->id }}</td>
+						<td class="customer_bookings__left-solid">{{ $bookingID }}</td>
 						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_start_time)->format('h:i A') }}</td>
 						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_end_time)->format('h:i A') }}</td>
 						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_end_time)->toDateString() }}</td>
