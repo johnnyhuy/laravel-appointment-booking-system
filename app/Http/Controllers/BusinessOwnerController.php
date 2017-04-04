@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\BusinessOwner;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+
+use App\BusinessOwner;
+use App\Http\Controllers\BookingController;
 
 class BusinessOwnerController extends Controller
 {
@@ -51,7 +53,7 @@ class BusinessOwnerController extends Controller
         //If no business owner exists, show the business owner registration page
         else 
         {
-            return view('admin.register', compact('business'));
+            return view('admin.register', ['business' => $this->business]);
         }
     }
 
@@ -76,20 +78,17 @@ class BusinessOwnerController extends Controller
         //If no business owner exists, show the business owner registration page
         else 
         {
-            return view('admin.register', compact('business'));
+            return view('admin.register', ['business' => $this->business]);
         }
     }
 
     public function employees() 
     {
-        // Get first record of business owner
-        $business = BusinessOwner::first();
-
         //If a business owner exists, and you are logged in as the business owner,
         //show the business owner page
         if (BusinessOwner::first() && $this->guard()->check()) 
         {
-            return view('admin.employees', compact('business'));
+            return view('admin.employees', ['business' => $this->business]);
         }
         //If a business owner exists, but you are not loggined in as the bussiness
         //owner, then redirect to the login page
@@ -111,14 +110,12 @@ class BusinessOwnerController extends Controller
 
     public function history() 
     {
-        // Get first record of business owner
-        $business = BusinessOwner::first();
-
         //If a business owner exists, and you are logged in as the business owner,
         //show the business owner page
         if (BusinessOwner::first() && $this->guard()->check()) 
         {
-            return view('admin.history', compact('business'));
+            // Pass business and booking history data
+            return view('admin.history', ['business' => $this->business, 'history' => BookingController::history()]);
         }
         //If a business owner exists, but you are not loggined in as the bussiness
         //owner, then redirect to the login page
@@ -147,7 +144,7 @@ class BusinessOwnerController extends Controller
         //show the business owner page
         if (BusinessOwner::first() && $this->guard()->check()) 
         {
-            return view('admin.roster', compact('business'));
+            return view('admin.roster', ['business' => $this->business]);
         }
         //If a business owner exists, but you are not loggined in as the bussiness
         //owner, then redirect to the login page

@@ -50,8 +50,8 @@ $factory->define(Customer::class, function (Generator $faker) {
         'phone' => $faker->phoneNumber,
         'address' => $faker->streetAddress,
         'phone' => $faker->phoneNumber,
-        'created_at' => Carbon::now(),
-        'updated_at' => Carbon::now(),
+        'created_at' => Carbon::now('Australia/Melbourne')->toDateTimeString(),
+        'updated_at' => Carbon::now('Australia/Melbourne')->toDateTimeString(),
     ];
 });
 
@@ -85,8 +85,8 @@ $factory->define(Booking::class, function (Generator $faker) {
     $day = rand(0, 365);
 
      // Get the start of today
-    $startTime = Carbon::now()->startOfDay();
-    $endTime = Carbon::now()->startOfDay();
+    $startTime = Carbon::now('Australia/Melbourne')->startOfDay();
+    $endTime = Carbon::now('Australia/Melbourne')->startOfDay();
 
     // Set future or past booking by one year
     if (rand(0, 1) == 1) {

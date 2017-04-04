@@ -38,21 +38,49 @@ footer.dashboard {
 .main {
 	padding: 20px;
 
-	@include e("header") {
-		font-family: $secondary-font;
+	@include e('header') {
+		font-family: $font-secondary;
 		font-weight: 600;
 		margin-top: 0;
 		margin-bottom: $margin-base;
 		color: $gray-dark;
+
+		@include m('margin-top') {
+			margin-top: 40px;
+		}
 	}
 
-	@include e("table") {
+	@include e('table-wrapper') {
 		border-radius: $border-radius-large;
+		border: $main-table-border solid $gray-dark;
 		overflow: hidden;
+		margin-bottom: 40px;
+	}
 
+	@include e('table') {
 		th {
+			border-bottom: $main-table-border solid $gray-dark !important;
+			font-family: $font-primary;
 			font-size: 16px;
 			background-color: $gray-lightest;
+		}
+
+		th, td {
+			vertical-align: middle !important;
+		}
+
+		// .main table modifiers
+
+		@include m('left-solid') {
+			border-left: $main-table-border solid $gray-dark;
+		}
+
+		@include m('left-dotted') {
+			border-left: $main-table-border dotted $gray-lighter;
+		}
+
+		@include m('left-dashed') {
+			border-left: $main-table-border dashed $gray-lighter;
 		}
 	}
 }
@@ -62,6 +90,23 @@ footer.dashboard {
 }
 
 // Table
+
+.table {
+
+	// Table modifiers
+
+	@include m('id') {
+		max-width: 30px;
+	}
+
+	@include m('time') {
+		max-width: 40px;
+	}
+
+	@include m('date') {
+		max-width: 60px;
+	}
+}
 
 .table > thead > tr > th {
 	border-bottom: none;
@@ -76,7 +121,7 @@ footer.dashboard {
 
 .navbar-brand {
 	color: $white;
-	font-family: $primary-font;
+	font-family: $font-primary;
 	font-weight: 600;
 	font-size: 24px;
 }
@@ -110,7 +155,7 @@ footer.dashboard {
 
 .nav-sidebar a {
 	color: $gray-dark;
-	font-family: $secondary-font;
+	font-family: $font-secondary;
 	font-size: 18px;
 }
 

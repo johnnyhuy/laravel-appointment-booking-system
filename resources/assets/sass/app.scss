@@ -27,6 +27,14 @@ footer {
 	text-align: center;
 }
 
+.btn {
+	font-family: $font-secondary;
+
+	@include m('margin-top') {
+		margin-top: 20px;
+	}
+}
+
 .block {
 	background: white;
 	padding: $padding-base $padding-base 0 $padding-base;
@@ -50,7 +58,7 @@ footer {
 	th {
 		border-top: none !important;
 		border-bottom: 1px solid $border-color;
-		font-family: $secondary-font;
+		font-family: $font-secondary;
 		font-size: 18px;
 		text-align: center;
 		color: $gray-dark;
@@ -107,7 +115,7 @@ footer {
 	text-align: center;
 
 	@include e("title") {
-		font-family: $secondary-font;
+		font-family: $font-secondary;
 	}
 
 	@include e-hover("title") {

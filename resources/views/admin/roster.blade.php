@@ -4,7 +4,7 @@
 
 <div class="main__block">
 	<h1 class="main__header">Add Working Times</h1>
-	<h4 class="main_description">Add Business Hours for the next month</h4>
+	<h4 class="main__description">Add Business Hours for the next month</h4>
 	<form method="POST" action="/admin/roster">
 		{{ csrf_field() }}
 		@if ($flash = session('message'))
@@ -20,17 +20,15 @@
 			</div>
 		@endif
 		<label for="inputDate">Date</label>
-		<input name="date" type="date" id="inputDate" class="form-control request__input" placeholder="Date" value="{{old('date')}}" autofocus>
+		<input name="date" type="date" id="inputDate" class="form-control request__input" placeholder="Date" value="{{ old('date') }}" autofocus>
 		<label for="inputStartTime">Start Time</label>
-		<input name="start_time" type="time" id="inputStartTime" class="form-control request__input" placeholder="12:00" value="{{old('start_time')}}" autofocus>
+		<input name="start_time" type="time" id="inputStartTime" class="form-control request__input" placeholder="12:00" value="{{ old('start_time') }}" autofocus>
 		<label for="inputEndTime">End Time</label>
-		<input name="end_time" type="time" id="inputEndTime" class="form-control request__input" placeholder="12:00" value="{{old('end_time')}}" autofocus>
-		<br/>
-		<button class="btn btn-lg btn-primary btn-block" href="/admin/employees">Add Working Time</button>
+		<input name="end_time" type="time" id="inputEndTime" class="form-control request__input" placeholder="12:00" value="{{ old('end_time') }}" autofocus>
+		<button class="btn btn-lg btn-primary btn-block btn--margin-top" href="/admin/employees">Add Working Time</button>
 	</form>
-	<br/><br/>
-	<h1 class="main__header">Roster</h1>
-	<h4 class="main_description">Working hours for the next month</h4>
+	<h1 class="main__header main__header--margin-top">Roster</h1>
+	<h4 class="main__description">Working hours for the next month</h4>
 	<table class="table main__table">
         <tr>
         	<th>Day</th>
