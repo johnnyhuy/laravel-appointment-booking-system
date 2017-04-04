@@ -50,6 +50,12 @@ footer.dashboard {
 		}
 	}
 
+	@include e('info') {
+		font-size: 18px;
+		font-weight: bold;
+		color: $gray-dark;
+	}
+
 	@include e('table-wrapper') {
 		border-radius: $border-radius-large;
 		border: $main-table-border solid $gray-dark;
