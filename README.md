@@ -4,23 +4,28 @@ Major group assignment for COSC2299 Software Engineering: Process and Tools at R
 ## Team Members & Contributions
 For team members, please add more details to your role if needed.
 
-* **Johnny Huynh** S3604367 - **20%**
+* **Johnny Huynh** S3604367 - **25%**
   * Manage Trello board
   * Setup/manage live server
-* **Lachlan Porter** S3537901 - **20%**
+* **Lachlan Porter** S3537901 - **25%**
   * UI design
   * User stories
-* **Craig Barry** S3601725 - **20%**
+* **Craig Barry** S3601725 - **25%**
   * Unit testing
   * Database planning
-* **Jarry Chen** S3600396 - **20%**
+* **Jarry Chen** S3600396 - **25%**
   * User stories
   * Unit testing
+
+# Tutor & Product Manager
+**A Homy Ash** amirhomayoon.ashrafzadeh@rmit.edu.au
+
+**Tuesday 8:30 Tutorial** - 014.06.013
 
 # Development Environment
 To allow actual development on the project code. You must require a development environment for Laravel (PHP Framework) to function properly on your local device.
 
-## Requirments
+## Requirements
 
 * [Composer](https://getcomposer.org/download/) >= 1.4.1
 * [PHP](http://php.net/manual/en/intro-whatis.php) >= 5.6.4

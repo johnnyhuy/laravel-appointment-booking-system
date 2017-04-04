@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Booking;
 use Carbon\Carbon;
+use App\Http\controllers\BookingController;
 
 class BookingHistory extends TestCase
 {
@@ -18,19 +19,35 @@ class BookingHistory extends TestCase
     public function testOnlyShowPreviousBookings()
     {
         //a previous booking 
-    	$validBooking = factory(Booking::class)->create([
+    	$validBooking = factory(BookingController::class)->create([
             'booking_start_time' => Carbon::now()->subWeek()]);
 
         //a future booking (should not be displayed)
-        $invalidBooking = factory(Booking::class)->create([
+        $invalidBooking = factory(BookingController::class)->create([
             'booking_start_time' => Carbon::now()->addWeek()
             ]);
 
-        $history = Booking::getHistory();
+        $history = BookingController::getHistory();
 
         //check if the valid booking is contained but not the invalid one
         $this->assertContains($validBooking, $history);
         $this->assertNotContains($invalidBooking, $history);
+    }
+
+    public function testBookingsAreOrdered()
+    {
+        //earlier booking
+        $earlierBooking = factory(BookingController::class)->create([
+            'booking_start_time'=> Carbon::now()->subWeek(2)]);
+        //later booking
+        $laterBooking = factory(BookingController::class)->create([
+            'booking_start_time'=> Carbon::now()->subWeek()]);
+        
+        $history = BookingController::getHistory();
+
+        //check if the earlier booking is first
+        
+
     }
 
     public function testDontShowNowBookings()
@@ -38,10 +55,10 @@ class BookingHistory extends TestCase
         //this means if the booking is exactly now it should not be displayed
         //a form of boundry testing for the middle since startTime < now
 
-        $nowBooking = factory(Booking::class)->create([
+        $nowBooking = factory(BookingController::class)->create([
             'booking_start_time' => Carbon::now()]);
 
-        $history = Booking::getHistory();
+        $history = BookingController::getHistory();
 
         //check if this booking is displayed
         $this->assertContains($nowBooking, $history);
@@ -55,10 +72,10 @@ class BookingHistory extends TestCase
     public function testDisplayManyBookings()
     {
         //create a few bookings and make sure they are all being displayed
-        $booking = factory(Booking::class, 20)->create([
+        $booking = factory(BookingController::class, 20)->create([
             'booking_start_time' => Carbon::now()->subWeek()]);
 
-        $history = Booking::getHistory();
+        $history = BookingController::getHistory();
 
         //make sure they are all returned (since they should all be valid)
         $this->assertCount(20, $history);
