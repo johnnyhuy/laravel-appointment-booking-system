@@ -197,6 +197,6 @@ class BusinessOwnerController extends Controller
         auth()->login($businessOwner);
 
         //Redirect to the business owner admin page
-        return redirect('/');
+        return redirect('/admin');
     }
 }
