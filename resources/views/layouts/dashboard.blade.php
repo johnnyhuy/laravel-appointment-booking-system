@@ -43,8 +43,7 @@
 						$title = "";
 					}
 				@endphp
-				<a class="navbar-brand" href="#">{{ $business->business_name . $title }}: 
-				 </a>
+				<a class="navbar-brand" href="#">{{ $business->business_name . $title }}</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">

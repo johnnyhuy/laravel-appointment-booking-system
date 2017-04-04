@@ -21,13 +21,13 @@
 				 	$booking->booking_end_time = \Carbon\Carbon::now();
 				 	$booking->save();*/
 				 ?>
-				@foreach(DB::table('bookings')->whereDate('booking_start_time', '<', \Carbon\Carbon::now())->get() as $booking)
+				@foreach(App\Booking::whereDate('booking_start_time', '<', Carbon\Carbon::now())->get() as $booking)
 					<tr>
-						<td> {{	$booking->id }}</td>
-						<td> {{ $booking->customer_id }}</td>
-						<td>{{ date("H:i", strtotime($booking->booking_start_time))}}</td>
-						<td>{{ date("H:i", strtotime($booking->booking_end_time))}}</td>
-						<td>{{ \Carbon\Carbon::parse($booking->day)->toDateString() }}</td>
+						<td>{{ $booking->id }}</td>
+						<td>{{ $booking->customer_id }}</td>
+						<td>{{ Carbon\Carbon::parse($booking->booking_start_time)->format('h:i A') }}</td>
+						<td>{{ Carbon\Carbon::parse($booking->booking_end_time)->format('h:i A') }}</td>
+						<td>{{ Carbon\Carbon::parse($booking->booking_start_time)->toDateString() }}</td>
 					</tr>
 				@endforeach
 		    </table>
