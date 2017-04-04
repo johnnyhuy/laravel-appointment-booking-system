@@ -196,7 +196,7 @@ class CustomerRegisterTest extends DuskTestCase
                 ->press('Register')
                 ->assertSee('The firstname field is required.');
 
-            // If first name contains a ' symbol
+            // If first name is correct
             $browser->visit('/register')
                 ->type('firstname', 'John')
                 ->press('Register')
@@ -446,6 +446,25 @@ class CustomerRegisterTest extends DuskTestCase
                 ->type('address', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel gravida erat. In eleifend turpis et lacus laoreet aliquam et eu purus')
                 ->press('Register')
                 ->assertSee('The address may not be greater than 32 characters.');
+        });
+    }
+
+    /**
+     * Customer retains first name field after one redirect
+     *
+     * @return void
+     */
+    public function testCustomerFirstNameRetainsForOneRedirect()
+    {
+        $this->browse(function ($browser, $secondBrowser) {
+            $browser->visit('/register')
+                ->type('firstname', 'John')
+                ->press('Register')
+                ->assertInputValue('firstname', 'John');
+            $browser->visit('/register')
+                ->assertInputValueIsNot('firstname', 'John');
+            $secondBrowser->visit('/register')
+                ->assertInputValueIsNot('firstname', 'John');
         });
     }
 }

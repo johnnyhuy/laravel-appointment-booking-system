@@ -21,7 +21,20 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">{{ $business->business_name }}: Dashboard</a>
+				<a class="navbar-brand" href="#">{{ $business->business_name }}: 
+				<?php 
+				 $url = $_SERVER['REQUEST_URI'];
+				 $subtitle = substr ($url,7);
+				 if ($subtitle=="")
+				 {
+				 		echo "Dashboard";
+				 }
+				 else
+				 {
+				 		echo ucfirst ($subtitle);
+				 }
+				 ?>	
+				 </a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
@@ -35,10 +48,14 @@
 		<div class="row">
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
-					<li class="active"><a href="#">Bookings<span class="sr-only">(current)</span></a></li>
-					<li><a href="#">Employees</a></li>
-					<li><a href="#">Roster</a></li>
+					<li class="active"><a href="/admin">Summary<span class="sr-only">(current)</span></a></li>
+					<li><a href="/admin/history">History</a></li>
+					<li><a href="/admin/roster">Roster</a></li>
+					<li><a href="/admin/employees">Employees</a></li>
 				</ul>
+				<footer class="dashboard">
+					LCJJ Development Team
+				</footer>
 			</div>
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				@yield('content')
