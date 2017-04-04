@@ -34,6 +34,22 @@ class BookingHistory extends TestCase
         $this->assertNotContains($invalidBooking, $history);
     }
 
+    public function testBookingsAreOrdered()
+    {
+        //earlier booking
+        $earlierBooking = factory(BookingController::class)->create([
+            'booking_start_time'=> Carbon::now()->subWeek(2)]);
+        //later booking
+        $laterBooking = factory(BookingController::class)->create([
+            'booking_start_time'=> Carbon::now()->subWeek()]);
+        
+        $history = BookingController::getHistory();
+
+        //check if the earlier booking is first
+        
+
+    }
+
     public function testDontShowNowBookings()
     {
         //this means if the booking is exactly now it should not be displayed
