@@ -18,16 +18,16 @@ class CustomerTest extends TestCase
 
     protected $customerData;
 
-    protected function setUp() {
-        // When customer inputs data
-        $customer = factory(Customer::class)->make();
+    public function setUp() 
+    {
+        parent::setUp();
 
+        // Generate fakedata
+        $customer = factory(Customer::class)->make();
         $this->customerData = [
             'firstname' => $customer->firstname,
             'lastname' => $customer->lastname,
-            // Customer has same username as business owner
-            'username' => $businessOwner->username,
-            // Password is hard-coded since factory calls bcrypt()
+            'username' => $customer->username,
             'password' => 'secretpassword123',
             'password_confirmation' => 'secretpassword123',
             'phone' => $customer->phone,
@@ -45,6 +45,8 @@ class CustomerTest extends TestCase
         // Given business owner is created
         $businessOwner = factory(BusinessOwner::class)->create();
 
+        $this->customerData['username'] = $businessOwner->username;
+
         // and send request
         $response = $this->json('POST', '/register', $this->customerData);
 
@@ -61,12 +63,26 @@ class CustomerTest extends TestCase
      */
     public function testCustomerRegisterFirstNameValidation()
     {
-        // Send post request to /register with included customer input data
-        $response = $this->json('POST', '/register', $customerData);
+        // If user inputs nothing in the firstname field
+        $this->customerData = ['firstname' => ''];
 
-        $this->customerData->firstname = '';
+        // Send request
+        $response = $this->json('POST', '/register', $this->customerData);
 
         // Then respond with an error
-        $response->assertJson(['messages'], 'Customer must not have the same username as business owner username');
+        $response->assertJson([
+            'firstname' => ['The firstname field is required.']
+        ], 'Customer cannot enter nothing in firstname field.');
+
+        // Is user inputs special characters
+        $this->customerData = ['firstname' => 'John(@*^*!(&'];
+
+        // Send request
+        $response = $this->json('POST', '/register', $this->customerData);
+
+        // Then respond with an error
+        $response->assertJson([
+            'firstname' => ['The firstname format is invalid.']
+        ], 'Customer firstname field must be valid.');
     }
 }
