@@ -11,25 +11,37 @@
 |
 */
 
-//Customer handling
-Route::get('/', 'Auth\LoginController@index');
-Route::get('/login', 'Auth\LoginController@index');
-Route::get('/bookings', 'CustomerController@index');
-Route::get('/register', 'CustomerController@register')->middleware('guest');
-Route::get('/logout', 'Auth\LoginController@logout');
+Route::get('/', function() {
+	return redirect('/login');
+});
 
-//Customer form submission handling
-Route::post('/login', 'Auth\LoginController@login');
+// Customer handling
+
+// Session handling
+// GET
+Route::get('/login', 'Auth\SessionController@index')->name('login');
+Route::get('/logout', 'Auth\SessionController@logout');
+Route::get('/register', 'CustomerController@register');
+
+// POST
+Route::post('/login', 'Auth\SessionController@login');
 Route::post('/register', 'CustomerController@create');
 
-//Admin handling
+// Bookings
+Route::get('/bookings', 'BookingController@index');
+
+
+// Admin handling
+
+// Dashboard views
 Route::get('/admin', 'AdminController@index');
+Route::get('/admin/register', 'BusinessOwnerController@register');
 Route::get('/admin/summary', 'AdminController@summary');
-Route::get('/admin/employees/', 'AdminController@employees');
-Route::get('/admin/history/', 'AdminController@history');
+Route::get('/admin/employees', 'AdminController@employees');
+Route::get('/admin/history', 'AdminController@history');
 Route::get('/admin/roster', 'AdminController@roster');
 
-//Admin form submission handling
+// Admin form submission handling
 Route::post('/admin/register', 'BusinessOwnerController@create');
 Route::post('/admin/employees', 'EmployeeController@create');
 Route::post('/admin/roster', 'WorkingTimeController@create');
