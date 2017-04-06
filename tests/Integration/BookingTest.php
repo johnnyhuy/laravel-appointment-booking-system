@@ -10,7 +10,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Customer;
 use App\BusinessOwner;
 use App\Booking;
-use App\Http\Controllers\BookingController;
 use Carbon\Carbon;
 
 class BookingTest extends TestCase
@@ -75,88 +74,213 @@ class BookingTest extends TestCase
         $this->assertEquals(4, $count);
     }
 
-    public function testOnlyShowPreviousBookings()
+    /**
+     * Display only history bookings
+     *
+     * @return void
+     */
+    public function testOnlyShowHistoryBookings()
     {
         // a previous booking 
         $validBooking = factory(Booking::class)->create([
-            'booking_start_time' => Carbon::now('Australia/Melbourne')
+            'date' => Carbon::now('Australia/Melbourne')
                 ->subWeek()
-                ->toDateTimeString()
+                ->toDateString()
         ]);
 
         // a future booking (should not be displayed)
         $invalidBooking = factory(Booking::class)->create([
-            'booking_start_time' => Carbon::now('Australia/Melbourne')
+            'date' => Carbon::now('Australia/Melbourne')
                 ->addWeek()
-                ->toDateTimeString()
+                ->toDateString()
         ]);
 
-        $history = BookingController::history();
+        // Use a static function to get history bookings
+        $history = Booking::allHistory();
 
         // check if the valid booking is contained but not the invalid one
-        $this->assertTrue($history->contains('booking_start_time', $validBooking->booking_start_time));
-        $this->assertFalse($history->contains('booking_start_time', $invalidBooking->booking_start_time));
+        $this->assertTrue($history->contains('date', $validBooking->date));
+        $this->assertFalse($history->contains('date', $invalidBooking->date));
     }
 
-    public function testBookingsAreOrdered()
+    /**
+     * Test to see if history bookings are ordered
+     *
+     * @return void
+     */
+    public function testHistoryBookingsAreOrdered()
     {
         // earlier booking
         $earlierBooking = factory(Booking::class)->create([
-            'booking_start_time' => Carbon::now('Australia/Melbourne')->subWeek()->toDateTimeString()
+            'date' => Carbon::now('Australia/Melbourne')->subWeek()->toDateString()
         ]);
 
         // later booking by 2 weeks
         $laterBooking = factory(Booking::class)->create([
-            'booking_start_time' => Carbon::now('Australia/Melbourne')->subWeek(2)->toDateTimeString()
+            'date' => Carbon::now('Australia/Melbourne')->subWeek(2)->toDateString()
         ]);
         
-        $history = BookingController::history();
+        // Use a static function to get history bookings
+        $history = Booking::allHistory();
 
         // check if the earlier booking is first
-        $this->assertEquals($history->first()->booking_start_time, $earlierBooking->booking_start_time);
-        $this->assertNotEquals($history->first()->booking_start_time, $laterBooking->booking_start_time);
+        $this->assertEquals($history->first()->date, $earlierBooking->date);
+        $this->assertNotEquals($history->first()->date, $laterBooking->date);
     }
 
-    public function testDontShowNowBookings()
+    /**
+     * Do not show booking that starts now in history bookings
+     *
+     * @return void
+     */
+    public function testDontShowNowHistoryBookings()
     {
         // this means if the booking is exactly now it should not be displayed
         // a form of boundry testing for the middle since startTime < now
 
         $nowBooking = factory(Booking::class)->create([
-            'booking_start_time' => Carbon::now('Australia/Melbourne')->toDateTimeString()
+            'date' => Carbon::now('Australia/Melbourne')->toDateString()
         ]);
 
-        $history = BookingController::history();
+        // Use a static function to get history bookings
+        $history = Booking::allHistory();
 
         // check if this booking is displayed, assuming it must return false
-        $this->assertFalse($history->contains('booking_start_time', $nowBooking->booking_start_time));
+        $this->assertFalse($history->contains('date', $nowBooking->date));
     }
 
-    /*
-        Tests we need to fill the arbitrary 6 test quota
-    */
-
-
-    public function testDisplayManyBookings()
+    /**
+     * Display many history of bookings
+     *
+     * @return void
+     */
+    public function testDisplayManyHistoryBookings()
     {
         //create a few bookings and make sure they are all being displayed
         $booking = factory(Booking::class, 20)->create([
-            'booking_start_time' => Carbon::now('Australia/Melbourne')->subWeek()->toDateTimeString()
+            'date' => Carbon::now('Australia/Melbourne')->subWeek()->toDateString()
         ]);
 
-        $history = BookingController::history();
+        // Use a static function to get history bookings
+        $history = Booking::allHistory();
 
         //make sure they are all returned (since they should all be valid)
         $this->assertCount(20, $history);
     }
 
     /**
-     * Sort future bookings by ascending order by booking start time
+     * Display only latest bookings
      *
      * @return void
      */
-    // public function testSortFutureBookingsByAscendingOrder()
-    // {
+    public function testOnlyShowLastestBookings()
+    {
+        // a previous booking 
+        $validBooking = factory(Booking::class)->create([
+            'date' => Carbon::now('Australia/Melbourne')
+                ->addWeek()
+                ->toDateString()
+        ]);
 
-    // }
+        // a future booking (should not be displayed)
+        $invalidBooking = factory(Booking::class)->create([
+            'date' => Carbon::now('Australia/Melbourne')
+                ->subWeek()
+                ->toDateString()
+        ]);
+
+        // Use a static function to get latest bookings
+        $latest = Booking::allLatest();
+
+        // check if the valid booking is contained but not the invalid one
+        $this->assertTrue($latest->contains('date', $validBooking->date));
+        $this->assertFalse($latest->contains('date', $invalidBooking->date));
+    }
+
+    /**
+     * Test to see if latest bookings are ordered
+     *
+     * @return void
+     */
+    public function testLatestBookingsAreOrdered()
+    {
+        // earlier booking
+        $earlierBooking = factory(Booking::class)->create([
+            'date' => Carbon::now('Australia/Melbourne')->addWeek(1)->toDateString()
+        ]);
+
+        // later booking by 2 weeks
+        $laterBooking = factory(Booking::class)->create([
+            'date' => Carbon::now('Australia/Melbourne')->addWeeks(2)->toDateString()
+        ]);
+        
+        // Use a static function to get latest bookings
+        $latest = Booking::allLatest();
+
+        // check if the earlier booking is first
+        $this->assertEquals($latest->first()->date, $earlierBooking->date);
+        $this->assertNotEquals($latest->first()->date, $laterBooking->date);
+    }
+
+    /**
+     * Do not show booking that starts now in latest bookings
+     *
+     * @return void
+     */
+    public function testDontShowNowLatestBookings()
+    {
+        // Create a booking that starts now
+        $nowBooking = factory(Booking::class)->create([
+            'date' => Carbon::now('Australia/Melbourne')->toDateString()
+        ]);
+
+        // Use a static function to get latest bookings
+        $latest = Booking::allLatest();
+
+        // check if this booking is displayed, assuming it must return false
+        $this->assertFalse($latest->contains('date', $nowBooking->date));
+    }
+
+    /**
+     * Display many latest bookings
+     *
+     * @return void
+     */
+    public function testDisplayManyLatestBookings()
+    {
+        // create a few bookings and make sure they are all being displayed
+        $booking = factory(Booking::class, 20)->create([
+            'date' => Carbon::now('Australia/Melbourne')->addWeek()->toDateString()
+        ]);
+
+        // Use a static function to get latest bookings
+        $latest = Booking::allLatest();
+
+        // make sure they are all returned (since they should all be valid)
+        $this->assertCount(20, $latest);
+    }
+
+    /**
+     * Display latest bookings with a given maximum 7 days
+     *
+     * @return void
+     */
+    public function testDisplayMaxSevenDaysOfLatestBookings()
+    {
+        // Create a valid booking for the next day
+        $validBooking = factory(Booking::class)->create([
+            'date' => Carbon::now('Australia/Melbourne')->addDay()->toDateString()
+        ]);
+
+        // Create an invalid booking for the next week
+        $invalidBooking = factory(Booking::class)->create([
+            'date' => Carbon::now('Australia/Melbourne')->addWeek()->addDay()->toDateString()
+        ]);
+
+        // Call relative time parameter to get all bookings of this week
+        $latest = Booking::allLatest('+7 days');
+
+        // Count 1 valid booking
+        $this->assertCount(1, $latest);
+    }
 }

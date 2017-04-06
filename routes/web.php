@@ -23,12 +23,13 @@ Route::post('/login', 'Auth\LoginController@login');
 Route::post('/register', 'CustomerController@create');
 
 //Admin handling
-Route::get('/admin', 'BusinessOwnerController@index');
-Route::get('/admin/summary', 'BusinessOwnerController@summary');
-Route::get('/admin/employees/', 'BusinessOwnerController@employees');
-Route::get('/admin/history/', 'BusinessOwnerController@history');
-Route::get('/admin/roster', 'BusinessOwnerController@roster');
+Route::get('/admin', 'AdminController@index');
+Route::get('/admin/summary', 'AdminController@summary');
+Route::get('/admin/employees/', 'AdminController@employees');
+Route::get('/admin/history/', 'AdminController@history');
+Route::get('/admin/roster', 'AdminController@roster');
+
 //Admin form submission handling
 Route::post('/admin/register', 'BusinessOwnerController@create');
 Route::post('/admin/employees', 'EmployeeController@create');
-Route::post('/admin/roster', 'WorkingHoursController@create');
+Route::post('/admin/roster', 'WorkingTimeController@create');

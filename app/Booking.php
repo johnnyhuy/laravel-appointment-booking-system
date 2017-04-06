@@ -17,10 +17,46 @@ class Booking extends Model
 	 */
 	public function duration()
 	{
-		$startTime = Carbon::parse($this->attributes['booking_start_time']);
-		$endTime = Carbon::parse($this->attributes['booking_end_time']);
+		$startTime = Carbon::parse($this->attributes['start_time']);
+		$endTime = Carbon::parse($this->attributes['end_time']);
 		
 		return $startTime->diffInSeconds($endTime);
+	}
+
+	/**
+	 *
+	 * Show all history of bookings
+	 *
+	 */
+	public static function allHistory() {
+		// Return past bookings eloquent model
+		return Booking::where('date', '<', Carbon::now()->subDay())		
+			// Get eloquent model
+			->get()
+			// Sort by start time using an eloquent collection function
+			->sortByDESC('date');
+	}
+
+	/**
+	 *
+	 * Show all latest of bookings
+	 *
+	 */
+	public static function allLatest($max = null) {
+		$startDay = Carbon::now()->addDay();
+		$booking = Booking::where('date', '>', $startDay);
+
+		if (isset($max)) {
+			$max = Carbon::parse($max);
+			$booking = Booking::whereBetween('date', [$startDay->toDateString(), $max->toDateString()]);
+		}
+
+		// Return latest bookings eloquent model
+		return $booking
+			// Get eloquent model
+			->get()
+			// Sort by start time using an eloquent collection function
+			->sortBy('date');
 	}
 
 	/**

@@ -2,16 +2,16 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:700|Raleway:300,400,600');
 
 // Variables
-@import "variables";
+@import 'variables';
 
 // Mixins
-@import "mixins";
+@import 'mixins';
 
 // Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import 'node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
-@import "dashboard";
-@import "customer_bookings";
+@import 'dashboard';
+@import 'customer_bookings';
 
 body {
 	background-color: $body-bg;
@@ -41,7 +41,7 @@ footer {
 	border: 1px solid $border-color;
 	border-radius: 5px;
 
-	@include m("no-padding") {
+	@include m('no-padding') {
 		padding: 0px !important;
 	}
 }
@@ -56,7 +56,6 @@ footer {
 
 .table {
 	th {
-		border-top: none !important;
 		border-bottom: 1px solid $border-color;
 		font-family: $font-secondary;
 		font-size: 18px;
@@ -65,7 +64,6 @@ footer {
 	}
 
 	td {
-		border-top: none !important;
 		text-align: center;
 		font-size: 16px;
 		color: $gray;
@@ -73,6 +71,18 @@ footer {
 
 	@include m('no-margin') {
 		margin: 0 !important;
+	}
+
+	@include m('left-solid') {
+		border-left: $dash-table-border solid $dash-table-color;
+	}
+
+	@include m('left-dotted') {
+		border-left: $dash-table-border dotted $gray-lighter;
+	}
+
+	@include m('left-dashed') {
+		border-left: $dash-table-border dashed $gray-lighter;
 	}
 }
 
@@ -98,39 +108,61 @@ footer {
 .request {
 	margin-bottom: $margin-large;
 
-	@include e("input") {
+	@include e('input') {
 		margin-bottom: $margin-base;
 	}
 
-	@include e("button") {
+	@include e('button') {
 		margin-bottom: $margin-base;
+
+		@include m('dropdown') {
+			width: 100%;
+			background-color: $white;
+			border: 1px solid $input-border;
+		}
 	}
 
-	@include e("validate") {
+	@include e('validate') {
 		color: $gray-lighter;
+	}
+
+	@include e('flex-container') {
+		display: flex;
+	}
+
+	@include e('flex') {
+		flex: 1 1 100px;
+
+		@include m('left') {
+			margin-right: $margin-base;
+		}
+
+		@include m('right') {
+			margin-left: $margin-base;
+		}
 	}
 }
 
 .header {
 	text-align: center;
 
-	@include e("title") {
+	@include e('title') {
 		font-family: $font-secondary;
 	}
 
-	@include e-hover("title") {
+	@include e-hover('title') {
 		text-decoration: none;
 	}
 
-	@include e-visited("title") {
+	@include e-visited('title') {
 		text-decoration: none;
 	}
 
-	@include e-focus("title") {
+	@include e-focus('title') {
 		text-decoration: none;
 	}
 
-	@include e("subtitle") {
+	@include e('subtitle') {
 		margin-top: 0px;
 		margin-bottom: $margin-x-large;
 		color: $gray-light;
