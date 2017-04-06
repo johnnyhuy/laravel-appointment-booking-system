@@ -14,21 +14,6 @@ class EmployeeTest extends TestCase
     // Rollback database actions once test is complete with this trait
     use DatabaseTransactions;
 
-
-    public function setUp() 
-    {
-        parent::setUp();
-
-        // Generate fakedata
-        $employee = factory(Employee::class)->make();
-        $this->employeeData = [
-            'title' => $employee->title,
-            'firstname' => $employee->firstname,
-            'lastname' => $employee->lastname,
-            'phone' => $employee->phone,
-        ];
-    }
-
     /**
      * Tests validation rules for title field when adding a new employee
      *
@@ -37,26 +22,30 @@ class EmployeeTest extends TestCase
     public function testAddEmployeeTitleValidation()
     {
         // If user inputs nothing in the firstname field
-        $this->employeeData = ['title' => ''];
+        $employeeData = [
+            'title' => ''
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'title' => ['The title field is required.']
+        $response->assertJsonFragment([
+            'The title field is required.'
         ]);
 
 
-         // Is user inputs special characters
-        $this->employeeData = ['title' => 'Smith(@*^*!(&'];
+        // Is user inputs special characters
+        $employeeData = [
+            'title' => 'Smith(@*^*!(&'
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'title' => ['The title format is invalid.']
+        $response->assertJsonFragment([
+            'The title format is invalid.'
         ]);
     }
 
@@ -68,26 +57,30 @@ class EmployeeTest extends TestCase
     public function testAddEmployeeFirstnameValidation()
     {
         // If user inputs nothing in the firstname field
-        $this->employeeData = ['firstname' => ''];
+        $employeeData = [
+            'firstname' => ''
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'firstname' => ['The firstname field is required.']
+        $response->assertJsonFragment([
+            'The firstname field is required.'
         ]);
 
 
-         // Is user inputs special characters
-        $this->employeeData = ['firstname' => 'Smith(@*^*!(&'];
+        // Is user inputs special characters
+        $employeeData = [
+            'firstname' => 'Smith(@*^*!(&'
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'firstname' => ['The firstname format is invalid.']
+        $response->assertJsonFragment([
+            'The firstname format is invalid.'
         ]);
     }
 
@@ -99,26 +92,30 @@ class EmployeeTest extends TestCase
     public function testAddEmployeeLastnameValidation()
     {
         // If user inputs nothing in the lastname field
-        $this->employeeData = ['lastname' => ''];
+        $employeeData = [
+            'lastname' => ''
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'lastname' => ['The lastname field is required.']
+        $response->assertJsonFragment([
+            'The lastname field is required.'
         ]);
 
 
          // Is user inputs special characters
-        $this->employeeData = ['lastname' => 'Smith(@*^*!(&'];
+        $employeeData = [
+            'lastname' => 'Smith(@*^*!(&'
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'lastname' => ['The lastname format is invalid.']
+        $response->assertJsonFragment([
+            'The lastname format is invalid.'
         ]);
     }
 
@@ -130,52 +127,58 @@ class EmployeeTest extends TestCase
     public function testAddEmployeePhoneValidation()
     {
         // If user inputs nothing in the phone field
-        $this->employeeData = ['phone' => ''];
+        $employeeData = [
+            'phone' => ''
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'phone' => ['The phone field is required.']
+        $response->assertJsonFragment([
+            'The phone field is required.'
         ]);
 
 
         // If user inputs less than 10 characters
-        $this->employeeData = ['phone' => '12345'];
+        $employeeData = [
+            'phone' => '12345'
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'phone' => ['The phone must be at least 10 characters.']
+        $response->assertJsonFragment([
+            'The phone must be at least 10 characters.'
         ]);
 
 
         // If user inputs alphabetical characters
-        $this->employeeData = ['phone' => 'abcdefghijk'];
+        $employeeData = [
+            'phone' => 'abcdefghijk'
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'phone' => ['The phone format is invalid.']
+        $response->assertJsonFragment([
+            'The phone format is invalid.'
         ]);
 
 
         // If user invalid characters
-        $this->employeeData = ['phone' => '04%^&!123456'];
+        $employeeData = [
+            'phone' => '04%^&!123456'
+        ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $this->employeeData);
+        $response = $this->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
-        $response->assertJson([
-            'phone' => ['The phone format is invalid.']
+        $response->assertJsonFragment([
+            'The phone format is invalid.'
         ]);
-
-
     }
 }
