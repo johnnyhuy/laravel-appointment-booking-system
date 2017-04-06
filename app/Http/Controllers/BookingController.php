@@ -10,6 +10,11 @@ use Carbon\Carbon;
 
 class BookingController extends Controller
 {
+	public function __construct() {
+		// Check auth, if not auth then redirect to login
+        $this->middleware('auth:web_user');
+    }
+
 	/**
 	 *
 	 * View index og customer bookings

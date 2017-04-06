@@ -12,17 +12,19 @@ use App\Booking;
 
 class BusinessOwnerController extends Controller
 {
-    //Returns the guard object for a business owner authentication
-    protected static function guard()
-    {
-        return Auth::guard('web_admin');
+    public function __construct() {
+        // Check if guest then stay, else redirect
+        $this->middleware('guest:web_admin');
+        $this->middleware('guest:web_user');
     }
+    
+    public function register() {
+        // Redirect to /admin if business exists
+        if (BusinessOwner::first() and Auth::guard('web_admin')) {
+            return redirect('/admin');
+        }
 
-    //Returns true if form information is correct to log into business owner account
-    public static function login() 
-    {
-        //Attempt to login as the business owner
-        return BusinessOwnerController::guard()->attempt(request(['username', 'password']));
+        return view('admin.register');
     }
 
     //Register's a business owner

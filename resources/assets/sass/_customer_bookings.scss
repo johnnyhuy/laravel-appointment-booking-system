@@ -1,4 +1,9 @@
 .customer_bookings {
+	th {
+		border-top: none !important;
+		background-color: $gray-lightest;
+	}
+
 	@include e("left-solid") {
 		border-right: 1px solid $border-color;
 	}

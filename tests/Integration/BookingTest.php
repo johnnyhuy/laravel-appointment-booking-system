@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Customer;
 use App\BusinessOwner;
 use App\Booking;
+
 use Carbon\Carbon;
 
 class BookingTest extends TestCase
