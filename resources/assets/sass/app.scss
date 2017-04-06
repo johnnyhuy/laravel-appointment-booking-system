@@ -68,6 +68,8 @@ footer {
 		font-size: 16px;
 		color: $gray;
 	}
+	
+	// General modifiers
 
 	@include m('no-margin') {
 		margin: 0 !important;
@@ -84,6 +86,29 @@ footer {
 	@include m('left-dashed') {
 		border-left: $dash-table-border dashed $gray-lighter;
 	}
+
+	// Field specific modifiers
+
+	@include m('id') {
+		max-width: 40px;
+		min-width: 25px;
+	}
+
+	@include m('time') {
+		max-width: 30px;
+	}
+
+	@include m('name') {
+		min-width: 100px;
+	}
+
+	@include m('date') {
+		max-width: 40px;
+	}
+}
+
+.table > thead > tr > th {
+	border-bottom: none;
 }
 
 .user {
@@ -109,7 +134,7 @@ footer {
 	margin-bottom: $margin-large;
 
 	@include e('input') {
-		margin-bottom: $margin-base;
+		margin-bottom: 0;
 	}
 
 	@include e('button') {

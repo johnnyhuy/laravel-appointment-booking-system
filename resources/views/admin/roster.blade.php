@@ -19,13 +19,15 @@
 				@endforeach
 			</div>
 		@endif
-		<label for="inputEmployee">Employee <span class="request__validate">(ID - Full Name)</span></label>
-		<select name="employee_id" id="inputEmployee" class="form-control request__input">
-			@foreach (App\Employee::all() as $employee)
-				<option value="{{ $employee->id }}">{{ $employee->id . ' - ' . $employee->firstname . ' ' . $employee->lastname }}</option>
-			@endforeach
-		</select>
-		<div class="request__flex-container">
+		<div class="form-group">
+			<label for="inputEmployee">Employee <span class="request__validate">(ID - Title - Full Name)</span></label>
+			<select name="employee_id" id="inputEmployee" class="form-control request__input">
+				@foreach (App\Employee::all()->sortby('title') as $employee)
+					<option value="{{ $employee->id }}">{{ $employee->id . ' - ' . $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname }}</option>
+				@endforeach
+			</select>
+		</div>
+		<div class="form-group request__flex-container">
 			<div class="request__flex request__flex--left">
 				<label for="inputStartTime">Start Time <span class="request__validate">(hh:mm AM/PM)</span></label>
 				<input name="start_time" type="time" id="inputStartTime" class="form-control request__input" value="{{ old('start_time') ? old('start_time') : '09:00' }}" autofocus>
@@ -35,7 +37,7 @@
 				<input name="end_time" type="time" id="inputEndTime" class="form-control request__input" value="{{ old('end_time') ? old('end_time') : '17:00' }}" autofocus>
 			</div>
 		</div>
-		<div class="request__flex-container">
+		<div class="form-group request__flex-container">
 			<div class="request__flex request__flex--left">
 				<label for="inputDay">Day <span class="request__validate">(Monday, Tuesday etc.)</span></label>
 				<select name="day" id="inputDay" class="form-control request__input">
@@ -64,9 +66,9 @@
 <div class="dash__block">
 	<h1 class="dash__header dash__header--margin-top">Roster</h1>
 	<h4 class="dash__description">Working hours for the next month</h4>
-	<h2>{{ Carbon\Carbon::now()->addMonth()->format('M') }}</h2>
+	<h1>{{ Carbon\Carbon::now()->addMonth()->format('M Y') }}</h1>
 	<div class="table-responsive dash__table-wrapper">
-		<table class="table table--no-margin calender">
+		<table class="table table--no-margin dash__table calender">
 	        <tr>
 	        	<th class="calender__week">Week</th>
 				<th class="calender__day">Monday</th>
@@ -83,15 +85,17 @@
 					@for ($days = 0; $days < 7; $days++)
 						<td class="calender__day calender__day--block">
 							<div class="calender__day-label">{{ Carbon\Carbon::now()->addMonth()->startOfMonth()->startOfWeek()->addDays($days)->addWeeks($weeks)->format('d') }}</div>
-							@foreach ($roster as $workingTime)
-								@if ($workingTime->date == Carbon\Carbon::now()->addMonth()->startOfMonth()->startOfWeek()->addDays($days)->addWeeks($weeks)->toDateString())
-									<div class="working-time">
-										<div class="working-time__block">
-											{{$workingTime->date}}
-										</div>
-									</div>
-								@endif
-							@endforeach
+							<div class="working-time">
+								@foreach ($roster as $workingTime)
+									@if ($workingTime->date == Carbon\Carbon::now()->addMonth()->startOfMonth()->startOfWeek()->addDays($days)->addWeeks($weeks)->toDateString())
+										<section class="working-time__block">
+											<div class="working-time__name">{{ $workingTime->employee->firstname . ' ' . $workingTime->employee->lastname }}</div>
+											<div class="working-time__title">{{ $workingTime->employee->title }}</div>
+											<div class="working-time__time">{{ Carbon\Carbon::parse($workingTime->start_time)->format('h:i A') . ' - ' . Carbon\Carbon::parse($workingTime->end_time)->format('h:i A') }}</div>
+										</section>
+									@endif
+								@endforeach
+							</div>
 						</td>
 					@endfor
 				</tr>

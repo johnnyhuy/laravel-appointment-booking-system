@@ -20,6 +20,7 @@ class CreateWorkingTimesTable extends Migration
             $table->time('end_time');
             $table->date('date');
             $table->timestamps();
+            $table->unique(['employee_id', 'date']);
         });
     }
 

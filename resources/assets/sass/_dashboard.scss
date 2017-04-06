@@ -69,7 +69,8 @@ footer.dashboard {
 	}
 
 	@include e('day') {
-		min-width: 150px;	
+		min-width: 150px;
+
 		@include m('block') {
 			position: relative;
 			border-left: 1px solid $gray-lighter;
@@ -81,7 +82,29 @@ footer.dashboard {
 	@include e('day-label') {
 		position: absolute;
 		top: 6px;
-		right: 10px;	
+		right: 10px;
+		color: $gray-lighter;
+	}
+
+	// Working time
+
+	.working-time {
+		text-align: left;
+
+		@include e('block') {
+			margin-right: 25px;
+			padding: 5px;
+			background-color: $brand-primary;
+			border-radius: $border-radius-large;
+			color: $white;
+			margin-bottom: $margin-base;
+		}
+
+		@include e('name') {
+			font-family: $font-primary;
+			font-weight: bold;
+			font-size: 18px;
+		}
 	}
 }
 
@@ -117,39 +140,13 @@ footer.dashboard {
 
 	@include e('table') {
 		th {
+			border-top: none !important;
 			border-bottom: $dash-table-border solid $dash-table-color !important;
 			font-family: $font-primary;
 			font-size: 16px;
 			background-color: $gray-lightest;
 		}
-
-		th, td {
-			vertical-align: middle !important;
-		}
 	}
-}
-
-// Table
-
-.table {
-
-	// Table modifiers
-
-	@include m('id') {
-		max-width: 30px;
-	}
-
-	@include m('time') {
-		max-width: 40px;
-	}
-
-	@include m('date') {
-		max-width: 60px;
-	}
-}
-
-.table > thead > tr > th {
-	border-bottom: none;
 }
 
 // Navbar

@@ -28,7 +28,11 @@ class WorkingTime extends Model
     		// Add a day to capture last day of week
     		->addDay();
 
-    	return WorkingTime::whereBetween('date', [$startDate, $endDate])->get();
+    	return WorkingTime::whereBetween('date', [$startDate, $endDate])
+    		// Get eloquent model
+    		->get()
+    		// Sort by start time of working time
+    		->sortBy('start_time');
     }
 
     /**
