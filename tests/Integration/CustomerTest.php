@@ -123,6 +123,11 @@ class CustomerTest extends TestCase
 
     }
 
+    /**
+     * Test customer register last name validation
+     *
+     * @return void
+     */
     public function testCustomerRegisterLastNameValidation()
     {
         // If user inputs nothing in the firstname field
@@ -200,6 +205,11 @@ class CustomerTest extends TestCase
         ]);
     }
 
+    /**
+     * Test customer register username validation
+     *
+     * @return void
+     */
     public function testCustomerRegisterUsernameValidation()
     {
         // If user inputs nothing in the firstname field
@@ -247,6 +257,11 @@ class CustomerTest extends TestCase
         ]);
      }
 
+    /**
+     * Test customer register password validation
+     *
+     * @return void
+     */
     public function testCustomerRegisterPasswordValidation()
     {
         // If user inputs nothing in the password field
@@ -296,6 +311,11 @@ class CustomerTest extends TestCase
         ]);
      }
 
+    /**
+     * Test customer register phone validation
+     *
+     * @return void
+     */
     public function testCustomerRegisterPhoneValidation()
     {
         // If user inputs nothing in the firstname field
@@ -358,8 +378,13 @@ class CustomerTest extends TestCase
         ]);
      }
 
-     public function testCustomerRegisterAddressValidation()
-     {
+     /**
+     * Test customer register address validation
+     *
+     * @return void
+     */
+    public function testCustomerRegisterAddressValidation()
+    {
         // If user inputs nothing in the firstname field
         // Create customer data
         $customerData = [
