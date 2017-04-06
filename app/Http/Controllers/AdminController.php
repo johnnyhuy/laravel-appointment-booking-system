@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\BusinessOwner;
 use App\Booking;
+use App\Employee;
 use App\WorkingTime;
 
 class AdminController extends Controller
@@ -81,7 +82,7 @@ class AdminController extends Controller
         //show the business owner page
         if (BusinessOwner::first() && $this->guard()->check()) 
         {
-            return view('admin.employees', ['business' => $this->business]);
+            return view('admin.employees', ['business' => $this->business, 'employees' => Employee::all()->sortBy('firstname')->sortBy('lastname')]);
         }
         //If a business owner exists, but you are not loggined in as the bussiness
         //owner, then redirect to the login page

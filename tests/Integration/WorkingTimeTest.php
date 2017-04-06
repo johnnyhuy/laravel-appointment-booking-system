@@ -268,6 +268,40 @@ class WorkingTimeTest extends TestCase
     }
 
     /**
+     * Get the roster and test if roster is sorted by start time of each working time
+     *
+     * @return void
+     */
+    public function testGetRosterIsSortedByStartTime() {
+        // Create a working time at the start of the month
+        // and add two hours
+        $laterWorkingTime = factory(WorkingTime::class)->create([
+            'start_time' => Carbon::now()
+                ->addHours(2)
+                ->toTimeString(),
+            'date' => Carbon::now()
+                ->addMonth()
+                ->startOfMonth()
+                ->toDateString(),
+        ]);
+
+        // Create a working time at the start of the month
+        // and add one hour
+        $earlierWorkingTime = factory(WorkingTime::class)->create([
+            'start_time' => Carbon::now()
+                ->addHour()
+                ->toTimeString(),
+            'date' => Carbon::now()
+                ->addMonth()
+                ->startOfMonth()
+                ->toDateString(),
+        ]);
+
+        // Check get roster first object returns the earlier working time
+        $this->assertEquals(WorkingTime::getRoster()->first()->start_time, $earlierWorkingTime->start_time);
+    }
+
+    /**
      * Get the roster of working times for next month
      *
      * @return void
@@ -291,5 +325,62 @@ class WorkingTimeTest extends TestCase
 
         // Assert that all 20 working times is shown
         $this->assertEquals(2, count(WorkingTime::getRoster()));
+    }
+
+    /**
+     * Employee can only have one booking per day
+     *
+     * @return void
+     */
+    public function testEmployeeCanOnlyHaveOneWorkingTimePerDay() {
+        // Create a working time
+        // Two hour shift 1:00PM - 3:00PM
+        // Date is within next month from today
+        $workingTime = factory(WorkingTime::class)->create([
+            'start_time' => Carbon::now()
+                ->startOfDay()
+                ->addHours(13)
+                // Format time to 24 hour HH:MM
+                ->format('H:i'),
+            'end_time' => Carbon::now()
+                ->startOfDay()
+                ->addHours(15)
+                // Format time to 24 hour HH:MM
+                ->format('H:i'),
+            'date' => Carbon::now()
+                ->addMonth()
+                ->toDateString(),
+        ]);
+
+        // Send a POST request to /admin/roster with working time data
+        // Assign to the same employee
+        // Two hour shift 1:00PM - 3:00PM
+        // Use the same working time date as the factory
+        $response = $this->json('POST', '/admin/roster', [
+            'employee_id' => $workingTime->employee->id,
+            'start_time' => Carbon::now()
+                ->startOfDay()
+                ->addHours(13)
+                // Format time to 24 hour HH:MM
+                ->format('H:i'),
+            'end_time' => Carbon::now()
+                ->startOfDay()
+                ->addHours(15)
+                // Format time to 24 hour HH:MM
+                ->format('H:i'),
+            'date' => $workingTime->date,
+        ]);
+
+        // Find in JSON response for error
+        $response->assertJsonFragment([
+            'Employee can only have one working time per day.'
+        ]);
+
+        // If session message exists, then fail
+        // Message in session is the success message shown after adding a working time
+        $response->assertSessionMissing('message');
+
+        // There must be only 1 working time (no duplicates)
+        $this->assertCount(1, WorkingTime::all());
     }
 }

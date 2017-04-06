@@ -53,6 +53,7 @@ class WorkingTimeController extends Controller
 			'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'date.before' => 'The :attribute must be a date after within the weeks of next month.',
             'date.after' => 'The :attribute must be a date after within the weeks of next month.',
+            'date.unique' => 'Employee can only have one working time per day.',
 		];
 
 		// Validation rules
@@ -67,8 +68,8 @@ class WorkingTimeController extends Controller
             'end_time' => 'required|after:start_time|date_format:H:i',
 
         	// Must be a date after today, before a month from now
-        	// Note: 'before last day of this month' means it is 'before the first day of next month' for some unknown reason
-            'date' => 'required|after:' . $afterDate . '|before:' . $beforeDate,
+        	// Date must be unique where employee ID is unique
+            'date' => 'required|unique:working_times,date,NULL,id,employee_id,' . request('employee_id') . '|after:' . $afterDate . '|before:' . $beforeDate,
         ];
 
 		// Validate form
