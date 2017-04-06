@@ -23,4 +23,14 @@ class Employee extends Model
 		return date($format, strtotime($availability[0]->start_time)) . " - " . 
 				date($format, strtotime($availability[0]->end_time));
 	}
+
+	/**
+	 *
+	 * Get working times from employee
+	 *
+	 */
+	public function workingTimes()
+	{
+		return $this->hasMany(WorkingTime::class);
+	}
 }

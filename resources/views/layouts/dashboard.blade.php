@@ -8,7 +8,7 @@
 	<meta name="author" content="">
 	<link rel="icon" href="../../favicon.ico">
 	<title>{{ $business->business_name }}: Dashboard</title>
-	<link href="{{ asset('css/app.css') }}?{{ time() }}" rel="stylesheet">
+	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
 <body class="dashboard">
@@ -66,15 +66,14 @@
 					<li class="{{ Request::is('admin/roster') ? 'active' : null }}"><a href="/admin/roster">Roster</a></li>
 					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a href="/admin/employees">Employees</a></li>
 				</ul>
-				<footer class="dashboard">
-					LCJJ Development Team
-				</footer>
+				<footer class="dashboard">LCJJ Development Team</footer>
 			</div>
-			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 dash">
 				@yield('content')
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

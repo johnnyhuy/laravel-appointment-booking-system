@@ -33,9 +33,61 @@ footer.dashboard {
 	}
 }
 
+// Notice block
+
+.notice {
+	margin: 60px auto;
+	text-align: center;
+
+	@include e('icon') {
+		color: $gray-light;
+		font-size: 120px;
+	}
+
+	@include e('message') {
+		font-family: $font-secondary;
+		color: $gray-dark;
+	}
+
+	@include e('description') {
+		margin-top: 20px;
+	}
+}
+
+// Calender
+
+.calender {
+	@include e('week') {
+		border-right: 1px solid $gray-light;
+		min-width: 60px;
+
+		@include m('label') {
+			padding-top: 60px !important;
+			font-family: $font-secondary;
+			font-weight: bold;
+		}
+	}
+
+	@include e('day') {
+		min-width: 150px;	
+		@include m('block') {
+			position: relative;
+			border-left: 1px solid $gray-lighter;
+			border-top: 1px solid $gray-lighter;
+			height: 150px;
+		}
+	}
+
+	@include e('day-label') {
+		position: absolute;
+		top: 6px;
+		right: 10px;	
+	}
+}
+
 // Main container
 
-.main {
+.dash {
 	padding: 20px;
 
 	@include e('header') {
@@ -58,14 +110,14 @@ footer.dashboard {
 
 	@include e('table-wrapper') {
 		border-radius: $border-radius-large;
-		border: $main-table-border solid $gray-dark;
+		border: $dash-table-border solid $dash-table-color;
 		overflow: hidden;
 		margin-bottom: 40px;
 	}
 
 	@include e('table') {
 		th {
-			border-bottom: $main-table-border solid $gray-dark !important;
+			border-bottom: $dash-table-border solid $dash-table-color !important;
 			font-family: $font-primary;
 			font-size: 16px;
 			background-color: $gray-lightest;
@@ -74,25 +126,7 @@ footer.dashboard {
 		th, td {
 			vertical-align: middle !important;
 		}
-
-		// .main table modifiers
-
-		@include m('left-solid') {
-			border-left: $main-table-border solid $gray-dark;
-		}
-
-		@include m('left-dotted') {
-			border-left: $main-table-border dotted $gray-lighter;
-		}
-
-		@include m('left-dashed') {
-			border-left: $main-table-border dashed $gray-lighter;
-		}
 	}
-}
-
-.main .page-header {
-	margin-top: 0;
 }
 
 // Table

@@ -45,7 +45,7 @@ class CustomerTest extends TestCase
         // Given business owner is created
         $businessOwner = factory(BusinessOwner::class)->create();
 
-        $this->customerData['username'] = $businessOwner->username;
+        $this->customerData = ['username' => $businessOwner->username];
 
         // and send request
         $response = $this->json('POST', '/register', $this->customerData);
