@@ -16,7 +16,8 @@ class CreateBusinessOwnersTable extends Migration
         Schema::create('business_owners', function (Blueprint $table) {
             $table->increments('id');
 			$table->string('business_name');
-			$table->string('owner_name');
+            $table->string('firstname');
+			$table->string('lastname');
 			$table->string('username');
 			$table->string('password');
 			$table->string('address');
