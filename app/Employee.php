@@ -8,6 +8,8 @@ use App\Availability;
 
 class Employee extends Model
 {
+	protected $guarded = [];
+	
 	public static function getEmployeeAvailability($employeeID, $day) 
 	{
 		//Format of the time (HH:MM)
