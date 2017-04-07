@@ -15,12 +15,22 @@ class Booking extends Model
 	 * Calculate the duration of the booking
 	 *
 	 */
-	public function duration()
+	public function duration($toTimeString = false)
 	{
+		// Set start and end time
 		$startTime = Carbon::parse($this->attributes['start_time']);
 		$endTime = Carbon::parse($this->attributes['end_time']);
+
+		// Get difference in time
+		$duration = $startTime->diffInSeconds($endTime);
+
+		// Convert to time string
+		if ($toTimeString) {
+			$duration = gmdate('G:i', $duration);
+		}
 		
-		return $startTime->diffInSeconds($endTime);
+		// Return duration
+		return $duration;
 	}
 
 	/**

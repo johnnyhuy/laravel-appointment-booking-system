@@ -21,8 +21,8 @@ class BookingsTest extends TestCase
 		// Given booking exists
 		// and duration is two hours
 		$booking = new Booking([
-			'booking_start_time' => Carbon::now()->subHour(4),
-			'booking_end_time' => Carbon::now()->subHour(2),
+			'start_time' => Carbon::now()->subHour(4),
+			'end_time' => Carbon::now()->subHour(2),
 		]);
 
 		// Calculate duration of booking
@@ -30,5 +30,25 @@ class BookingsTest extends TestCase
 
 		// Return expected result in seconds
 		$this->assertEquals(7200, $duration);
+	}
+
+	/**
+     * Get the duration time of booking in a time format
+     *
+     * @return void
+     */
+	public function testGetDurationOfBookingInTimeFormatString() {
+		// Given booking exists
+		// and duration is two hours
+		$booking = new Booking([
+			'start_time' => Carbon::now()->subHour(4),
+			'end_time' => Carbon::now()->subHour(2),
+		]);
+
+		// Calculate duration of booking
+		$duration = $booking->duration(true);
+
+		// Expect duration to be in a time string HH:MM
+		$this->assertEquals('2:00', $duration);
 	}
 }
