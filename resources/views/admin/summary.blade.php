@@ -41,14 +41,10 @@
 				</tr>
 				@foreach (App\Employee::all() as $employee)
 					<tr>
-						<td> {{$employee->firstname . ' ' . $employee->lastname}} </td>
-						<td class="table--left-solid"> {{App\Employee::getEmployeeAvailability($employee->id, 'Monday')}} </td>
-						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Tuesday')}} </td>
-						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Wednesday')}} </td>
-						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Thursday')}} </td>
-						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Friday')}} </td>
-						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Saturday')}} </td>
-						<td> {{App\Employee::getEmployeeAvailability($employee->id, 'Sunday')}} </td>
+						<td class="table--right-solid">{{ $employee->firstname . ' ' . $employee->lastname}}</td>
+						@for ($days = 1; $days <= 7; $days++)
+							<td>{{ $employee->availability(strtoupper(Carbon\Carbon::now()->addDays($days)->format('l'))) }}</td>
+						@endfor
 					</tr>
 				@endforeach
 		    </table>
