@@ -75,6 +75,18 @@ footer {
 		margin: 0 !important;
 	}
 
+	@include m('right-solid') {
+		border-right: $dash-table-border solid $dash-table-color;
+	}
+
+	@include m('right-dotted') {
+		border-right: $dash-table-border dotted $gray-lighter;
+	}
+
+	@include m('right-dashed') {
+		border-right: $dash-table-border dashed $gray-lighter;
+	}
+
 	@include m('left-solid') {
 		border-left: $dash-table-border solid $dash-table-color;
 	}

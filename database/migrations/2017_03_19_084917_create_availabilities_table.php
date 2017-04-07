@@ -18,8 +18,17 @@ class CreateAvailabilitiesTable extends Migration
 			$table->integer('employee_id');
             $table->time('start_time');
             $table->time('end_time');
-			$table->string('day');
+			$table->enum('day', [
+                'MONDAY',
+                'TUESDAY',
+                'WEDNESDAY',
+                'THURSDAY',
+                'FRIDAY',
+                'SATURDAY',
+                'SUNDAY',
+            ]);
             $table->timestamps();
+            $table->unique(['employee_id', 'day']);
         });
     }
 

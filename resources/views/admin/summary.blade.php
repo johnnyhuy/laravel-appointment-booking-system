@@ -34,16 +34,12 @@
 		<div class="table-responsive dash__table-wrapper">
 		    <table class="table table--no-margin dash__table">
 		        <tr>
-					<th>Employee Name</th>
-					<th class="table--left-solid">Monday</th>
-					<th>Tuesday</th>
-					<th>Wednesday</th>
-					<th>Thursday</th>
-					<th>Friday</th>
-					<th>Saturday</th>
-					<th>Sunday</th>
+					<th class="table--right-solid">Employee Name</th>
+					@for ($days = 1; $days <= 7; $days++)
+						<th>{{ Carbon\Carbon::now()->addDays($days)->format('D d/m') }}</th>
+					@endfor
 				</tr>
-				@foreach(DB::table('employees')->get() as $employee)
+				@foreach (App\Employee::all() as $employee)
 					<tr>
 						<td> {{$employee->firstname . ' ' . $employee->lastname}} </td>
 						<td class="table--left-solid"> {{App\Employee::getEmployeeAvailability($employee->id, 'Monday')}} </td>
