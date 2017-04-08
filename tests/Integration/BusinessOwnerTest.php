@@ -20,6 +20,30 @@ class BusinessOwnerTest extends TestCase
 	// Rollback database actions once test is complete with this trait
 	use DatabaseTransactions;
 
+    /**
+     * Business owner cannot have same username as customer
+     *
+     * @return void
+     */
+    public function testBusinessOwnerCannotHaveSameUsernameAsCustomer()
+    {
+        // Given customer is created
+        $customer = factory(Customer::class)->create();
+
+        // Set business owner username as customer username
+        $businessOwnerData = [
+            'username' => $customer->username
+        ];
+
+        // Send a POST request to /register with customer data
+        $response = $this->json('POST', '/admin/register', $businessOwnerData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The username has already been taken.'
+        ]);
+    }
+
 	/**
      * Business name validation assertions
      *
