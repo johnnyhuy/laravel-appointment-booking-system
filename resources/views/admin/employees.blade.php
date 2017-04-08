@@ -20,7 +20,7 @@
 	<form class="request" method="POST" action="/admin/employees">
 		{{ csrf_field() }}
 		<div class="form-group">
-			<label for="inputJobTitle">Job Title</label>
+			<label for="inputJobTitle">Job Title <span class="request__validate">(e.g. Crew Member, Manager)</span></label>
 			<input name="title" type="text" id="inputJobTitle" class="form-control request__input" placeholder="Title" value="{{old('title')}}" autofocus>
 		</div>
 		<div class="form-group">
