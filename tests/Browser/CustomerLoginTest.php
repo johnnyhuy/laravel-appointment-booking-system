@@ -56,16 +56,18 @@ class CustomerLoginTest extends DuskTestCase
      */
     public function testLoginCustomer()
     {
-        factory(Customer::class)->create();
+        // Create a customer and set the password
+        $customer = factory(Customer::class)->create([
+            'password' => bcrypt('secret'),
+        ]);
 
-        $this->browse(function ($browser) {
+        $this->browse(function ($browser) use ($customer) {
             $browser->visit('/login')
                 ->visit('/login')
-                ->type('username', Customer::first()->username)
+                ->type('username', $customer->username)
                 ->type('password', 'secret')
                 ->press('Sign in')
-                ->assertSee('Successfully logged in!')
-                ->logout();
+                ->assertSee('Successfully logged in!');
         });
     }
 
@@ -76,37 +78,37 @@ class CustomerLoginTest extends DuskTestCase
      */
     public function testLoginCustomerBadPasswords()
     {
-        factory(Customer::class)->create();
+        $customer = factory(Customer::class)->create();
 
-        $this->browse(function ($browser) {
+        $this->browse(function ($browser) use ($customer) {
             $browser->visit('/login')
                 ->visit('/login')
-                ->type('username', Customer::first()->username)
-                //Encrypted version of the password shouldn't pass
-                ->type('password', Customer::first()->password)
+                ->type('username', $customer->username)
+                // Encrypted version of the password shouldn't pass
+                ->type('password', $customer->password)
                 ->press('Sign in')
                 ->assertSee('Error! Invalid credentials.');
 
             $browser->visit('/login')
                 ->visit('/login')
-                ->type('username', Customer::first()->username)
-                //Blank password shouldn't pass
+                ->type('username', $customer->username)
+                // Blank password shouldn't pass
                 ->type('password', '')
                 ->press('Sign in')
                 ->assertSee('Error! Invalid credentials.');
 
             $browser->visit('/login')
                 ->visit('/login')
-                ->type('username', Customer::first()->username)
-                //Correct password with incorrect case should fail
+                ->type('username', $customer->username)
+                // Correct password with incorrect case should fail
                 ->type('password', 'Secret')
                 ->press('Sign in')
                 ->assertSee('Error! Invalid credentials.');
 
             $browser->visit('/login')
                 ->visit('/login')
-                ->type('username', Customer::first()->username)
-                //Correct password with extra whitespace should fail
+                ->type('username', $customer->username)
+                // Correct password with extra whitespace should fail
                 ->type('password', 'secret ')
                 ->press('Sign in')
                 ->assertSee('Error! Invalid credentials.');
@@ -120,13 +122,12 @@ class CustomerLoginTest extends DuskTestCase
      */
     public function testLoggedCustomerCannotVisitLogin()
     {
-        factory(Customer::class)->create();
+        $customer = factory(Customer::class)->create();
 
-        $this->browse(function ($browser) {
-            $browser->loginAs(Customer::first())
+        $this->browse(function ($browser) use ($customer) {
+            $browser->loginAs($customer)
                 ->visit('/login')
-                ->assertPathIs('/bookings')
-                ->logout();
+                ->assertPathIs('/bookings');
         });
     }
 

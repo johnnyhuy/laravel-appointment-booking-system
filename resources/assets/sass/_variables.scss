@@ -34,8 +34,8 @@ $border-radius-large: 10px;
 $border-radius-circle: 100%;
 
 // Typography
-$primary-font: "Raleway", sans-serif;
-$secondary-font: "Open Sans", sans-serif;
+$font-primary: "Raleway", sans-serif;
+$font-secondary: "Open Sans", sans-serif;
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 $font-family-sans-serif: "Raleway", sans-serif;
 $font-size-base: 14px;
@@ -71,3 +71,5 @@ $margin-x-large:		20px;
 // Dashboard variables
 $navbar-height:			70px;
 $sidebar-padding:		20px;
+$dash-table-border:		1px;
+$dash-table-color:		$gray-light; 

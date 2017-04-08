@@ -27,6 +27,9 @@
 
 					// Check url for title
 					if (Request::is('admin')) {
+						$title .= "Business Information";
+					}
+					elseif (Request::is('admin/summary')) {
 						$title .= "Summary of Bookings";
 					}
 					elseif (Request::is('admin/history')) {
@@ -43,12 +46,12 @@
 						$title = "";
 					}
 				@endphp
-				<a class="navbar-brand" href="#">{{ $business->business_name . $title }}</a>
+				<a title="Redirect back to business information" class="navbar-brand" href="/admin">{{ $business->business_name . $title }}</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Logged in as {{ $business->username }}</a></li>
-					<li><a href="/logout">Logout</a></li>
+					<li><a href="/admin">Logged in as {{ $business->username }}</a></li>
+					<li><a title="Logout Administrator" href="/logout">Logout</a></li>
 				</ul>
 			</div>
 		</div>
@@ -57,20 +60,20 @@
 		<div class="row">
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
-					<li class="{{ Request::is('admin') ? 'active' : null }}"><a href="/admin">Summary<span class="sr-only">(current)</span></a></li>
-					<li class="{{ Request::is('admin/history') ? 'active' : null }}"><a href="/admin/history">History</a></li>
-					<li class="{{ Request::is('admin/roster') ? 'active' : null }}"><a href="/admin/roster">Roster</a></li>
-					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a href="/admin/employees">Employees</a></li>
+					<li class="{{ Request::is('admin') ? 'active' : null }}"><a title="Show Business Information" href="/admin">Information<span class="sr-only">(current)</span></a></li>
+					<li class="{{ Request::is('admin/summary') ? 'active' : null }}"><a title="Show a summary of bookings" href="/admin/summary">Summary<span class="sr-only">(current)</span></a></li>
+					<li class="{{ Request::is('admin/history') ? 'active' : null }}"><a title="Show a history of bookings" href="/admin/history">History</a></li>
+					<li class="{{ Request::is('admin/roster') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster">Roster</a></li>
+					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a title="Show all employees" href="/admin/employees">Employees</a></li>
 				</ul>
-				<footer class="dashboard">
-					LCJJ Development Team
-				</footer>
+				<footer class="dashboard">LCJJ Development Team</footer>
 			</div>
-			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 dash">
 				@yield('content')
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

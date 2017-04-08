@@ -10,6 +10,8 @@ use App\BusinessOwner;
 
 class BusinessOwnerRegisterTest extends DuskTestCase
 {
+    use DatabaseMigrations;
+    
     /**
      * Test when admin registers with valid data the form accepts the input
      *
@@ -17,7 +19,7 @@ class BusinessOwnerRegisterTest extends DuskTestCase
      */
     public function testRegisterBusinessOwner()
     {
-        // Generate customer info
+        // Generate business owner info
         $bo = factory(BusinessOwner::class)->make();
 
         // Start browser
