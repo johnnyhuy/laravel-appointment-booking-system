@@ -21,19 +21,19 @@
 		{{ csrf_field() }}
 		<div class="form-group">
 			<label for="inputJobTitle">Job Title <span class="request__validate">(e.g. Crew Member, Manager)</span></label>
-			<input name="title" type="text" id="inputJobTitle" class="form-control request__input" placeholder="Title" value="{{old('title')}}" autofocus>
+			<input name="title" type="text" id="inputJobTitle" class="form-control request__input" placeholder="Title" value="{{ old('title') }}" autofocus>
 		</div>
 		<div class="form-group">
 			<label for="inputFirstName">First Name</label>
-			<input name="firstname" type="text" id="inputFirstName" class="form-control request__input" placeholder="First Name" value="{{old('firstname')}}" autofocus>
+			<input name="firstname" type="text" id="inputFirstName" class="form-control request__input" placeholder="First Name" value="{{ old('firstname') }}" autofocus>
 		</div>
 		<div class="form-group">
 			<label for="inputLastName">Last Name</label>
-			<input name="lastname" type="text" id="inputLastName" class="form-control request__input" placeholder="Last Name" value="{{old('lastname')}}" autofocus>
+			<input name="lastname" type="text" id="inputLastName" class="form-control request__input" placeholder="Last Name" value="{{ old('lastname') }}" autofocus>
 		</div>
 		<div class="form-group">
 			<label for="inputPhone">Phone <span class="request__validate">(at least 10 characters)</span></label>
-			<input name="phone" type="text" id="inputPhone" class="form-control request__input" placeholder="Phone" value="{{old('phone')}}" autofocus>
+			<input name="phone" type="text" id="inputPhone" class="form-control request__input" placeholder="Phone" value="{{ old('phone') }}" autofocus>
 		</div>
 		<button class="btn btn-lg btn-primary btn-block btn--margin-top" href="/admin/employees">Add Employee</button>
 	</form>
