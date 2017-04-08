@@ -5,7 +5,7 @@
 		<div class="block block--no-padding">
 			<table class="table table--no-margin customer_bookings">
 				<tr>
-					<th class="customer_bookings__left-solid">Booking ID</th>
+					<th class="customer_bookings__left-solid">ID</th>
 					<th>Start Time</th>
 					<th>End Time</th>
 					<th>Date</th>
@@ -17,9 +17,9 @@
 					@endphp
 					<tr>
 						<td class="customer_bookings__left-solid">{{ $bookingID }}</td>
-						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_start_time)->format('h:i A') }}</td>
-						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_end_time)->format('h:i A') }}</td>
-						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->booking_end_time)->toDateString() }}</td>
+						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->start_time)->format('h:i A') }}</td>
+						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->end_time)->format('h:i A') }}</td>
+						<td class="customer_bookings__left-dashed">{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
 						<td>{{ gmdate('G:i', $booking->duration()) }}</td>
 					</tr>
 				@endforeach

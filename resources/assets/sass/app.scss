@@ -2,16 +2,16 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:700|Raleway:300,400,600');
 
 // Variables
-@import "variables";
+@import 'variables';
 
 // Mixins
-@import "mixins";
+@import 'mixins';
 
 // Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import 'node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
-@import "dashboard";
-@import "customer_bookings";
+@import 'dashboard';
+@import 'customer_bookings';
 
 body {
 	background-color: $body-bg;
@@ -27,13 +27,21 @@ footer {
 	text-align: center;
 }
 
+.btn {
+	font-family: $font-secondary;
+
+	@include m('margin-top') {
+		margin-top: 20px;
+	}
+}
+
 .block {
 	background: white;
 	padding: $padding-base $padding-base 0 $padding-base;
 	border: 1px solid $border-color;
 	border-radius: 5px;
 
-	@include m("no-padding") {
+	@include m('no-padding') {
 		padding: 0px !important;
 	}
 }
@@ -48,24 +56,71 @@ footer {
 
 .table {
 	th {
-		border-top: none !important;
 		border-bottom: 1px solid $border-color;
-		font-family: $secondary-font;
+		font-family: $font-secondary;
 		font-size: 18px;
 		text-align: center;
 		color: $gray-dark;
 	}
 
 	td {
-		border-top: none !important;
 		text-align: center;
 		font-size: 16px;
 		color: $gray;
 	}
+	
+	// General modifiers
 
 	@include m('no-margin') {
 		margin: 0 !important;
 	}
+
+	@include m('right-solid') {
+		border-right: $dash-table-border solid $dash-table-color;
+	}
+
+	@include m('right-dotted') {
+		border-right: $dash-table-border dotted $gray-lighter;
+	}
+
+	@include m('right-dashed') {
+		border-right: $dash-table-border dashed $gray-lighter;
+	}
+
+	@include m('left-solid') {
+		border-left: $dash-table-border solid $dash-table-color;
+	}
+
+	@include m('left-dotted') {
+		border-left: $dash-table-border dotted $gray-lighter;
+	}
+
+	@include m('left-dashed') {
+		border-left: $dash-table-border dashed $gray-lighter;
+	}
+
+	// Field specific modifiers
+
+	@include m('id') {
+		max-width: 40px;
+		min-width: 25px;
+	}
+
+	@include m('time') {
+		max-width: 30px;
+	}
+
+	@include m('name') {
+		min-width: 100px;
+	}
+
+	@include m('date') {
+		max-width: 40px;
+	}
+}
+
+.table > thead > tr > th {
+	border-bottom: none;
 }
 
 .user {
@@ -90,39 +145,61 @@ footer {
 .request {
 	margin-bottom: $margin-large;
 
-	@include e("input") {
-		margin-bottom: $margin-base;
+	@include e('input') {
+		margin-bottom: 0;
 	}
 
-	@include e("button") {
+	@include e('button') {
 		margin-bottom: $margin-base;
+
+		@include m('dropdown') {
+			width: 100%;
+			background-color: $white;
+			border: 1px solid $input-border;
+		}
 	}
 
-	@include e("validate") {
+	@include e('validate') {
 		color: $gray-lighter;
+	}
+
+	@include e('flex-container') {
+		display: flex;
+	}
+
+	@include e('flex') {
+		flex: 1 1 100px;
+
+		@include m('left') {
+			margin-right: $margin-base;
+		}
+
+		@include m('right') {
+			margin-left: $margin-base;
+		}
 	}
 }
 
 .header {
 	text-align: center;
 
-	@include e("title") {
-		font-family: $secondary-font;
+	@include e('title') {
+		font-family: $font-secondary;
 	}
 
-	@include e-hover("title") {
+	@include e-hover('title') {
 		text-decoration: none;
 	}
 
-	@include e-visited("title") {
+	@include e-visited('title') {
 		text-decoration: none;
 	}
 
-	@include e-focus("title") {
+	@include e-focus('title') {
 		text-decoration: none;
 	}
 
-	@include e("subtitle") {
+	@include e('subtitle') {
 		margin-top: 0px;
 		margin-bottom: $margin-x-large;
 		color: $gray-light;
@@ -140,7 +217,7 @@ footer {
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: $screen-md-min) {
 	.container {
-		width: 540px;
+		width: 680px;
 	}
 }
 

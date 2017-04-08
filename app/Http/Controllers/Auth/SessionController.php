@@ -9,46 +9,30 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BusinessOwnerController;
 
-class LoginController extends Controller
+class SessionController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('guest', ['except' => 'logout']);
+    public function __construct() {
+        $this->middleware('guest:web_user', ['except' => 'logout']);
+        $this->middleware('guest:web_admin', ['except' => 'logout']);
     }
 
     public function index()
     {
-        //If already logged in as a user, redirect to user's page
-        if(Auth::guard('web_user')->Check()) 
-        {
-            return redirect('/bookings');
-        }
-        //If already logged in as a business owner, redirect to admin page
-        else if(Auth::guard('web_admin')->Check()) 
-        {
-            return redirect('/admin');
-        }
-        //If not logged in, show the login page
-        else 
-        {
-            return view('customer.login');
-        }
-        
+        return view('customer.login');
     }
 
     public function login()
     {
-      
         // Sign in as customer
-        if(CustomerController::login()) {
+        if (Auth::guard('web_user')->attempt(request(['username', 'password']))) {
             // Session flash
             session()->flash('message', 'Successfully logged in!');
 
             // Success, go to customer's booking page
             return redirect('/bookings');
         }
-        //If sign in as a customer doesn't work, attempt business owner sign in
-        else if(BusinessOwnerController::login()) {
+        // If sign in as a customer doesn't work, attempt business owner sign in
+        elseif (Auth::guard('web_admin')->attempt(request(['username', 'password']))) {
              // Session flash
             session()->flash('message', 'Business Owner login success.');
 
@@ -68,12 +52,12 @@ class LoginController extends Controller
     public function logout()
     {
         //If logged in as a customer, log out from customer
-        if(Auth::guard('web_user')->Check()) 
+        if (Auth::guard('web_user')->check()) 
         {
             Auth::guard('web_user')->logout();
         }
         //If already logged in as a business owner, log out from buisness owner
-        else if(Auth::guard('web_admin')->Check()) 
+        elseif (Auth::guard('web_admin')->check()) 
         {
             Auth::guard('web_admin')->logout();
         }

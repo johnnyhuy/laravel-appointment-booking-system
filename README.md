@@ -4,23 +4,31 @@ Major group assignment for COSC2299 Software Engineering: Process and Tools at R
 ## Team Members & Contributions
 For team members, please add more details to your role if needed.
 
+* **Lachlan Porter** S3537901 - **25%**
+  * Wireframe design
+  * User stories
+  * Structured pages: admin dashboard, history of bookings, customer bookings
+* **Craig Barry** S3601725 - **25%**
+  * Dusk testing
+  * Intergration testing
+  * Database planning
+  * Structured pages: add working time, add employee, business owner login/registration, roster
 * **Johnny Huynh** S3604367 - **25%**
   * Manage Trello board
   * Setup/manage live server
-* **Lachlan Porter** S3537901 - **25%**
-  * UI design
-  * User stories
-* **Craig Barry** S3601725 - **25%**
-  * Unit testing
-  * Database planning
+  * Dusk testing
+  * Integration testing
+  * Structured pages: customer login/registration, business owner login/registration
+  * Wireframe design
 * **Jarry Chen** S3600396 - **25%**
   * User stories
-  * Unit testing
+  * Integration testing
+  * Structured pages: business information
 
 # Tutor & Product Manager
 **A Homy Ash** amirhomayoon.ashrafzadeh@rmit.edu.au
 
-**Tuesday 8:30 Tutorial** - 014.06.013
+**Tuesday 16:30 Tutorial** - 014.06.013
 
 # Development Environment
 To allow actual development on the project code. You must require a development environment for Laravel (PHP Framework) to function properly on your local device.

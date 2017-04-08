@@ -16,10 +16,19 @@ class CreateAvailabilitiesTable extends Migration
         Schema::create('availabilities', function (Blueprint $table) {
             $table->increments('id');
 			$table->integer('employee_id');
-			$table->string('day');
-			$table->time('start_time');
-			$table->time('end_time');
+            $table->time('start_time');
+            $table->time('end_time');
+			$table->enum('day', [
+                'MONDAY',
+                'TUESDAY',
+                'WEDNESDAY',
+                'THURSDAY',
+                'FRIDAY',
+                'SATURDAY',
+                'SUNDAY',
+            ]);
             $table->timestamps();
+            $table->unique(['employee_id', 'day']);
         });
     }
 

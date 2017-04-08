@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    //Register a new employee
+    // Create a new employee
     public function create()
     {
     	// Validate form
@@ -18,12 +18,13 @@ class EmployeeController extends Controller
             'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
         ]);
 
-        $employee = new Employee;
-        $employee->firstname = request('firstname');
-        $employee->lastname = request('lastname');
-        $employee->title = request('title');
-        $employee->phone = request('phone');
-        $employee->save();
+        // Create employee
+        Employee::create([
+            'firstname' => request('firstname'),
+            'lastname' => request('lastname'),
+            'title' => request('title'),
+            'phone' => request('phone'),
+        ]);
 
         // Session flash
         session()->flash('message', 'New Employee Added');

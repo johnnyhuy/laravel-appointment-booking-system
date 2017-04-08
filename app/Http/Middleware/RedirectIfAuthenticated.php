@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
+use App\BusinessOwner;
+
 class RedirectIfAuthenticated
 {
     /**
@@ -17,9 +19,33 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        // Redirect if customer is logged in
+        // If user is auth
         if (Auth::guard($guard)->check()) {
-            return redirect('/bookings');
+            switch ($guard) {
+                case 'web_user':
+                    // Go to customer bookings
+                    $redirectURL = '/bookings';
+                    break;
+                case 'web_admin':
+                    // Check if business owner exists
+                    if (BusinessOwner::first()) {
+                        // Go to dashboard
+                        $redirectURL = '/admin';
+                    }
+                    else {
+                        // Else go to business owner registration
+                        $redirectURL = '/admin/register';
+                    }
+
+                    break;
+                
+                default:
+                    // All else fails, redirect to login
+                    $redirectURL = '/login';
+                    break;
+            }
+            
+            return redirect($redirectURL);
         }
 
         return $next($request);
