@@ -35,11 +35,12 @@
 			<label for="inputPhone">Phone <span class="request__validate">(at least 10 characters)</span></label>
 			<input name="phone" type="text" id="inputPhone" class="form-control request__input" placeholder="Phone" value="{{old('phone')}}" autofocus>
 		</div>
-		<button class="btn btn-lg btn-primary btn-block btn--margin-top" href="/admin/employees">Register</button>
+		<button class="btn btn-lg btn-primary btn-block btn--margin-top" href="/admin/employees">Add Employee</button>
 	</form>
 </div>
 <div class="dash__block">
-		<h1 class="dash__header">Employees</h1>
+	<h1 class="dash__header">Employees</h1>
+	@if (count($employees))
 		<h4 class="main_description">A table of all employees within the business.</h4>
 		<div class="table-responsive dash__table-wrapper">
 		    <table class="table table--no-margin dash__table">
@@ -61,5 +62,12 @@
 				@endforeach
 		    </table>
 		</div>
-	</div>
+	@else
+		<div class="notice">
+			<span class="glyphicon glyphicon-thumbs-down notice__icon" aria-hidden="true"></span>
+			<h1 class="notice__message">No employees found.</h1>
+			<h4 class="notice__description">Try add an employee using the form above.</h4>
+		</div>
+	@endif
+</div>
 @endsection
