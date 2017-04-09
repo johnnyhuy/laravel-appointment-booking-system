@@ -40,9 +40,9 @@ class BusinessOwnerController extends Controller
 
         // Validation rules
         $rules = [
-            'businessname' => 'required|min:2|max:32|regex:/^[A-z0-9\-\.\s]+$/',
-            'firstname' => "required|min:2|max:32|regex:/^[A-z\']+$/",
-            'lastname' => "required|min:2|max:32|regex:/^[A-z\']+$/",
+            'businessname' => 'required|min:2|max:32|regex:/^[A-z0-9\-\.\s ]+$/',
+            'firstname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
+            'lastname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
             'username' => 'required|min:6|max:24|alpha_num|unique:customers,username',
             'password' => 'required|min:6|max:32|confirmed',
             'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
