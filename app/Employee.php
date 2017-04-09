@@ -15,13 +15,13 @@ class Employee extends Model
 	
 	public function availability($day) 
 	{
-		if($day == 1) $day = "SUNDAY";
-		if($day == 2) $day = "MONDAY";
-		if($day == 3) $day = "TUESDAY";
-		if($day == 4) $day = "WEDNESDAY";
-		if($day == 5) $day = "THURSDAY";
-		if($day == 6) $day = "FRIDAY";
-		if($day == 7) $day = "SATURDAY";
+		if ($day == 1) $day = "SUNDAY";
+		if ($day == 2) $day = "MONDAY";
+		if ($day == 3) $day = "TUESDAY";
+		if ($day == 4) $day = "WEDNESDAY";
+		if ($day == 5) $day = "THURSDAY";
+		if ($day == 6) $day = "FRIDAY";
+		if ($day == 7) $day = "SATURDAY";
 
 		// Format of the time (HH:MM)
 		$format = "H:i";

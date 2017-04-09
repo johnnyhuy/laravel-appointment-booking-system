@@ -17,6 +17,7 @@ storage/*.key
 .env.*.php
 .env.php
 .env
+.env.backup
 .env.testing
 .env.dusk
 .env.dusk.local

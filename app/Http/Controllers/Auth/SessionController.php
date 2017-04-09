@@ -68,6 +68,4 @@ class SessionController extends Controller
         //Redirect to login page
         return redirect('/login');
     }
-
-   
 }

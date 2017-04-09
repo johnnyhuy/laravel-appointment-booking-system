@@ -95,8 +95,8 @@ $factory->define(Customer::class, function (Generator $faker) {
 $factory->define(BusinessOwner::class, function (Generator $faker) {
     return [
 		'business_name' => $faker->company,
-		'firstname' => $faker->name,
-        'lastname' => $faker->name,
+		'firstname' => $faker->firstName,
+        'lastname' => $faker->lastName,
 		'username' => str_replace(".", "", $faker->userName),
 		'password' => $password = bcrypt($faker->password),
 		'address' => $faker->streetAddress,
