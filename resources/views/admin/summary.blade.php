@@ -14,7 +14,7 @@
 					<th class="table--date">Date</th>
 					<th class="table--time">Duration</th>
 				</tr>
-				@foreach ($latest as $booking)
+				@foreach (App\Booking::allLatest('7') as $booking)
 					<tr>
 						<td class="table--id">{{ $booking->id }}</td>
 						<td class="table--left-solid">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
@@ -41,9 +41,9 @@
 				</tr>
 				@foreach (App\Employee::all() as $employee)
 					<tr>
-						<td class="table--right-solid">{{ $employee->firstname . ' ' . $employee->lastname}}</td>
+						<td class="table--right-solid">{{ $employee->firstname . ' ' . $employee->lastname }}</td>
 						@for ($days = 1; $days <= 7; $days++)
-							<td>{{ $employee->availability(strtoupper(Carbon\Carbon::now()->addDays($days)->format('l'))) }}</td>
+							<td>{{ $employee->availability($days) }}</td>
 						@endfor
 					</tr>
 				@endforeach
