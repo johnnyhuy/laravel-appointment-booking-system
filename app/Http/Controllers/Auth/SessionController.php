@@ -66,8 +66,6 @@ class SessionController extends Controller
         session()->flash('message', 'Successfully logged out!');
 
         //Redirect to login page
-        return redirect('/');
+        return redirect('/login');
     }
-
-   
 }

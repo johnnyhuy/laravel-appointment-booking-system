@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Booking;
 use App\BusinessOwner;
 
-class DashboardTest extends DuskTestCase
+class BusinessOwnerDashboardTest extends DuskTestCase
 {
 	/**
      * Test if admin dashboard exists
@@ -129,11 +129,12 @@ class DashboardTest extends DuskTestCase
 
         // Generate a 2 hour booking a day before today
         $booking = factory(Booking::class)->create([
-            'booking_start_time' => Carbon::now()
+            'date' => Carbon::now()->subDays(1),
+            'start_time' => Carbon::now()
                 ->startOfDay()
                 ->subDays(1)
                 ->toDatetimeString(),
-            'booking_end_time' => Carbon::now()
+            'end_time' => Carbon::now()
                 ->startOfDay()
                 ->subDays(1)
                 ->addHours(2)
@@ -151,13 +152,4 @@ class DashboardTest extends DuskTestCase
                 ->assertSee($booking->customer->firstname . ' ' . $booking->customer->lastname);
         });
     }
-
-    /**
-     * Show a message when there are no bookings at the History of Bookings page
-     *
-     * @return void
-     */
-    // public function testAddWorkingTimes() {
-        
-    // }
 }

@@ -12,9 +12,9 @@ class EmployeeController extends Controller
     {
     	// Validate form
         $this->validate(request(), [
-            'firstname' => 'required|max:255|regex:/^[A-z\-\. ]+$/',
-            'lastname' => 'required|max:255|regex:/^[A-z\-\. ]+$/',
-            'title' => 'required|max:255|regex:/^[A-z\-\. ]+$/',
+            'firstname' => 'required|min:2|max:32|regex:/^[A-z\-\.' . "\'" . ' ]+$/',
+            'lastname' => 'required|min:2|max:32|regex:/^[A-z\-\.' . "\'" . ' ]+$/',
+            'title' => 'required|min:2|max:32|regex:/^[A-z\-\.' . "\'" . ' ]+$/',
             'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
         ]);
 

@@ -81,32 +81,28 @@ class CustomerLoginTest extends DuskTestCase
         $customer = factory(Customer::class)->create();
 
         $this->browse(function ($browser) use ($customer) {
-            $browser->visit('/login')
-                ->visit('/login')
+            $browser->visit('/logout')
                 ->type('username', $customer->username)
                 // Encrypted version of the password shouldn't pass
-                ->type('password', $customer->password)
+                ->type('password', bcrypt($customer->password))
                 ->press('Sign in')
                 ->assertSee('Error! Invalid credentials.');
 
-            $browser->visit('/login')
-                ->visit('/login')
+            $browser->visit('/logout')
                 ->type('username', $customer->username)
                 // Blank password shouldn't pass
                 ->type('password', '')
                 ->press('Sign in')
                 ->assertSee('Error! Invalid credentials.');
 
-            $browser->visit('/login')
-                ->visit('/login')
+            $browser->visit('/logout')
                 ->type('username', $customer->username)
                 // Correct password with incorrect case should fail
                 ->type('password', 'Secret')
                 ->press('Sign in')
                 ->assertSee('Error! Invalid credentials.');
 
-            $browser->visit('/login')
-                ->visit('/login')
+            $browser->visit('/logout')
                 ->type('username', $customer->username)
                 // Correct password with extra whitespace should fail
                 ->type('password', 'secret ')
