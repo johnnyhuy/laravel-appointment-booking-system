@@ -170,7 +170,11 @@ class BookingHistoryTest extends DuskTestCase
         //Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for today
-        $booking = factory(Booking::class)->create();
+        $booking = factory(Booking::class)->create( [
+			'date' => \Carbon\Carbon::now(),
+			'start_time' => \Carbon\Carbon::now()->subHour(),
+			'end_time' => \Carbon\Carbon::now()->addHour(),
+		]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
             //Login as Business Owner
