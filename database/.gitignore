@@ -1,3 +1,4 @@
 dev-database.sqlite
 test-database.sqlite
 dusk-database.sqlite
+*.sqlite
