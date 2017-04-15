@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+use App\Activity;
 use App\Customer;
 use App\BusinessOwner;
 use App\Booking;
@@ -35,6 +36,66 @@ class BookingTest extends TestCase
 
         // Then there exists 4 bookings from customer
         $this->assertCount(4, Customer::first()->bookings);
+    }
+
+    /**
+     * Creating a booking through the Business Owner view (admin)
+     *
+     * @return void
+     */
+    public function testAdminAddBooking()
+    {
+        // Build booking data
+
+
+        // Send POST request to /admin/booking/add
+
+
+        // Check message add booking is successful
+
+
+        // Check the database if booking exists
+
+    }
+
+    /**
+     * If a booking has no activity, then error
+     *
+     * @return void
+     */
+    public function testBookingHasNoActivityThenError()
+    {
+        // Build booking data without an activity (activity ID)
+
+
+        // Send POST request to /admin/booking/add
+
+
+        // Receive an error through HTTP JSON response
+
+    }
+
+    /**
+     * Booking belongs to one activity, make 4 bookings and assign it to an activity
+     *
+     * @return void
+     */
+    public function testBookingHasOnlyOneActivity()
+    {
+        // There exists an acitvity
+        $activity = factory(Activity::class)->create();
+
+        // Create 4 new bookings and assign it to activity
+        $bookings = factory(Booking::class, 4)->create([
+            'activity_id' => $activity->id,
+        ]);
+
+        // Get activity from booking class
+        // Check if 4 bookings belong to 1 activity
+        // Call attribute activity will return one activity from each booking
+        foreach ($bookings as $booking) {
+            $this->assertEquals($activity->id, $booking->activity->id);
+        }
     }
 
     /**

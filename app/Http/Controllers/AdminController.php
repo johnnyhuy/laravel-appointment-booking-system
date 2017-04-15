@@ -49,4 +49,9 @@ class AdminController extends Controller
     {
         return view('admin.roster', ['business' => $this->business, 'roster' => WorkingTime::getRoster()]);
     }
+
+    public function activity() 
+    {
+        return view('admin.activity', ['business' => $this->business]);
+    }
 }

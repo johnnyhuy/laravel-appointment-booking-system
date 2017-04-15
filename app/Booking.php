@@ -75,7 +75,16 @@ class Booking extends Model
 	 */
 	public function customer()
 	{
-		//return Customer::where('id', $this->customer_id);
 		return $this->belongsTo(Customer::class);
+	}
+
+	/**
+	 *
+	 * Get activity from bookings
+	 *
+	 */
+	public function activity()
+	{
+		return $this->belongsTo(Activity::class);
 	}
 }

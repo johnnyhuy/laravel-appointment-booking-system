@@ -18,6 +18,7 @@ use App\Employee;
 use App\Availability;
 use App\BusinessOwner;
 use App\WorkingTime;
+use App\Activity;
 
 // Use vendor classes
 use Carbon\Carbon;
@@ -34,6 +35,27 @@ $factory->define(Employee::class, function (Generator $faker) {
         'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
         'phone' => $faker->phoneNumber,
+    ];
+});
+
+/**
+ *
+ * Generating dummy data for Activity
+ *
+ */
+$factory->define(Activity::class, function (Generator $faker) {
+    // Set time variables for duration
+    $hour = rand(0, 23);
+    $minute = rand(0, 1) == 1 ? 0 : 30;
+
+    // Set duration
+    $duration = Carbon::createFromTime($hour, $minute)
+        ->format('H:i');
+
+    return [
+        'name' => $faker->word,
+        'description' => $faker->sentence,
+        'duration' => $duration,
     ];
 });
 
@@ -111,6 +133,7 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
  */
 $factory->define(Booking::class, function (Generator $faker) {
     $customer = factory(Customer::class)->create();
+    $activity = factory(Activity::class)->create();
 
     // Loop so that start time is always earlier than end time in hours
     while (true) {
@@ -154,6 +177,7 @@ $factory->define(Booking::class, function (Generator $faker) {
 
     return [
         'customer_id' => $customer->id,
+        'activity_id' => $activity->id,
         'start_time' => $startTime,
         'end_time' => $endTime,
         'date' => $day,
