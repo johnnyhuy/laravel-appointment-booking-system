@@ -1,4 +1,4 @@
-<?php
+'<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +17,12 @@ Route::get('/', function() {
 
 // Customer handling
 
-// Session handling
+/**
+ *
+ * Session handling
+ *
+ */
+
 // GET
 Route::get('/login', 'Auth\SessionController@index')->name('login');
 Route::get('/logout', 'Auth\SessionController@logout');
@@ -31,7 +36,11 @@ Route::post('/register', 'CustomerController@create');
 Route::get('/bookings', 'BookingController@index');
 
 
-// Admin handling
+/**
+ *
+ * Admin handling
+ *
+ */
 
 // Dashboard views
 Route::get('/admin', 'AdminController@index');
@@ -45,3 +54,11 @@ Route::get('/admin/roster', 'AdminController@roster');
 Route::post('/admin/register', 'BusinessOwnerController@create');
 Route::post('/admin/employees', 'EmployeeController@create');
 Route::post('/admin/roster', 'WorkingTimeController@create');
+
+// Activity management
+// Custom modified resourceful controller using CRUD routes
+Route::resource('/admin/activity', 'ActivityController', [
+	'only' => [
+		'store', 'edit', 'update', 'destroy'
+	]
+]);
