@@ -57,14 +57,14 @@ class ActivityTest extends TestCase
             'duration' => $activity->duration,
         ];
 
-        // Send a POST request to /admin/activity
-        $response = $this->json('POST', '/admin/activity', $activityData);
+        // Send a POST request to admin/activity
+        $response = $this->json('POST', 'admin/activity', $activityData);
 
         // Check create activity success message
         $response->assertSessionHas('message', 'Activity has successfully been created.');
 
         // Check if redirected after request
-        $response->assertRedirect('/admin/activity');
+        $response->assertRedirect('admin/activity');
 
         // Check if activity exists in the database
         $this->assertDatabaseHas('activities', [
@@ -93,14 +93,14 @@ class ActivityTest extends TestCase
             'duration' => $editedActivity->duration,
         ];
         
-        // Send PUT/PATCH request to /admin/activity/{activity}
-        $response = $this->json('PUT', '/admin/activity/' . Activity::find($initActivity->id), $activityData);
+        // Send PUT/PATCH request to admin/activity/{activity}
+        $response = $this->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
 
         // Check edit activity success message
         $response->assertSessionHas('message', 'Activity has successfully been edited.');
 
         // Check if redirected after request
-        $response->assertRedirect('/admin/activity');
+        $response->assertRedirect('admin/activity');
 
         // Check if activity has been edited in the database
         $this->assertDatabaseHas('activities', [
@@ -119,11 +119,121 @@ class ActivityTest extends TestCase
     public function testAdminRemoveActivity()
     {
         // Create an activity
+        $activity = factory(Activity::class)->create();
 
-        // Send DELETE request to /admin/activity/{activity}
+        // Send DELETE request to admin/activity/{activity}
+        $response = $this->json('DELETE', 'admin/activity/' . $activity->id);
 
         // Check remove activity success message
+        $response->assertSessionHas('message', 'Activity has successfully been removed.');
 
         // Check if activity does not exist in the database
+        $this->assertEquals(null, Activity::find($activity->id));
+    }
+
+    /**
+     * Remove an activity from Business Owner view (admin)
+     *
+     * @return void
+     */
+    public function testActivityValidation()
+    {
+        // Create fake data
+        $activity = factory(Activity::class)->make();
+        
+        // Build activity data
+        $activityData = [
+            'name' => $activity->name,
+            'description' => $activity->description,
+            'duration' => $activity->duration,
+        ];
+
+
+        // User inputs name less than 2 characters
+        // Rebuild activity data
+        $activityData = [
+            'name' => 'a'
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The activity name must be at least 2 characters.'
+        ]);
+
+
+        // User inputs name more than 32 characters
+        // Rebuild activity data
+        $activityData = [
+            'name' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The activity name may not be greater than 32 characters.'
+        ]);
+
+        // User inputs name with special characters
+        // Rebuild activity data
+        $activityData = [
+            'name' => '@ct1v!ty n@me'
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The activity name is invalid, do not use special characters.'
+        ]);
+
+
+        // User inputs description less than 2 characters
+        // Rebuild activity data
+        $activityData = [
+            'description' => 'a'
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The description must be at least 2 characters.'
+        ]);
+
+
+        // User inputs description more than 64 characters
+        // Rebuild activity data
+        $activityData = [
+            'description' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The description may not be greater than 64 characters.'
+        ]);
+
+        // User inputs an invalid time format in duration
+        // Rebuild activity data
+        $activityData = [
+            'duration' => 'lorem'
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The duration field must be in the correct time format (e.g. 4:00 or 16:30).'
+        ]);
     }
 }

@@ -11,9 +11,9 @@ class Booking extends Model
 	protected $guarded = [];
 
 	/**
-	 *
 	 * Calculate the duration of the booking
-	 *
+	 * 
+	 * @return string
 	 */
 	public function duration($toTimeString = false)
 	{
@@ -36,12 +36,13 @@ class Booking extends Model
 	/**
 	 *
 	 * Show all history of bookings
+	 * @return App\Booking
 	 *
 	 */
 	public static function allHistory() {
 		// Return past bookings eloquent model
-		return Booking::where('date', '<', Carbon::now()->subDay())	
-			->get()	
+		return Booking::where('date', '<', Carbon::now()->toDateString())	
+			->get()
 			// Sort by start time using an eloquent collection function
 			->sortByDESC('date');
 	}
@@ -49,11 +50,11 @@ class Booking extends Model
 	/**
 	 *
 	 * Show all latest of bookings
+	 * @return App\Booking
 	 *
 	 */
 	public static function allLatest($max = null) {
-		$startDay = Carbon::now()->startOfDay();
-		$booking = Booking::where('date', '>=', $startDay);
+		$booking = Booking::where('date', '>=', Carbon::now()->toDateString());
 
 		if (isset($max)) {
 			$max = Carbon::now()->addDays($max);
