@@ -17,13 +17,13 @@ class ActivityController extends Controller
     {
         // Validation error messages
         $messages = [
-            'name.alpha_num' => 'The :attribute is invalid, do not use special characters except "." and "-".',
+            'name.regex' => 'The :attribute is invalid, do not use special characters.',
             'duration.date_format' => 'The :attribute field must be in the correct time format (e.g. 4:00 or 16:30).',
         ];
 
         // Validation rules
         $rules = [
-            'name' => 'required|min:2|max:32|alpha_num',
+            'name' => 'required|min:2|max:32|regex:/^[A-z0-9\s]+$/',
             'description' => 'min:2|max:64',
             'duration' => 'required|date_format:H:i',
         ];
@@ -65,11 +65,14 @@ class ActivityController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Activity  $activity
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Activity $activity)
+    public function update(Request $request, $id)
     {
+        // Find activity by ID
+        $activity = Activity::find($id);
+
         // Validation error messages
         $messages = [
             'name.alpha_num' => 'The :attribute is invalid, do not use special characters except "." and "-".',
@@ -88,8 +91,6 @@ class ActivityController extends Controller
             'name' => 'activity name',
         ];
 
-        dd($activity);
-
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
 
@@ -104,18 +105,28 @@ class ActivityController extends Controller
         // Session flash
         session()->flash('message', 'Activity has successfully been edited.');
 
-        //Redirect to the business owner admin page
+        // Redirect to activity page
         return redirect('/admin/activity');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Activity  $activity
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Activity $activity)
+    public function destroy($id)
     {
-        //
+        // Find activity
+        $activity = Activity::find($id);
+
+        // Delete activity
+        $activity->delete();
+
+        // Session flash
+        session()->flash('message', 'Activity has successfully been removed.');
+
+        // Redirect to activity page
+        return redirect('/admin/activity');
     }
 }

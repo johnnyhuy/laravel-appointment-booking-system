@@ -133,6 +133,7 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
  */
 $factory->define(Booking::class, function (Generator $faker) {
     $customer = factory(Customer::class)->create();
+    $employee = factory(Employee::class)->create();
     $activity = factory(Activity::class)->create();
 
     // Loop so that start time is always earlier than end time in hours
@@ -169,14 +170,15 @@ $factory->define(Booking::class, function (Generator $faker) {
         ->addMinutes($endMinute);
 
     // Convert Carbon object to Time string
-    $startTime = $startTime->toTimeString();
-    $endTime = $endTime->toTimeString();
+    $startTime = $startTime->format('H:i');
+    $endTime = $endTime->format('H:i');
 
     // Convert day to Date string
     $day = $day->toDateString();
 
     return [
         'customer_id' => $customer->id,
+        'employee_id' => $employee->id,
         'activity_id' => $activity->id,
         'start_time' => $startTime,
         'end_time' => $endTime,

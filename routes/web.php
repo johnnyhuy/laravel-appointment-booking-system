@@ -1,4 +1,4 @@
-'<?php
+<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -57,7 +57,13 @@ Route::post('/admin/roster', 'WorkingTimeController@create');
 
 // Activity management
 // Custom modified resourceful controller using CRUD routes
-Route::resource('/admin/activity', 'ActivityController', [
+Route::resource('admin/activity', 'ActivityController', [
+	'only' => [
+		'store', 'edit', 'update', 'destroy'
+	]
+]);
+
+Route::resource('admin/booking', 'BookingController', [
 	'only' => [
 		'store', 'edit', 'update', 'destroy'
 	]
