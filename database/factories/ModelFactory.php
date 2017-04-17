@@ -45,7 +45,7 @@ $factory->define(Employee::class, function (Generator $faker) {
  */
 $factory->define(Activity::class, function (Generator $faker) {
     // Set time variables for duration
-    $hour = rand(0, 23);
+    $hour = rand(2, 4);
     $minute = rand(0, 1) == 1 ? 0 : 30;
 
     // Set duration
@@ -95,12 +95,21 @@ $factory->define(Availability::class, function (Generator $faker) {
  *
  */
 $factory->define(Customer::class, function (Generator $faker) {
-    static $password;
+    while (true) {
+        // Replace '.' to 'a' character in default faker username
+        $username = str_replace(".", "a", $faker->userName);
+
+        // Generate usernames that are 6 or more characters long
+        if (strlen($username) >= 6) {
+            break;
+        }
+    }
+
     return [
         'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
-        'username' => str_replace(".", "", $faker->userName),
-        'password' => $password ?: $password = bcrypt($faker->password),
+        'username' => $username,
+        'password' => bcrypt($faker->password),
         'phone' => $faker->phoneNumber,
         'address' => $faker->streetAddress,
         'phone' => $faker->phoneNumber,
@@ -115,12 +124,22 @@ $factory->define(Customer::class, function (Generator $faker) {
  *
  */
 $factory->define(BusinessOwner::class, function (Generator $faker) {
+    while (true) {
+        // Replace '.' to 'a' character in default faker username
+        $username = str_replace(".", "a", $faker->userName);
+
+        // Generate usernames that are 6 or more characters long
+        if (strlen($username) >= 6) {
+            break;
+        }
+    }
+
     return [
 		'business_name' => $faker->company,
 		'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
-		'username' => str_replace(".", "", $faker->userName),
-		'password' => $password = bcrypt($faker->password),
+		'username' => $username,
+		'password' => bcrypt($faker->password),
 		'address' => $faker->streetAddress,
 		'phone' => $faker->phoneNumber,
     ];
@@ -132,49 +151,38 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
  *
  */
 $factory->define(Booking::class, function (Generator $faker) {
+    // Create factories
     $customer = factory(Customer::class)->create();
     $employee = factory(Employee::class)->create();
     $activity = factory(Activity::class)->create();
 
-    // Loop so that start time is always earlier than end time in hours
-    while (true) {
-        $startHour = rand(0, 24);
-        $startMinute = rand(0, 1) == 1 ? 0 : 30;
-        $endHour = rand(0, 24);
-        $endMinute = rand(0, 1) == 1 ? 0 : 30;
+    // Activity duration
+    $duration = Carbon::parse($activity->duration);
 
-        if ($startHour < $endHour) {
-            break;
-        }
-    }
+    // Get start time
+    $startHour = rand(8, 15);
+    $startMinute = rand(0, 1) == 1 ? 0 : 30;
+    $startTime = Carbon::createFromTime($startHour, $startMinute)->format('H:i');
+
+    // Calculate end time
+    $endTime = Booking::calculateEndTime($activity->id, $startTime);
+
+     // Get time now
+    $now = Carbon::now('Australia/Melbourne');
 
     // Give a random day
     $days = rand(0, 365);
 
-     // Get the start of today
-    $startTime = Carbon::now('Australia/Melbourne')->startOfDay();
-    $endTime = Carbon::now('Australia/Melbourne')->startOfDay();
-    $day = Carbon::now('Australia/Melbourne')->startOfDay();
-
     // Set future or past booking by one year
     if (rand(0, 1) == 1) {
-        $day->subYears(1);
+        $now->subYears(1);
     }
 
-    $day->addDays($days);
-
-    // Add days and hours
-    $startTime->addHours($startHour)
-        ->addMinutes($startMinute);
-    $endTime->addHours($endHour)
-        ->addMinutes($endMinute);
-
-    // Convert Carbon object to Time string
-    $startTime = $startTime->format('H:i');
-    $endTime = $endTime->format('H:i');
+    // Add a random amount of days
+    $now->addDays($days);
 
     // Convert day to Date string
-    $day = $day->toDateString();
+    $date = $now->toDateString();
 
     return [
         'customer_id' => $customer->id,
@@ -182,6 +190,6 @@ $factory->define(Booking::class, function (Generator $faker) {
         'activity_id' => $activity->id,
         'start_time' => $startTime,
         'end_time' => $endTime,
-        'date' => $day,
+        'date' => $date,
     ];
 });
