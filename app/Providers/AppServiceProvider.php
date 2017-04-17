@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Dusk\DuskServiceProvider;
 
+use App\Activity;
+use App\Booking;
+
+use Carbon\Carbon;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -19,25 +24,52 @@ class AppServiceProvider extends ServiceProvider
 		//Additional code to fix php artisan migrate error for (unique key too long on certain systems)
         Schema::defaultStringLength(191);
 
-        Validator::extend('is_employee_not_working', function ($attribute, $value, $parameters, $validator) {
-            $date = $parameters[0];
-            $startTime = $parameters[1];
-            $endTime = $parameters[2];
-            $bookings = App\Booking::where('employee_id', $value)
-                ->where('date', '=', $date);
+        // Create a validator to check if an employee is free when adding a booking
+        Validator::extend('is_employee_free', function ($attribute, $value, $parameters, $validator) {
+            // Parameters are the date and time of booking
+            $pDate = $parameters[0];
+            $pStartTime = $parameters[1];
+            $pEndTime = $parameters[2];
 
+            // Get bookings of the date
+            $bookings = Booking::where('employee_id', $value)
+                ->where('date', '=', $pDate)
+                ->get();
+            
+            // Is employee free
+            $free = true;
+
+            // Loop through booking results
             foreach ($bookings as $booking) {
-                // When a booking is between an employee working
-                if ($booking->start_time < $startTime and $booking->end_time > $endTime) {
-                    return false;
-                }
+                // Booking start and end time
+                $bStartTime = $booking->start_time;
+                $bEndTime = $booking->end_time;
 
-                if ($booking->start_time < $startTime and $booking->end_time < $endTime) {
-                    return false;
+                // If times are conflicting with any exiting booking
+                // Then break and return false
+                if (!($pStartTime < $bStartTime and $pEndTime <= $bStartTime or $pStartTime >= $bEndTime and $pEndTime > $bEndTime)) {
+                    $free = false;
+                    break;
                 }
             }
 
-            return $count === 0;
+            // Return condition
+            return $free;
+        });
+
+        Validator::extend('is_end_time_valid', function ($attribute, $value, $parameters, $validator) {
+            // Alias
+            $activityID = $value;
+            $startTime = $parameters[0];
+
+            // If end time is before start time
+            // Then return false
+            if (Booking::calculateEndTime($activityID, $startTime) < $startTime) {
+                return false;
+            }
+            else {
+                return true;
+            }
         });
     }
 

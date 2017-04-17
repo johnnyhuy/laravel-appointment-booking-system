@@ -27,19 +27,20 @@ class BookingController extends Controller
         // Validation error messages
         $messages = [
         	'start_time.date_format' => 'The :attribute field must be in the correct time format.',
-        	'end_time.date_format' => 'The :attribute field must be in the correct time format.',
-        	'customer_id.exists' => 'Customer does not exist.',
-        	'employee_id.exists' => 'Employee does not exist.',
-        	'activity_id.exists' => 'Activity does not exist.',
+            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'customer_id.exists' => 'The :attribute does not exist.',
+            'employee_id.exists' => 'The :attribute does not exist.',
+            'employee_id.is_employee_free' => 'The :attribute is already working on another booking at that time.',
+            'activity_id.exists' => 'The :attribute does not exist.',
+        	'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
         ];
 
         // Validation rules
         $rules = [
             'customer_id' => 'required|exists:customers,id',
-            'employee_id' => 'required|exists:employees,id',
-            'activity_id' => 'required|exists:activities,id',
+            'employee_id' => 'exists:employees,id|is_employee_free:' . $request->date . ',' . $request->start_time . ',' . $request->end_time,
+            'activity_id' => 'required|exists:activities,id|is_end_time_valid:' . $request->start_time,
             'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|after:start_time|date_format:H:i',
             'date' => 'required|date',
         ];
 
@@ -61,7 +62,7 @@ class BookingController extends Controller
             'employee_id' => $request->employee_id,
             'activity_id' => $request->activity_id,
             'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'end_time' => Booking::calculateEndTime($request->activity_id, $request->start_time),
             'date' => $request->date,
         ]);
 

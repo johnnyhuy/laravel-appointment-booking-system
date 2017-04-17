@@ -4,11 +4,33 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Activity;
+
 use Carbon\Carbon;
 
 class Booking extends Model
 {
 	protected $guarded = [];
+
+	/**
+	 * Calculate end time of a booking given its activity
+	 * 
+	 * @return string
+	 */
+	public static function calculateEndTime($activityID, $pStartTime) {
+		$activity = Activity::find($activityID);
+
+		if (isset($activity)) {
+			// Set start time
+			$startTime = Carbon::parse($pStartTime);
+
+		    // Calculate end time
+		    return Carbon::createFromTime($startTime->hour, $startTime->minute)
+		    	->addHours($activity->getHour())
+		    	->addMinutes($activity->getMinute())
+		    	->format('H:i');
+		}
+	}
 
 	/**
 	 * Calculate the duration of the booking

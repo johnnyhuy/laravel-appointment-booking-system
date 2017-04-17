@@ -60,11 +60,11 @@ class ActivityTest extends TestCase
         // Send a POST request to admin/activity
         $response = $this->json('POST', 'admin/activity', $activityData);
 
-        // Check create activity success message
-        $response->assertSessionHas('message', 'Activity has successfully been created.');
-
         // Check if redirected after request
         $response->assertRedirect('admin/activity');
+
+        // Check create activity success message
+        $response->assertSessionHas('message', 'Activity has successfully been created.');
 
         // Check if activity exists in the database
         $this->assertDatabaseHas('activities', [
@@ -96,11 +96,11 @@ class ActivityTest extends TestCase
         // Send PUT/PATCH request to admin/activity/{activity}
         $response = $this->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
 
-        // Check edit activity success message
-        $response->assertSessionHas('message', 'Activity has successfully been edited.');
-
         // Check if redirected after request
         $response->assertRedirect('admin/activity');
+
+        // Check edit activity success message
+        $response->assertSessionHas('message', 'Activity has successfully been edited.');
 
         // Check if activity has been edited in the database
         $this->assertDatabaseHas('activities', [
@@ -123,6 +123,9 @@ class ActivityTest extends TestCase
 
         // Send DELETE request to admin/activity/{activity}
         $response = $this->json('DELETE', 'admin/activity/' . $activity->id);
+
+        // Check if redirected after request
+        $response->assertRedirect('admin/activity');
 
         // Check remove activity success message
         $response->assertSessionHas('message', 'Activity has successfully been removed.');

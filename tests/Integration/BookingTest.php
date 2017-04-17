@@ -52,7 +52,7 @@ class BookingTest extends TestCase
         $customer = factory(Customer::class)->create();
         $activity = factory(Activity::class)->create();
 
-        // Get Current time
+        // Get time
         $time = Carbon::createFromTime(0, 0);
 
         // Activity duration
@@ -124,7 +124,7 @@ class BookingTest extends TestCase
 
         // Check response for an error message
         $response->assertJsonFragment([
-            'Customer does not exist.'
+            'The customer does not exist.'
         ]);
 
 
@@ -154,22 +154,7 @@ class BookingTest extends TestCase
 
         // Check response for an error message
         $response->assertJsonFragment([
-            'Activity does not exist.'
-        ]);
-
-
-        // User selects no employee
-        // Build booking data
-        $bookingData = [
-            'employee_id' => '',
-        ];
-
-        // Send POST request to admin/booking
-        $response = $this->actingAs($bo)->json('POST', 'admin/booking', $bookingData);
-
-        // Check response for an error message
-        $response->assertJsonFragment([
-            'The employee field is required.'
+            'The activity does not exist.'
         ]);
 
 
@@ -184,7 +169,7 @@ class BookingTest extends TestCase
 
         // Check response for an error message
         $response->assertJsonFragment([
-            'Employee does not exist.'
+            'The employee does not exist.'
         ]);
 
 
@@ -201,64 +186,155 @@ class BookingTest extends TestCase
         $response->assertJsonFragment([
             'The start time field must be in the correct time format.'
         ]);
-
-
-        // User inputs invalid end time
-        // Build booking data
-        $bookingData = [
-            'end_time' => '@@@',
-        ];
-
-        // Send POST request to admin/booking
-        $response = $this->actingAs($bo)->json('POST', 'admin/booking', $bookingData);
-
-        // Check response for an error message
-        $response->assertJsonFragment([
-            'The end time field must be in the correct time format.'
-        ]);
-
-
-        // User inputs start time after end time
-        // Build booking data
-        $bookingData = [
-            'start_time' => '04:00',
-            'end_time' => '02:00',
-        ];
-
-        // Send POST request to admin/booking
-        $response = $this->actingAs($bo)->json('POST', 'admin/booking', $bookingData);
-
-        // Check response for an error message
-        $response->assertJsonFragment([
-            'The end time must be a date after start time.'
-        ]);
     }
 
     /**
-     * Booking belongs to one activity, make 4 bookings and assign it to an activity
+     * Create an existing booking and assign it to an employee
+     * Send a request to create another booking and try to assign it to an employee
+     * Both bookings have the employee working at the same time
      *
      * @return void
      */
-    public function testIfBookingAlreadyExistsThenError()
+    public function testEmployeeIsWorkingOnBookingValidation()
     {
         // Business Owner must be created and logged in
         $bo = factory(BusinessOwner::class)->create();
 
-        // Get Current time
-        $time = Carbon::createFromTime(0, 0);
+        // Generate fake data
+        $employee = factory(Employee::class)->create();
+        $customer = factory(Customer::class)->create();
+        $activity = factory(Activity::class)->create();
 
-        // There exists a booking
-        $booking = factory(Booking::class)->create();
+        // Start time is 10:00AM
+        $startTime = '10:00';
 
-        // Add a booking from activity duration
+        // Calculate the end time depending on the activity duration
+        $endTime = Booking::calculateEndTime($activity->id, $startTime);
+
         // Build booking data
         $bookingData = [
-            'customer_id' => $booking->customer_id,
-            'employee_id' => $booking->employee_id,
-            'activity_id' => $booking->activity_id,
-            'start_time' => $booking->start_time,
-            'end_time' => $booking->end_time,
-            'date' => $booking->date,
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'date' => Carbon::now()->toDateString(),
+        ];
+
+        // There exists a booking
+        $booking = factory(Booking::class)->create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $bookingData['start_time'],
+            'end_time' => $bookingData['end_time'],
+            'date' => $bookingData['date'],
+        ]);
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo)->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee is already working on another booking at that time.'
+        ]);
+
+
+        // When employee starts before start time and finishes before end time
+        // Subtract an hour from start and end time (offset)
+        $bookingData['start_time'] = Carbon::parse($startTime)->subHour()->format('H:i');
+        $bookingData['end_time'] = Carbon::parse($endTime)->subHour()->format('H:i');
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo)->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee is already working on another booking at that time.'
+        ]);
+
+
+        // When employee starts after start time and finishes after end time
+        // Add an hour from start and end time (offset)
+        $bookingData['start_time'] = Carbon::parse($startTime)->addHour()->format('H:i');
+        $bookingData['end_time'] = Carbon::parse($endTime)->addHour()->format('H:i');
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo)->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee is already working on another booking at that time.'
+        ]);
+
+        // When employee working on booking starts before existing booking
+        $bookingData['start_time'] = Carbon::parse($booking->start_time)
+            ->subHours($activity->hour)
+            ->subMinutes($activity->minute)
+            ->format('H:i');
+        $bookingData['end_time'] = Carbon::parse($booking->end_time)
+            ->subHours($activity->hour)
+            ->subMinutes($activity->minute)
+            ->format('H:i');
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo)->json('POST', 'admin/booking', $bookingData);
+
+        // Check message add booking is successful
+        $response->assertSessionHas('message', 'Booking has successfully been created.');
+
+
+        // When employee working on booking starts after existing booking
+        $bookingData['start_time'] = Carbon::parse($booking->start_time)
+            ->addHours($activity->hour)
+            ->addMinutes($activity->minute)
+            ->format('H:i');
+        $bookingData['end_time'] = Carbon::parse($booking->end_time)
+            ->addHours($activity->hour)
+            ->addMinutes($activity->minute)
+            ->format('H:i');
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo)->json('POST', 'admin/booking', $bookingData);
+
+        // Check message add booking is successful
+        $response->assertSessionHas('message', 'Booking has successfully been created.');
+    }
+
+    /**
+     * When user attempts to add a booking activity duration that goes to the next day
+     * Then show an error
+     *
+     * @return void
+     */
+    public function testBookingAddActivityDurationWhereBookingEndTimeIsInvalid()
+    {
+        // Business Owner must be created and logged in
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Generate fake data
+        $employee = factory(Employee::class)->create();
+        $customer = factory(Customer::class)->create();
+        
+        // Set duration for 2 hours
+        $activity = factory(Activity::class)->create([
+            'duration' => '2:00'
+        ]);
+        
+        // Booking starts at 22:00
+        $startTime = '22:00';
+
+        // End time is 24:00 or 00:00, which is the next day
+        $endTime = Booking::calculateEndTime($activity->id, $startTime);
+
+        // Build booking data
+        $bookingData = [
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'date' => Carbon::now()->toDateString(),
         ];
 
         // Send POST request to /admin/booking
@@ -266,7 +342,7 @@ class BookingTest extends TestCase
 
         // Check response for an error message
         $response->assertJsonFragment([
-            'Thes start time field must be in the correct time format.'
+            'The activity duration added on start time is invalid. Please add a start time that does not go to the next day.'
         ]);
     }
 
