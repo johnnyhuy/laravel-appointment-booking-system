@@ -1,5 +1,5 @@
 # SE-PT-Assignment
-Major group assignment for COSC2299 Software Engineering: Process and Tools at RMIT University. This assignment is due 9:00AM Monday April 10 2017.
+Major group assignment for COSC2299 Software Engineering: Process and Tools at RMIT University. This assignment is due 9:00AM Monday May 1 2017.
 
 ## Team Members & Contributions
 For team members, please add more details to your role if needed.
