@@ -7,7 +7,7 @@ use App\Booking;
 
 use Tests\DuskTestCase;
 
-class BookingsTest extends DuskTestCase
+class CustomerBookingsTest extends DuskTestCase
 {
     /**
      * Test when customer is logged in and sees start time column

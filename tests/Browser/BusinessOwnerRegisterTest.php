@@ -3,15 +3,12 @@
 namespace Tests\Browser;
 
 use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 use App\Customer;
 use App\BusinessOwner;
 
 class BusinessOwnerRegisterTest extends DuskTestCase
-{
-    use DatabaseMigrations;
-    
+{    
     /**
      * Test when admin registers with valid data the form accepts the input
      *

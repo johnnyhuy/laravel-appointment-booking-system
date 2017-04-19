@@ -35,12 +35,12 @@
 			<label for="inputPhone">Phone <span class="request__validate">(at least 10 characters)</span></label>
 			<input name="phone" type="text" id="inputPhone" class="form-control request__input" placeholder="Phone" value="{{ old('phone') }}" autofocus>
 		</div>
-		<button class="btn btn-lg btn-primary btn-block btn--margin-top" href="/admin/employees">Add Employee</button>
+		<button class="btn btn-lg btn-primary btn-block btn--margin-top">Add Employee</button>
 	</form>
 </div>
 <div class="dash__block">
 	<h1 class="dash__header">Employees</h1>
-	@if (count($employees))
+	@if ($employees->count())
 		<h4 class="main_description">A table of all employees within the business.</h4>
 		<div class="table-responsive dash__table-wrapper">
 		    <table class="table table--no-margin dash__table">

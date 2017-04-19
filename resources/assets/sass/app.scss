@@ -102,8 +102,11 @@ footer {
 	// Field specific modifiers
 
 	@include m('id') {
-		max-width: 40px;
-		min-width: 25px;
+		width: 80px;
+	}
+
+	@include m('description') {
+		min-width: 100px;
 	}
 
 	@include m('time') {

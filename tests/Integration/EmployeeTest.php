@@ -3,17 +3,11 @@
 namespace Tests\Integration;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Employee;
 
 class EmployeeTest extends TestCase
 {
-    // Rollback database actions once test is complete with this trait
-    use DatabaseTransactions;
-
     /**
      * Tests validation rules for title field when adding a new employee
      *

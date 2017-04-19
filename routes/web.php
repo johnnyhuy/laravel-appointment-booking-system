@@ -49,6 +49,7 @@ Route::get('/admin/summary', 'AdminController@summary');
 Route::get('/admin/employees', 'AdminController@employees');
 Route::get('/admin/history', 'AdminController@history');
 Route::get('/admin/roster', 'AdminController@roster');
+Route::get('/admin/activity', 'AdminController@activity');
 
 // Admin form submission handling
 Route::post('/admin/register', 'BusinessOwnerController@create');

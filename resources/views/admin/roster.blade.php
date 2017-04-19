@@ -29,11 +29,11 @@
 		</div>
 		<div class="form-group request__flex-container">
 			<div class="request__flex request__flex--left">
-				<label for="inputStartTime">Start Time <span class="request__validate">(hh:mm AM/PM)</span></label>
+				<label for="inputStartTime">Start Time <span class="request__validate">(24 hour format)</span></label>
 				<input name="start_time" type="time" id="inputStartTime" class="form-control request__input" value="{{ old('start_time') ? old('start_time') : '09:00' }}" autofocus>
 			</div>
 			<div class="request__flex request__flex--right">
-				<label for="inputEndTime">End Time <span class="request__validate">(hh:mm AM/PM)</span></label>
+				<label for="inputEndTime">End Time <span class="request__validate">(24 hour format)</span></label>
 				<input name="end_time" type="time" id="inputEndTime" class="form-control request__input" value="{{ old('end_time') ? old('end_time') : '17:00' }}" autofocus>
 			</div>
 		</div>
@@ -41,20 +41,20 @@
 			<div class="request__flex request__flex--left">
 				<label for="inputDay">Day <span class="request__validate">(Monday, Tuesday etc.)</span></label>
 				<select name="day" id="inputDay" class="form-control request__input">
-					<option value="0">Monday</option>
-					<option value="1">Tuesday</option>
-					<option value="2">Wednesday</option>
-					<option value="3">Thursday</option>
-					<option value="4">Friday</option>
-					<option value="5">Saturday</option>
-					<option value="6">Sunday</option>
+					<option value="1">Monday</option>
+					<option value="2">Tuesday</option>
+					<option value="3">Wednesday</option>
+					<option value="4">Thursday</option>
+					<option value="5">Friday</option>
+					<option value="6">Saturday</option>
+					<option value="7">Sunday</option>
 				</select>
 			</div>
 			<div class="request__flex request__flex--right">
 				<label for="inputWeek">Week <span class="request__validate">(e.g. week 1 of month)</span></label>
 				<select name="week" id="inputWeek" class="form-control request__input">
 				@for ($i = 1; $i <= 5; $i++)
-					<option value="{{ $i - 1 }}">{{ $i }}</option>
+					<option value="{{ $i }}">{{ $i }}</option>
 				@endfor
 				</select>
 			</div>

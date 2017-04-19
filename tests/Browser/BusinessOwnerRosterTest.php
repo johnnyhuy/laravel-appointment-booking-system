@@ -3,12 +3,13 @@
 namespace Tests\Browser;
 
 use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 use App\BusinessOwner;
 use App\Employee;
 use App\Booking;
 use App\Availability;
+
+use Carbon\Carbon;
 
 class BusinessOwnerRosterTest extends DuskTestCase
 {
@@ -72,15 +73,15 @@ class BusinessOwnerRosterTest extends DuskTestCase
             $browser->loginAs($bo, 'web_admin')
                 //Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
-                ->keys('#inputStartTime', '08:00 AM')
-                ->keys('#inputEndTime', '09:00 PM')
-                ->select('day', 'Monday')
-                ->select('week', '1')
-
+                ->keys('#inputStartTime', '08:00')
+                ->keys('#inputEndTime', '17:00')
+                ->select('day', 1)
+                ->select('week', 1)
                 ->press('Add Working Time')
 
+                // Check if working time is added
                 ->assertSee('New working time has been added.')
-                ->assertSee(\Carbon\Carbon::parse('08:00 AM')->format('h:i A') . ' - ' . \Carbon\Carbon::parse('09:00 PM')->format('h:i A'));
+                ->assertSee('08:00 AM - 05:00 PM');
         });
     }
 
@@ -102,22 +103,21 @@ class BusinessOwnerRosterTest extends DuskTestCase
             $browser->loginAs($bo, 'web_admin')
                 //Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
-                ->keys('#inputStartTime', '08:00 AM')
-                ->keys('#inputEndTime', '09:00 PM')
-                ->select('day', 'Monday')
-                ->select('week', '1')
-
+                ->keys('#inputStartTime', '08:00')
+                ->keys('#inputEndTime', '17:00')
+                ->select('day', 1)
+                ->select('week', 1)
                 ->press('Add Working Time')
 
+                // Check if working time is added
                 ->assertSee('New working time has been added.')
-                ->assertSee(\Carbon\Carbon::parse('08:00 AM')->format('h:i A') . ' - ' . \Carbon\Carbon::parse('09:00 PM')->format('h:i A'))
+                ->assertSee('08:00 AM - 05:00 PM')
 
                 //Go to summary page (default directory of /admin)
                 ->keys('#inputStartTime', '010:00 AM')
                 ->keys('#inputEndTime', '05:00 PM')
-                ->select('day', 'Monday')
-                ->select('week', '1')
-
+                ->select('day', 1)
+                ->select('week', 1)
                 ->press('Add Working Time')
 
                 ->assertSee('Employee can only have one working time per day.')
@@ -132,7 +132,6 @@ class BusinessOwnerRosterTest extends DuskTestCase
      */
     public function testAddWorkingTimesOnSameDayButDifferentWeeks()
     {
-      
         //Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         //Creates an employee
@@ -143,27 +142,25 @@ class BusinessOwnerRosterTest extends DuskTestCase
             $browser->loginAs($bo, 'web_admin')
                 //Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
-                ->keys('#inputStartTime', '08:00 AM')
-                ->keys('#inputEndTime', '09:00 PM')
-                ->select('day', 'Monday')
-                ->select('week', '1')
-
+                ->keys('#inputStartTime', '08:00')
+                ->keys('#inputEndTime', '17:00')
+                ->select('day', 1)
+                ->select('week', 1)
                 ->press('Add Working Time')
 
                 ->assertSee('New working time has been added.')
-                ->assertSee(\Carbon\Carbon::parse('08:00 AM')->format('h:i A') . ' - ' . \Carbon\Carbon::parse('09:00 PM')->format('h:i A'))
+                ->assertSee('08:00 AM - 05:00 PM')
 
                 //Go to summary page (default directory of /admin)
-                ->keys('#inputStartTime', '10:00 AM')
-                ->keys('#inputEndTime', '05:00 PM')
-                ->select('day', 'Monday')
-                ->select('week', '2')
-
+                ->keys('#inputStartTime', '10:00')
+                ->keys('#inputEndTime', '17:00')
+                ->select('day', 1)
+                ->select('week', 2)
                 ->press('Add Working Time')
 
                 ->assertSee('New working time has been added.')
-                ->assertSee(\Carbon\Carbon::parse('08:00 AM')->format('h:i A') . ' - ' . \Carbon\Carbon::parse('09:00 PM')->format('h:i A'))
-                ->assertSee(\Carbon\Carbon::parse('10:00 AM')->format('h:i A') . ' - ' . \Carbon\Carbon::parse('05:00 PM')->format('h:i A'));
+                ->assertSee('08:00 AM - 05:00 PM')
+                ->assertSee('10:00 AM - 05:00 PM');
         });
     }
 
@@ -186,22 +183,20 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 //Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->select('employee_id', (string)$employee1->id)
-                ->keys('#inputStartTime', '08:00 AM')
-                ->keys('#inputEndTime', '09:00 PM')
-                ->select('day', 'Monday')
-                ->select('week', '1')
-
+                ->keys('#inputStartTime', '08:00')
+                ->keys('#inputEndTime', '17:00')
+                ->select('day', 1)
+                ->select('week', 1)
                 ->press('Add Working Time')
 
                 ->assertSee('New working time has been added.')
                 ->assertSee($employee1->firstname . ' ' . $employee1->lastname)
 
                 ->select('employee_id', (string)$employee2->id)
-                ->keys('#inputStartTime', '08:00 AM')
-                ->keys('#inputEndTime', '09:00 PM')
-                ->select('day', 'Monday')
-                ->select('week', '1')
-
+                ->keys('#inputStartTime', '08:00')
+                ->keys('#inputEndTime', '17:00')
+                ->select('day', 1)
+                ->select('week', 1)
                 ->press('Add Working Time')
 
                 ->assertSee('New working time has been added.')
@@ -228,11 +223,10 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 //Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->select('employee_id', (string)$employee->id)
-                ->keys('#inputStartTime', '0900AM')
-                ->keys('#inputEndTime', '0700AM')
-                ->select('day', 'Monday')
-                ->select('week', '1')
-
+                ->keys('#inputStartTime', '09:00')
+                ->keys('#inputEndTime', '07:00')
+                ->select('day', 1)
+                ->select('week', 1)
                 ->press('Add Working Time')
 
                 ->assertDontSee('New working time has been added.')
@@ -259,11 +253,10 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 //Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->select('employee_id', (string)$employee->id)
-                ->keys('#inputStartTime', '0900AM')
-                ->keys('#inputEndTime', '0900AM')
-                ->select('day', 'Monday')
-                ->select('week', '1')
-
+                ->keys('#inputStartTime', '09:00')
+                ->keys('#inputEndTime', '09:00')
+                ->select('day', 1)
+                ->select('week', 1)
                 ->press('Add Working Time')
 
                 ->assertDontSee('New working time has been added.')

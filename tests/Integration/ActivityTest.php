@@ -3,9 +3,6 @@
 namespace Tests\Integration;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Employee;
 use App\Activity;
@@ -15,12 +12,6 @@ use Carbon\Carbon;
 
 class ActivityTest extends TestCase 
 {
-	// Rollback database actions once test is complete with this trait
-    use DatabaseTransactions;
-
-    // Test without middleware
-    use WithoutMiddleware;
-
     /**
      * Activity has many bookings, make 4 bookings and assign it to an activity
      *
