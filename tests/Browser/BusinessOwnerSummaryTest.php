@@ -3,12 +3,13 @@
 namespace Tests\Browser;
 
 use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 use App\BusinessOwner;
 use App\Employee;
 use App\Booking;
 use App\Availability;
+
+use Carbon\Carbon;
 
 class BusinessOwnerSummaryTest extends DuskTestCase
 {
@@ -44,7 +45,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for yesterday
         $booking = factory(Booking::class)->create([
-            'date' => \Carbon\Carbon::now()->addDay(),
+            'date' => Carbon::now()->addDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -57,11 +58,11 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 //Check for full name on page
                 ->assertSee($booking->customer->firstname . " " . $booking->customer->lastname)
                 //Check for start time in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking->start_time)->format('H:i'))
+                ->assertSee(Carbon::parse($booking->start_time)->format('H:i'))
                 //Check for the end time in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking->end_time)->format('H:i'))
+                ->assertSee(Carbon::parse($booking->end_time)->format('H:i'))
                 //Check for the date in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking->date)->format('d/m/y'));
+                ->assertSee(Carbon::parse($booking->date)->format('d/m/y'));
         });
     }
 
@@ -76,7 +77,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for yesterday
         $booking = factory(Booking::class)->create([
-            'date' => \Carbon\Carbon::now()->subDay(),
+            'date' => Carbon::now()->subDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -87,11 +88,11 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 //Check for full name on page
                 ->assertDontSee($booking->customer->firstname . " " . $booking->customer->lastname)
                 //Check for start time in the proper format
-                ->assertDontSee(\Carbon\Carbon::parse($booking->start_time)->format('H:i'))
+                ->assertDontSee(Carbon::parse($booking->start_time)->format('H:i'))
                 //Check for the end time in the proper format
-                ->assertDontSee(\Carbon\Carbon::parse($booking->end_time)->format('H:i'))
+                ->assertDontSee(Carbon::parse($booking->end_time)->format('H:i'))
                 //Check for the date in the proper format
-                ->assertDontSee(\Carbon\Carbon::parse($booking->date)->format('d/m/y'));
+                ->assertDontSee(Carbon::parse($booking->date)->format('d/m/y'));
         });
     }
 
@@ -106,11 +107,11 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for tommorow
         $booking1 = factory(Booking::class)->create([
-            'date' => \Carbon\Carbon::now()->addDay(),
+            'date' => Carbon::now()->addDay(),
         ]);
         //Create a booking for 2 days from now
         $booking2 = factory(Booking::class)->create([
-            'date' => \Carbon\Carbon::now()->addDay()->addDay(),
+            'date' => Carbon::now()->addDay()->addDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking1, $booking2) {
@@ -125,11 +126,11 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 //Check for full name on page
                 ->assertSee($booking1->customer->firstname . " " . $booking1->customer->lastname)
                 //Check for start time in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking1->start_time)->format('H:i'))
+                ->assertSee(Carbon::parse($booking1->start_time)->format('H:i'))
                 //Check for the end time in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking1->end_time)->format('H:i'))
+                ->assertSee(Carbon::parse($booking1->end_time)->format('H:i'))
                 //Check for the date in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking1->date)->format('d/m/y'))
+                ->assertSee(Carbon::parse($booking1->date)->format('d/m/y'))
 
                 //Check for second booking
                 // //Check for the booking ID
@@ -137,11 +138,11 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 //Check for full name on page
                 ->assertSee($booking2->customer->firstname . " " . $booking2->customer->lastname)
                 //Check for start time in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking2->start_time)->format('H:i'))
+                ->assertSee(Carbon::parse($booking2->start_time)->format('H:i'))
                 //Check for the end time in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking2->end_time)->format('H:i'))
+                ->assertSee(Carbon::parse($booking2->end_time)->format('H:i'))
                 //Check for the date in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking2->date)->format('d/m/y'));
+                ->assertSee(Carbon::parse($booking2->date)->format('d/m/y'));
         });
     }
 
@@ -156,9 +157,9 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for today
         $booking = factory(Booking::class)->create([
-            'date' => \Carbon\Carbon::now(),
-            'start_time' => \Carbon\Carbon::now(),
-            'end_time' => \Carbon\Carbon::now()->addHour(),
+            'date' => Carbon::now(),
+            'start_time' => Carbon::now(),
+            'end_time' => Carbon::now()->addHour(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -171,11 +172,11 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 //Check for full name on page
                 ->assertSee($booking->customer->firstname . " " . $booking->customer->lastname)
                 //Check for start time in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking->start_time)->format('H:i'))
+                ->assertSee(Carbon::parse($booking->start_time)->format('H:i'))
                 //Check for the end time in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking->end_time)->format('H:i'))
+                ->assertSee(Carbon::parse($booking->end_time)->format('H:i'))
                 //Check for the date in the proper format
-                ->assertSee(\Carbon\Carbon::parse($booking->date)->format('d/m/y'));
+                ->assertSee(Carbon::parse($booking->date)->format('d/m/y'));
         });
     }
 
@@ -190,7 +191,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for today
         $booking = factory(Booking::class)->create( [
-            'date' => \Carbon\Carbon::now()->addMonth()
+            'date' => Carbon::now()->addMonth()
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -201,11 +202,11 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 //Check for full name on page
                 ->assertDontSee($booking->customer->firstname . " " . $booking->customer->lastname)
                 //Check for start time in the proper format
-                ->assertDontSee(\Carbon\Carbon::parse($booking->start_time)->format('H:i'))
+                ->assertDontSee(Carbon::parse($booking->start_time)->format('H:i'))
                 //Check for the end time in the proper format
-                ->assertDontSee(\Carbon\Carbon::parse($booking->end_time)->format('H:i'))
+                ->assertDontSee(Carbon::parse($booking->end_time)->format('H:i'))
                 //Check for the date in the proper format
-                ->assertDontSee(\Carbon\Carbon::parse($booking->date)->format('d/m/y'));
+                ->assertDontSee(Carbon::parse($booking->date)->format('d/m/y'));
         });
     }
 
@@ -247,7 +248,11 @@ class BusinessOwnerSummaryTest extends DuskTestCase
 
         //Create Availabilities for Employee
         $a1 = factory(Availability::class)->create();
-        $a2 = factory(Availability::class)->create( ['day' => 'tuesday', 'end_time' => '20:00:00' ] );
+        $a2 = factory(Availability::class)->create([
+            'day' => 'TUESDAY',
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
 
         $this->browse(function ($browser) use ($bo, $employee, $a1, $a2) {
             //Login as Business Owner
@@ -259,10 +264,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 //Assert Employe isn't available for days where they are unavailable
                 ->assertSee('Not Available')
                 //Assert Availabilites appear
-                ->assertSee(\Carbon\Carbon::parse($a1->start_time)->format('h:i A') . " - " . 
-                     \Carbon\Carbon::parse($a1->end_time)->format('h:i A'))
-                ->assertSee(\Carbon\Carbon::parse($a2->start_time)->format('h:i A') . " - " . 
-                     \Carbon\Carbon::parse($a2->end_time)->format('h:i A'));
+                ->assertSee('09:00 AM - 05:00 PM');
         });
     }
 
@@ -279,13 +281,13 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $employee = factory(Employee::class)->create();
 
         //Create Availabilities for Employee
-        $a1 = factory(Availability::class)->create();
-        $a2 = factory(Availability::class)->create( ['day' => 'tuesday'] );
-        $a3 = factory(Availability::class)->create( ['day' => 'wednesday'] );
-        $a4 = factory(Availability::class)->create( ['day' => 'thursday'] );
-        $a5 = factory(Availability::class)->create( ['day' => 'friday'] );
-        $a6 = factory(Availability::class)->create( ['day' => 'saturday'] );
-        $a7 = factory(Availability::class)->create( ['day' => 'sunday'] );
+        $a2 = factory(Availability::class)->create(['day' => 'MONDAY']);
+        $a2 = factory(Availability::class)->create(['day' => 'TUESDAY']);
+        $a2 = factory(Availability::class)->create(['day' => 'WEDNESDAY']);
+        $a2 = factory(Availability::class)->create(['day' => 'THURSDAY']);
+        $a2 = factory(Availability::class)->create(['day' => 'FRIDAY']);
+        $a2 = factory(Availability::class)->create(['day' => 'SATURDAY']);
+        $a2 = factory(Availability::class)->create(['day' => 'SUNDAY']);
 
         $this->browse(function ($browser) use ($bo, $employee) {
             //Login as Business Owner

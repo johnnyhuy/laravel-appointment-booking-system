@@ -3,9 +3,6 @@
 namespace Tests\Integration;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Customer;
 use App\Employee;
@@ -17,9 +14,6 @@ use Carbon\Carbon;
 
 class WorkingTimeTest extends TestCase
 {
-    // Rollback database actions once test is complete with this trait
-    use DatabaseTransactions;
-
     /**
      * Add working time for employee
      *
@@ -105,8 +99,16 @@ class WorkingTimeTest extends TestCase
      */
     public function testAllFieldsThatAreRequired()
     {
+        // Build working time data
+        $workingTimeData = [
+            'employee_id' => '',
+            'start_time' => '',
+            'end_time' => '',
+            'date' => '',
+        ];
+
     	// Send a POST request to /admin/roster with nothing
-    	$response = $this->json('POST', '/admin/roster');
+    	$response = $this->json('POST', '/admin/roster', $workingTimeData);
 
     	// Check if errors occured
         $response->assertJson([

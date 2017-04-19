@@ -9,6 +9,7 @@ use Laravel\Dusk\DuskServiceProvider;
 
 use App\Activity;
 use App\Booking;
+use App\WorkingTime;
 
 use Carbon\Carbon;
 
@@ -25,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         // Create a validator to check if an employee is free when adding a booking
-        Validator::extend('is_employee_free', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('is_employee_on_booking', function ($attribute, $value, $parameters, $validator) {
             // Parameters are the date and time of booking
             $pDate = $parameters[0];
             $pStartTime = $parameters[1];
@@ -57,6 +58,38 @@ class AppServiceProvider extends ServiceProvider
             return $free;
         });
 
+        // Create a validator to check if an employee is free when adding a booking
+        Validator::extend('is_employee_working', function ($attribute, $value, $parameters, $validator) {
+            // Parameters are the date and time of booking
+            $pDate = $parameters[0];
+            $pStartTime = $parameters[1];
+            $pEndTime = $parameters[2];
+
+            // Get bookings of the date
+            $workingTime = WorkingTime::where('employee_id', $value)
+                ->where('date', $pDate)
+                ->first();
+
+            // If there doesnt exist a working time, then return false
+            if ($workingTime == null) {
+                return false;
+            }
+
+            // Working time alias
+            $wStartTime = $workingTime->start_time;
+            $wEndTime = $workingTime->end_time;
+
+
+            // Check if booking is in between employee working time
+            if ($pStartTime >= $wStartTime and $pEndTime <= $wEndTime) {
+                return true;
+            }
+
+            // If anything unexpected happens, return false
+            return false;
+        });
+
+        // Check if the calculated end time of a booking is valid
         Validator::extend('is_end_time_valid', function ($attribute, $value, $parameters, $validator) {
             // Alias
             $activityID = $value;

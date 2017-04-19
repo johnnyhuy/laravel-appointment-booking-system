@@ -3,9 +3,6 @@
 namespace Tests\Integration;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Employee;
 
@@ -13,9 +10,6 @@ use Carbon\Carbon;
 
 class AvailabilityTest extends TestCase
 {
-	// Rollback database actions once test is complete with this trait
-    use DatabaseTransactions;
-
     /**
      * Call a function and return true or false
      * If returns true, employee is available and vice versa

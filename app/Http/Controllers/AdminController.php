@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
+use App\Activity;
 use App\BusinessOwner;
 use App\Booking;
 use App\Employee;
@@ -31,27 +32,28 @@ class AdminController extends Controller
         return view('admin.index', ['business' => $this->business]);
     }
 
-    public function summary() {
+    public function summary()
+    {
         return view('admin.summary', ['business' => $this->business, 'latest' => Booking::allLatest('+7 days')]);
     }
 
-    public function employees() 
+    public function employees()
     {
         return view('admin.employees', ['business' => $this->business, 'employees' => Employee::all()->sortBy('firstname')->sortBy('lastname')]);
     }
 
-    public function history() 
+    public function history()
     {
         return view('admin.history', ['business' => $this->business, 'history' => Booking::allHistory()]);
     }
 
-    public function roster() 
+    public function roster()
     {
         return view('admin.roster', ['business' => $this->business, 'roster' => WorkingTime::getRoster()]);
     }
 
-    public function activity() 
+    public function activity()
     {
-        return view('admin.activity', ['business' => $this->business]);
+        return view('admin.activity', ['business' => $this->business, 'activities' => Activity::all()->sortBy('name')->sortBy('description')]);
     }
 }

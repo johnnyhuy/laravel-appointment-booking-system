@@ -25,8 +25,8 @@ class WorkingTimeController extends Controller
                 ->addMonth()
                 ->startOfMonth()
                 ->startOfWeek()
-                ->addDays($day)
-                ->addWeeks($week)
+                ->addDays($day - 1)
+                ->addWeeks($week - 1)
                 ->toDateString();
 
             // Put into request date field

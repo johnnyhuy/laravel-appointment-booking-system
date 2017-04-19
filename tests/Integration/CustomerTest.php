@@ -3,9 +3,6 @@
 namespace Tests\Integration;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Customer;
 use App\BusinessOwner;
@@ -13,9 +10,6 @@ use App\Booking;
 
 class CustomerTest extends TestCase
 {
-    // Rollback database actions once test is complete with this trait
-    use DatabaseTransactions;
-
     /**
      * Customer cannot have same username as business owner
      *
