@@ -22,24 +22,6 @@ class Activity extends Model
 		$this->minute = Carbon::parse($this->duration)->minute;
 	}
 
-	/**
-	 * Get hours from activity
-	 * 
-	 * @return int
-	 */
-	public function getHour() {
-		return Carbon::parse($this->attributes['duration'])->hour;
-	}
-
-	/**
-	 * Get minutes from activity
-	 * 
-	 * @return int
-	 */
-	public function getMinute() {
-		return Carbon::parse($this->attributes['duration'])->minute;
-	}
-
     /**
 	 * Get bookings from activity
 	 * 

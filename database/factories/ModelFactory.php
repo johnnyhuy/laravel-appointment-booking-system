@@ -165,7 +165,7 @@ $factory->define(Booking::class, function (Generator $faker) {
     $startTime = Carbon::createFromTime($startHour, $startMinute)->format('H:i');
 
     // Calculate end time
-    $endTime = Booking::calculateEndTime($activity->id, $startTime);
+    $endTime = Booking::calcEndTime($activity->duration, $startTime);
 
      // Get time now
     $now = Carbon::now('Australia/Melbourne');

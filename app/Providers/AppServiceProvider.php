@@ -22,15 +22,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-		//Additional code to fix php artisan migrate error for (unique key too long on certain systems)
+		// Additional code to fix php artisan migrate error for (unique key too long on certain systems)
         Schema::defaultStringLength(191);
 
         // Create a validator to check if an employee is free when adding a booking
         Validator::extend('is_employee_on_booking', function ($attribute, $value, $parameters, $validator) {
+            // Get request data
+            $request = $validator->getData();
+
+            // If request data is not provided then return false
+            if (!isset($request['date']) or !isset($request['start_time']) or !isset($request['end_time'])) {
+                return false;
+            }
+
             // Parameters are the date and time of booking
-            $pDate = $parameters[0];
-            $pStartTime = $parameters[1];
-            $pEndTime = $parameters[2];
+            $pDate = $request['date'];
+            $pStartTime = $request['start_time'];
+            $pEndTime = $request['end_time'];
 
             // Get bookings of the date
             $bookings = Booking::where('employee_id', $value)
@@ -60,10 +68,18 @@ class AppServiceProvider extends ServiceProvider
 
         // Create a validator to check if an employee is free when adding a booking
         Validator::extend('is_employee_working', function ($attribute, $value, $parameters, $validator) {
+            // Get request data
+            $request = $validator->getData();
+
+            // If request data is not provided then return false
+            if (!isset($request['date']) or !isset($request['start_time']) or !isset($request['end_time'])) {
+                return false;
+            }
+
             // Parameters are the date and time of booking
-            $pDate = $parameters[0];
-            $pStartTime = $parameters[1];
-            $pEndTime = $parameters[2];
+            $pDate = $request['date'];
+            $pStartTime = $request['start_time'];
+            $pEndTime = $request['end_time'];
 
             // Get bookings of the date
             $workingTime = WorkingTime::where('employee_id', $value)
@@ -91,18 +107,25 @@ class AppServiceProvider extends ServiceProvider
 
         // Check if the calculated end time of a booking is valid
         Validator::extend('is_end_time_valid', function ($attribute, $value, $parameters, $validator) {
+            // Get request data
+            $request = $validator->getData();
+
+            // If request data is not provided then return false
+            if (!isset($request['start_time'])) {
+                return false;
+            }
+
             // Alias
-            $activityID = $value;
-            $startTime = $parameters[0];
+            $activity = Activity::find($value);
+            $startTime = $request['start_time'];
 
             // If end time is before start time
             // Then return false
-            if (Booking::calculateEndTime($activityID, $startTime) < $startTime) {
-                return false;
-            }
-            else {
+            if (Booking::calcEndTime($activity->duration, $startTime) > $startTime) {
                 return true;
             }
+
+            return false;
         });
     }
 
