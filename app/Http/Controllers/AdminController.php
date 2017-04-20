@@ -56,4 +56,9 @@ class AdminController extends Controller
     {
         return view('admin.activity', ['business' => $this->business, 'activities' => Activity::all()->sortBy('name')->sortBy('description')]);
     }
+
+    public function booking()
+    {
+        return view('admin.booking', ['business' => $this->business, 'bookings' => Booking::allLatest()]);
+    }
 }

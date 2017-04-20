@@ -69,7 +69,7 @@ class BookingTest extends TestCase
         $startTime = '11:00';
 
         // Calculate end time given by activity duration (11:00 + 02:00 = 13:00)
-        $endTime = Booking::calculateEndTime($activity->id, $startTime);
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
 
         // Add a booking from activity duration
         // Build booking data
@@ -110,7 +110,6 @@ class BookingTest extends TestCase
     {
         // Build fake data
         $bo = factory(BusinessOwner::class)->create();
-
 
         // User selects no customer
         // Build booking data
@@ -246,7 +245,7 @@ class BookingTest extends TestCase
         $startTime = '10:00';
 
         // Calculate the end time depending on the activity duration
-        $endTime = Booking::calculateEndTime($activity->id, $startTime);
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
 
         // Build booking data
         $bookingData = [
@@ -367,7 +366,7 @@ class BookingTest extends TestCase
         $startTime = '22:00';
 
         // End time is 24:00 or 00:00, which is the next day
-        $endTime = Booking::calculateEndTime($activity->id, $startTime);
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
 
         // Build booking data
         $bookingData = [
@@ -425,7 +424,7 @@ class BookingTest extends TestCase
         $startTime = '13:00';
 
         // Calculate the end time depending on the activity duration
-        $endTime = Booking::calculateEndTime($activity->id, $startTime);
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
 
         // Build booking data
         $bookingData = [
@@ -482,7 +481,7 @@ class BookingTest extends TestCase
         $startTime = '08:00';
 
         // Calculate the end time depending on the activity duration
-        $endTime = Booking::calculateEndTime($activity->id, $startTime);
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
 
         // Build booking data
         $bookingData = [
@@ -502,6 +501,29 @@ class BookingTest extends TestCase
         $response->assertJsonFragment([
             'The employee is not working at that time. Add a working time for the employee on the roster.'
         ]);
+    }
+
+    /**
+     * Booking belongs to one employee, make 4 bookings and assign it to an employee
+     *
+     * @return void
+     */
+    public function testBookingHasOnlyOneEmployee()
+    {
+        // There exists an employee
+        $employee = factory(employee::class)->create();
+
+        // Create 4 new bookings and assign it to employee
+        $bookings = factory(Booking::class, 4)->create([
+            'employee_id' => $employee->id,
+        ]);
+
+        // Get employee from booking class
+        // Check if 4 bookings belong to 1 employee
+        // Call attribute employee will return one employee from each booking
+        foreach ($bookings as $booking) {
+            $this->assertEquals($employee->id, $booking->employee->id);
+        }
     }
 
     /**

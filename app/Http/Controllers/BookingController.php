@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Activity;
 use App\Booking;
 use App\Customer;
+
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -24,27 +26,23 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        // String that shows booking date, start and end time
-        // Used for validation rule parameters
-        $bookingDateTime = $request->date . ',' . $request->start_time . ',' . $request->end_time;
-
         // Validation error messages
         $messages = [
-        	'start_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
             'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'customer_id.exists' => 'The :attribute does not exist.',
             'employee_id.exists' => 'The :attribute does not exist.',
             'employee_id.is_employee_working' => 'The :attribute is not working at that time. Add a working time for the :attribute on the roster.',
             'employee_id.is_employee_on_booking' => 'The :attribute is already working on another booking at that time.',
             'activity_id.exists' => 'The :attribute does not exist.',
-        	'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
+            'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
         ];
 
         // Validation rules
         $rules = [
             'customer_id' => 'required|exists:customers,id',
-            'employee_id' => 'exists:employees,id|is_employee_working:' . $bookingDateTime . '|is_employee_on_booking:' . $bookingDateTime,
-            'activity_id' => 'required|exists:activities,id|is_end_time_valid:' . $request->start_time,
+            'employee_id' => 'exists:employees,id|is_employee_working|is_employee_on_booking',
+            'activity_id' => 'required|exists:activities,id|is_end_time_valid',
             'start_time' => 'required|date_format:H:i',
             'date' => 'required|date',
         ];
@@ -67,7 +65,7 @@ class BookingController extends Controller
             'employee_id' => $request->employee_id,
             'activity_id' => $request->activity_id,
             'start_time' => $request->start_time,
-            'end_time' => Booking::calculateEndTime($request->activity_id, $request->start_time),
+            'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time),
             'date' => $request->date,
         ]);
 
@@ -75,7 +73,7 @@ class BookingController extends Controller
         session()->flash('message', 'Booking has successfully been created.');
 
         //Redirect to the business owner admin page
-        return redirect('/admin/activity');
+        return redirect('/admin/booking');
     }
 
 	/**

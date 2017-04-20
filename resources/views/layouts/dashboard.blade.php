@@ -41,6 +41,9 @@
 					elseif (Request::is('admin/employees')) {
 						$title .= "Employees";
 					}
+					elseif (Request::is('admin/activity')) {
+						$title .= "Activities";
+					}
 					else {
 						// Else default
 						$title = "";
@@ -66,6 +69,7 @@
 					<li class="{{ Request::is('admin/roster') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster">Roster</a></li>
 					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a title="Show all employees" href="/admin/employees">Employees</a></li>
 					<li class="{{ Request::is('admin/activity') ? 'active' : null }}"><a title="Show activitites" href="/admin/activity">Activities</a></li>
+					<li class="{{ Request::is('admin/booking') ? 'active' : null }}"><a title="Show a bookings" href="/admin/booking">Bookings</a></li>
 				</ul>
 				<footer class="dashboard">LCJJ Development Team</footer>
 			</div>

@@ -13,23 +13,22 @@ class Booking extends Model
 	protected $guarded = [];
 
 	/**
-	 * Calculate end time of a booking given its activity
+	 * Calculate end time of a booking given its activity duration
 	 * 
 	 * @return string
 	 */
-	public static function calculateEndTime($activityID, $pStartTime) {
-		$activity = Activity::find($activityID);
+	public static function calcEndTime($pDuration, $pStartTime) {
+		// Set duration
+		$duration = Carbon::parse($pDuration);
 
-		if (isset($activity)) {
-			// Set start time
-			$startTime = Carbon::parse($pStartTime);
+		// Set start time
+		$startTime = Carbon::parse($pStartTime);
 
-		    // Calculate end time
-		    return Carbon::createFromTime($startTime->hour, $startTime->minute)
-		    	->addHours($activity->getHour())
-		    	->addMinutes($activity->getMinute())
-		    	->format('H:i');
-		}
+	    // Calculate end time
+	    return Carbon::createFromTime($startTime->hour, $startTime->minute)
+	    	->addHours($duration->hour)
+	    	->addMinutes($duration->minute)
+	    	->format('H:i');
 	}
 
 	/**
@@ -56,10 +55,9 @@ class Booking extends Model
 	}
 
 	/**
-	 *
 	 * Show all history of bookings
+	 * 
 	 * @return App\Booking
-	 *
 	 */
 	public static function allHistory() {
 		// Return past bookings eloquent model
@@ -70,10 +68,9 @@ class Booking extends Model
 	}
 
 	/**
-	 *
 	 * Show all latest of bookings
+	 * 
 	 * @return App\Booking
-	 *
 	 */
 	public static function allLatest($max = null) {
 		$booking = Booking::where('date', '>=', Carbon::now()->toDateString());
@@ -92,9 +89,19 @@ class Booking extends Model
 	}
 
 	/**
-	 *
+	 * Get employee from bookings
+	 * 
+	 * @return \App\Employee
+	 */
+	public function employee()
+	{
+		return $this->belongsTo(Employee::class);
+	}
+
+	/**
 	 * Get customer from bookings
-	 *
+	 * 
+	 * @return \App\Customer
 	 */
 	public function customer()
 	{
@@ -102,9 +109,9 @@ class Booking extends Model
 	}
 
 	/**
-	 *
 	 * Get activity from bookings
-	 *
+	 * 
+	 * @return \App\Activity
 	 */
 	public function activity()
 	{
