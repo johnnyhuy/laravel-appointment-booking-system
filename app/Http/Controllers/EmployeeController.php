@@ -2,16 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Employee;
 use Illuminate\Http\Request;
+
+use App\Employee;
+use App\BusinessOwner;
 
 class EmployeeController extends Controller
 {
+    public function __construct() {
+        // Check auth, if not auth then redirect to login
+        $this->middleware('auth:web_admin', [
+            'only' => [
+                'create',
+                'index',
+            ]
+        ]);
+    }
+
     // Create a new employee
-    public function create()
+    public function create(Request $request)
     {
     	// Validate form
-        $this->validate(request(), [
+        $this->validate($request, [
             'firstname' => 'required|min:2|max:32|regex:/^[A-z\-\.' . "\'" . ' ]+$/',
             'lastname' => 'required|min:2|max:32|regex:/^[A-z\-\.' . "\'" . ' ]+$/',
             'title' => 'required|min:2|max:32|regex:/^[A-z\-\.' . "\'" . ' ]+$/',
@@ -20,10 +32,10 @@ class EmployeeController extends Controller
 
         // Create employee
         Employee::create([
-            'firstname' => request('firstname'),
-            'lastname' => request('lastname'),
-            'title' => request('title'),
-            'phone' => request('phone'),
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'title' => $request->title,
+            'phone' => $request->phone,
         ]);
 
         // Session flash
@@ -31,5 +43,13 @@ class EmployeeController extends Controller
 
         //Redirect to the business owner employee page
         return redirect('/admin/employees');
+    }
+
+    public function index()
+    {
+        return view('admin.employees', [
+            'business' => BusinessOwner::first(),
+            'employees' => Employee::all()->sortBy('firstname')->sortBy('lastname')
+        ]);
     }
 }

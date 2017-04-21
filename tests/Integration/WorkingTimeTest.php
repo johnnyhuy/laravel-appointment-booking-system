@@ -112,7 +112,7 @@ class WorkingTimeTest extends TestCase
 
     	// Check if errors occured
         $response->assertJson([
-        	'employee_id' => ['The employee id field is required.'],
+        	'employee_id' => ['The employee field is required.'],
         	'start_time' => ['The start time field is required.'],
         	'end_time' => ['The end time field is required.'],
         	'date' => ['The date field is required.'],
@@ -173,82 +173,6 @@ class WorkingTimeTest extends TestCase
     }
 
     /**
-     * If working time is today then respond with an error
-     *
-     * @return void
-     */
-    public function testErrorIfWorkingTimeIsToday() {
-        // Create working time data
-        // and set date field as today
-        $workingTimeData = [
-            'date' => Carbon::now()
-                ->toDateString(),
-        ];
-
-        // Send a POST request to /admin/roster with working time data
-        $response = $this->json('POST', '/admin/roster', $workingTimeData);
-
-        // Find in JSON response for error
-        $response->assertJsonFragment([
-            'The date must be a date after within the weeks of next month.'
-        ]);
-    }
-
-    /**
-     * Error if working time is not in the next month of weeks
-     *
-     * @return void
-     */
-    public function testErrorIfWorkingTimeIsBeforeNextMonthOfWeeks() {
-    	// Create working time data
-        // Get the start of next month and week
-        // One day before
-        $workingTimeData = [
-            'date' => Carbon::now()
-                ->addMonth()
-                ->startOfMonth()
-                ->startOfWeek()
-                ->subDay()
-                ->toDateString(),
-        ];
-
-    	// Send a POST request to /admin/roster with working time data
-    	$response = $this->json('POST', '/admin/roster', $workingTimeData);
-
-    	// Find in JSON response for error
-        $response->assertJsonFragment([
-        	'The date must be a date after within the weeks of next month.'
-        ]);
-    }
-
-    /**
-     * Error if working time is not in the next month of weeks
-     *
-     * @return void
-     */
-    public function testErrorIfWorkingTimeIsAfterNextMonthOfWeeks() {
-        // Create working time data
-        // Get the end of next month and week
-        // One day after
-        $workingTimeData = [
-            'date' => Carbon::now()
-                ->addMonth()
-                ->endOfMonth()
-                ->endOfWeek()
-                ->addDay()
-                ->toDateString(),
-        ];
-
-        // Send a POST request to /admin/roster with working time data
-        $response = $this->json('POST', '/admin/roster', $workingTimeData);
-
-        // Find in JSON response for error
-        $response->assertJsonFragment([
-            'The date must be a date after within the weeks of next month.'
-        ]);
-    }
-
-    /**
      * If employee does not exist then respond with an error
      *
      * @return void
@@ -265,7 +189,7 @@ class WorkingTimeTest extends TestCase
 
     	// Find in JSON response for error
         $response->assertJsonFragment([
-        	'Employee does not exist.'
+        	'The employee does not exist.'
         ]);
     }
 
@@ -375,7 +299,7 @@ class WorkingTimeTest extends TestCase
 
         // Find in JSON response for error
         $response->assertJsonFragment([
-            'Employee can only have one working time per day.'
+            'The employee can only have one working time per day.'
         ]);
 
         // If session message exists, then fail

@@ -31,18 +31,20 @@ class AppServiceProvider extends ServiceProvider
             $request = $validator->getData();
 
             // If request data is not provided then return false
-            if (!isset($request['date']) or !isset($request['start_time']) or !isset($request['end_time'])) {
+            if (!isset($request['date']) or !isset($request['start_time']) or !isset($request['activity_id'])) {
                 return false;
             }
 
-            // Parameters are the date and time of booking
-            $pDate = $request['date'];
+            // Find activity
+            $activity = Activity::find($request['activity_id']);
+            
+            // Set time
             $pStartTime = $request['start_time'];
-            $pEndTime = $request['end_time'];
+            $pEndTime = Booking::calcEndTime($activity->duration, $pStartTime);
 
             // Get bookings of the date
             $bookings = Booking::where('employee_id', $value)
-                ->where('date', '=', $pDate)
+                ->where('date', '=', $request['date'])
                 ->get();
             
             // Is employee free
@@ -72,18 +74,20 @@ class AppServiceProvider extends ServiceProvider
             $request = $validator->getData();
 
             // If request data is not provided then return false
-            if (!isset($request['date']) or !isset($request['start_time']) or !isset($request['end_time'])) {
+            if (!isset($request['date']) or !isset($request['start_time']) or !isset($request['activity_id'])) {
                 return false;
             }
 
-            // Parameters are the date and time of booking
-            $pDate = $request['date'];
+            // Find activity
+            $activity = Activity::find($request['activity_id']);
+            
+            // Set time
             $pStartTime = $request['start_time'];
-            $pEndTime = $request['end_time'];
+            $pEndTime = Booking::calcEndTime($activity->duration, $pStartTime);
 
             // Get bookings of the date
             $workingTime = WorkingTime::where('employee_id', $value)
-                ->where('date', $pDate)
+                ->where('date', $request['date'])
                 ->first();
 
             // If there doesnt exist a working time, then return false
