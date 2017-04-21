@@ -187,21 +187,6 @@ class ActivityTest extends TestCase
         ]);
 
 
-        // User inputs description less than 2 characters
-        // Rebuild activity data
-        $activityData = [
-            'description' => 'a'
-        ];
-
-        // Send a POST request to admin/activity
-        $response = $this->json('POST', 'admin/activity', $activityData);
-
-        // Check response for an error message
-        $response->assertJsonFragment([
-            'The description must be at least 2 characters.'
-        ]);
-
-
         // User inputs description more than 64 characters
         // Rebuild activity data
         $activityData = [

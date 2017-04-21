@@ -13,11 +13,48 @@ use App\Booking;
 class BusinessOwnerController extends Controller
 {
     public function __construct() {
-        // Check if guest then stay, else redirect
-        $this->middleware('guest:web_admin');
-        $this->middleware('guest:web_user');
+        // Business Owner auth
+        $this->middleware('auth:web_admin', [
+            'only' => [
+                'index',
+                'summary',
+            ]
+        ]);
+
+        // Guest view
+        // Allow guests to register business
+        $this->middleware('guest:web_user', [
+            'only' => [
+                'create',
+                'register',
+            ]
+        ]);
     }
-    
+
+    /**
+     * Show business information
+     * E.g. Business name, owner full name
+     */
+    public function index() {
+        return view('admin.index', ['business' => BusinessOwner::first()]);
+    }
+
+    /**
+     * Show summary of bookings
+     * and employee availability
+     */
+    public function summary()
+    {
+        return view('admin.summary', [
+            'business' => BusinessOwner::first(),
+            'latest' => Booking::allLatest('+7 days')
+        ]);
+    }
+
+     /**
+     * Show business registration form
+     * Registers the business once
+     */
     public function register() {
         // Redirect to /admin if business exists
         if (BusinessOwner::first() and Auth::guard('web_admin')) {
@@ -27,8 +64,12 @@ class BusinessOwnerController extends Controller
         return view('admin.register');
     }
 
-    //Register's a business owner
-    public function create()
+     /**
+     * Send receives a POST request
+     * Creates Business Owner 
+     * Includes all business information
+     */
+    public function create(Request $request)
     {
         // Validation error messages
         $messages = [
@@ -57,17 +98,17 @@ class BusinessOwnerController extends Controller
         ];
 
     	// Validate form
-        $this->validate(request(), $rules, $messages, $attributes);
+        $this->validate($request, $rules, $messages, $attributes);
 
     	// Create customer
         $businessOwner = BusinessOwner::create([
-            'business_name' => request('businessname'),
-            'firstname' => request('firstname'),
-            'lastname' => request('lastname'),
-            'username' => request('username'),
-            'password' => bcrypt(request('password')),
-            'address' => request('address'),
-            'phone' => request('phone'),
+            'business_name' => $request->businessname,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+            'address' => $request->address,
+            'phone' => $request->phone,
         ]);
 
         // Session flash

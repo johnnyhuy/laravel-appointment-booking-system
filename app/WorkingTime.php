@@ -12,7 +12,8 @@ class WorkingTime extends Model
 {
     protected $guarded = [];
 
-    public static function getRoster() {
+    public static function getRoster()
+    {
     	// Start of week in the month
     	$startDate = Carbon::now()
     		->addMonth()
@@ -33,6 +34,28 @@ class WorkingTime extends Model
     		->get()
     		// Sort by start time of working time
     		->sortBy('start_time');
+    }
+
+    /**
+     * Get the date from month and year string
+     * Usage for /admin/roster/10-2017
+     * Where '10-2017' is the selected string
+     * 
+     * @return Carbon\Carbon
+     */
+    public static function getDate($monthYear)
+    {
+        // Get the month and year from url
+        $date = explode('-', $monthYear);
+        $month = $date[0];
+        $year = $date[1];
+
+        // If input is invalid
+        if (!is_numeric($month) or !is_numeric($year)) {
+            throw new NotFoundHttpException;
+        }
+
+        return Carbon::createFromDate($year, $month);
     }
 
     /**

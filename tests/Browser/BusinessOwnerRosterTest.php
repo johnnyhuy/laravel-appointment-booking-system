@@ -14,19 +14,44 @@ use Carbon\Carbon;
 class BusinessOwnerRosterTest extends DuskTestCase
 {
     /**
+     * Changing the month by using the selector
+     *
+     * @return void
+     */
+    public function testChangeMonthOnRoster()
+    {
+        // Creates business owner
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Change to the next two months from now
+        $nextTwoMonths = Carbon::now()->addMonths(2);
+
+        $this->browse(function ($browser) use ($bo, $nextTwoMonths) {
+            // Login as Business Owner
+            $browser->loginAs($bo, 'web_admin')
+                // Go to summary page (default directory of /admin)
+                ->visit('/admin/roster')
+                ->click('#inputMonthYear')
+                ->click('option[value="' . $nextTwoMonths->format('m-Y') . '"]')
+                ->assertPathIs('/admin/roster/' . $nextTwoMonths->format('m-Y'))
+                ->assertSee($nextTwoMonths->format('F Y'));
+        });
+    }
+
+    /**
      * Test whether the roster page exists
      *
      * @return void
      */
     public function testRosterPageExists()
     {
-        //Creates business owner
+        // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
 
         $this->browse(function ($browser) use ($bo) {
-            //Login as Business Owner
+            // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->assertPathIs('/admin/roster')
                 ->assertSee('Roster')
@@ -41,17 +66,17 @@ class BusinessOwnerRosterTest extends DuskTestCase
      */
     public function testEmployeeExistsInDropDown() 
     {
-        //Creates business owner
+        // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
-        //Creates an employee
+        // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
-            //Login as Business Owner
+            // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
-                //Look for employee selection string
+                // Look for employee selection string
                 ->assertSee($employee->id . ' - ' . $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname);
         });
     }
@@ -63,15 +88,15 @@ class BusinessOwnerRosterTest extends DuskTestCase
      */
     public function testAddWorkingTime() 
     {
-        //Creates business owner
+        // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
-        //Creates an employee
+        // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
-            //Login as Business Owner
+            // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->keys('#inputStartTime', '08:00')
                 ->keys('#inputEndTime', '17:00')
@@ -93,15 +118,15 @@ class BusinessOwnerRosterTest extends DuskTestCase
     public function testAddWorkingTimesOnSameDay()
     {
       
-        //Creates business owner
+        // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
-        //Creates an employee
+        // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
-            //Login as Business Owner
+            // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->keys('#inputStartTime', '08:00')
                 ->keys('#inputEndTime', '17:00')
@@ -113,7 +138,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 ->assertSee('New working time has been added.')
                 ->assertSee('08:00 AM - 05:00 PM')
 
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->keys('#inputStartTime', '010:00 AM')
                 ->keys('#inputEndTime', '05:00 PM')
                 ->select('day', 1)
@@ -132,15 +157,15 @@ class BusinessOwnerRosterTest extends DuskTestCase
      */
     public function testAddWorkingTimesOnSameDayButDifferentWeeks()
     {
-        //Creates business owner
+        // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
-        //Creates an employee
+        // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
-            //Login as Business Owner
+            // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->keys('#inputStartTime', '08:00')
                 ->keys('#inputEndTime', '17:00')
@@ -151,7 +176,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 ->assertSee('New working time has been added.')
                 ->assertSee('08:00 AM - 05:00 PM')
 
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->keys('#inputStartTime', '10:00')
                 ->keys('#inputEndTime', '17:00')
                 ->select('day', 1)
@@ -171,16 +196,16 @@ class BusinessOwnerRosterTest extends DuskTestCase
      */
     public function testAddWorkingTimesOnSameDayButDifferentEmployees()
     {     
-        //Creates business owner
+        // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
-        //Creates 2 employees
+        // Creates 2 employees
         $employee1 = factory(Employee::class)->create();
         $employee2 = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee1, $employee2) {
-            //Login as Business Owner
+            // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->select('employee_id', (string)$employee1->id)
                 ->keys('#inputStartTime', '08:00')
@@ -212,15 +237,15 @@ class BusinessOwnerRosterTest extends DuskTestCase
      */
     public function testStartTimeAfterEndTime() 
     {
-        //Creates business owner
+        // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
-        //Creates an employee
+        // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
-            //Login as Business Owner
+            // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->select('employee_id', (string)$employee->id)
                 ->keys('#inputStartTime', '09:00')
@@ -242,15 +267,15 @@ class BusinessOwnerRosterTest extends DuskTestCase
      */
     public function testStartTimeEqualsEndTime() 
     {
-        //Creates business owner
+        // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
-        //Creates an employee
+        // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
-            //Login as Business Owner
+            // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
+                // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->select('employee_id', (string)$employee->id)
                 ->keys('#inputStartTime', '09:00')

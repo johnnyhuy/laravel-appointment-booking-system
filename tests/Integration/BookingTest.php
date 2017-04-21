@@ -442,7 +442,7 @@ class BookingTest extends TestCase
 
         // Check response for an error message
         $response->assertJsonFragment([
-            'The employee is not working at that time. Add a working time for the employee on the roster.'
+            'The employee either has a conflict with another booking or employee is not working on that time.'
         ]);
     }
 
@@ -499,7 +499,7 @@ class BookingTest extends TestCase
 
         // Check response for an error message
         $response->assertJsonFragment([
-            'The employee is not working at that time. Add a working time for the employee on the roster.'
+            'The employee either has a conflict with another booking or employee is not working on that time.'
         ]);
     }
 

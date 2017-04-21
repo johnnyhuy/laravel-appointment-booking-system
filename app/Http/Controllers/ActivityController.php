@@ -2,11 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
 use Illuminate\Http\Request;
+
+use App\Activity;
+use App\BusinessOwner;
 
 class ActivityController extends Controller
 {
+    public function __construct() {
+        // Business Owner auth
+        $this->middleware('auth:web_admin', [
+            'only' => [
+                'index',
+                'store',
+                'edit',
+                'update',
+                'destroy',
+            ]
+        ]);
+    }
+
+    public function index()
+    {
+        return view('admin.activity', [
+            'business' => BusinessOwner::first(),
+            'activities' => Activity::all()->sortBy('name')->sortBy('description')
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -24,7 +47,7 @@ class ActivityController extends Controller
         // Validation rules
         $rules = [
             'name' => 'required|min:2|max:32|regex:/^[A-z0-9\s]+$/',
-            'description' => 'min:2|max:64',
+            'description' => 'max:64',
             'duration' => 'required|date_format:H:i',
         ];
 

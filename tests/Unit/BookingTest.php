@@ -4,8 +4,9 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 
+use App\Activity;
 use App\Booking;
-use App\Http\Controllers\CustomerController;
+
 use Carbon\Carbon;
 
 class BookingTest extends TestCase

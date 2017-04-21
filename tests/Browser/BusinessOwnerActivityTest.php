@@ -68,4 +68,76 @@ class BusinessOwnerActivityTest extends DuskTestCase
                 ->assertSee($activity->description);
         });
     }
+
+    /**
+     * Activity name validation rules
+     *
+     * @return void
+     */
+    public function testNameInputValidate()
+    {
+        // Generate fake activity data
+        $activity = factory(Activity::class)->make(); 
+
+        // Creates business owner
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Creates an employee
+        $employee = factory(Employee::class)->create();
+
+        $this->browse(function ($browser) use ($activity, $bo, $employee) {
+            // Login as Business Owner
+            $browser->loginAs($bo, 'web_admin')
+                // Visit activity page
+                ->visit('/admin/activity')
+
+
+                // When name is less than 2 characters
+                ->type('name', 'a')
+                ->press('Add Activity')
+
+                // Check error message
+                ->assertSee('The activity name must be at least 2 characters.')
+
+
+                // When name is greater than 32 characters
+                ->type('name', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+                ->press('Add Activity')
+
+                // Check error message
+                ->assertSee('The activity name may not be greater than 32 characters.');
+        });
+    }
+
+    /**
+     * Activity description validation rules
+     *
+     * @return void
+     */
+    public function testDescriptionInputValidate()
+    {
+        // Generate fake activity data
+        $activity = factory(Activity::class)->make(); 
+
+        // Creates business owner
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Creates an employee
+        $employee = factory(Employee::class)->create();
+
+        $this->browse(function ($browser) use ($activity, $bo, $employee) {
+            // Login as Business Owner
+            $browser->loginAs($bo, 'web_admin')
+                // Visit activity page
+                ->visit('/admin/activity')
+
+
+                // When description is greater than 64 characters
+                ->type('description', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+                ->press('Add Activity')
+
+                // Check error message
+                ->assertSee('The description may not be greater than 64 characters.');
+        });
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Activity;
 use App\Booking;
+use App\BusinessOwner;
 use App\Customer;
 
 use Carbon\Carbon;
@@ -14,8 +15,22 @@ class BookingController extends Controller
 {
 	public function __construct() {
 		// Check auth, if not auth then redirect to login
-        $this->middleware('auth:web_user', ['only' => 'index']);
-        $this->middleware('auth:web_admin', ['only' => 'store']);
+        $this->middleware('auth:web_user', ['only' => 'customerBookings']);
+        $this->middleware('auth:web_admin', [
+            'only' => [
+                'index',
+                'store',
+                'history',
+            ]
+        ]);
+    }
+
+    public function index()
+    {
+        return view('admin.booking', [
+            'business' => BusinessOwner::first(),
+            'bookings' => Booking::allLatest()
+        ]);
     }
 
     /**
@@ -32,7 +47,7 @@ class BookingController extends Controller
             'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'customer_id.exists' => 'The :attribute does not exist.',
             'employee_id.exists' => 'The :attribute does not exist.',
-            'employee_id.is_employee_working' => 'The :attribute is not working at that time. Add a working time for the :attribute on the roster.',
+            'employee_id.is_employee_working' => 'The :attribute either has a conflict with another booking or :attribute is not working on that time.',
             'employee_id.is_employee_on_booking' => 'The :attribute is already working on another booking at that time.',
             'activity_id.exists' => 'The :attribute does not exist.',
             'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
@@ -77,12 +92,21 @@ class BookingController extends Controller
     }
 
 	/**
-	 *
 	 * View index of customer bookings
-	 *
 	 */
-	public function index()
+	public function customerBookings()
 	{
-		return view('bookings.index');
+		return view('customer.bookings');
 	}
+
+    /**
+     * View index of customer bookings
+     */
+    public function history()
+    {
+        return view('admin.history', [
+            'business' => BusinessOwner::first(),
+            'history' => Booking::allHistory(),
+        ]);
+    }
 }
