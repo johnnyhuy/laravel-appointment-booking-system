@@ -52,7 +52,6 @@ Route::get('/admin/roster', function() {
 	return redirect('/admin/roster/' . Carbon\Carbon::now()->format('m-Y'));
 });
 Route::get('/admin/roster/{monthYear}', 'WorkingTimeController@index');
-Route::get('/admin/activity', 'ActivityController@index');
 Route::get('/admin/booking', 'BookingController@index');
 
 // Admin form submission handling
@@ -64,8 +63,8 @@ Route::post('/admin/roster/{monthYear}', 'WorkingTimeController@create');
 // Activity management
 // Custom modified resourceful controller using CRUD routes
 Route::resource('admin/activity', 'ActivityController', [
-	'only' => [
-		'store', 'edit', 'update', 'destroy'
+	'except' => [
+		'create'
 	]
 ]);
 

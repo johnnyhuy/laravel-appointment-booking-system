@@ -4,6 +4,7 @@ namespace Tests\Integration;
 
 use Tests\TestCase;
 
+use App\BusinessOwner;
 use App\Employee;
 
 class EmployeeTest extends TestCase
@@ -15,13 +16,16 @@ class EmployeeTest extends TestCase
      */
     public function testAddEmployeeTitleValidation()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
         // If user inputs nothing in the firstname field
         $employeeData = [
             'title' => ''
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -35,7 +39,7 @@ class EmployeeTest extends TestCase
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -50,13 +54,16 @@ class EmployeeTest extends TestCase
      */
     public function testAddEmployeeFirstnameValidation()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
         // If user inputs nothing in the firstname field
         $employeeData = [
             'firstname' => ''
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -70,7 +77,7 @@ class EmployeeTest extends TestCase
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -85,13 +92,16 @@ class EmployeeTest extends TestCase
      */
     public function testAddEmployeeLastnameValidation()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
         // If user inputs nothing in the lastname field
         $employeeData = [
             'lastname' => ''
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -105,7 +115,7 @@ class EmployeeTest extends TestCase
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -120,13 +130,16 @@ class EmployeeTest extends TestCase
      */
     public function testAddEmployeePhoneValidation()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+        
         // If user inputs nothing in the phone field
         $employeeData = [
             'phone' => ''
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -140,7 +153,7 @@ class EmployeeTest extends TestCase
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -154,7 +167,7 @@ class EmployeeTest extends TestCase
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([
@@ -168,7 +181,7 @@ class EmployeeTest extends TestCase
         ];
 
         // Send request
-        $response = $this->json('POST', '/admin/employees', $employeeData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/employees', $employeeData);
 
         // Then respond with an error
         $response->assertJsonFragment([

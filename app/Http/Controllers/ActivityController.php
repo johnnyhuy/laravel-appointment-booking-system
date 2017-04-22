@@ -11,15 +11,7 @@ class ActivityController extends Controller
 {
     public function __construct() {
         // Business Owner auth
-        $this->middleware('auth:web_admin', [
-            'only' => [
-                'index',
-                'store',
-                'edit',
-                'update',
-                'destroy',
-            ]
-        ]);
+        $this->middleware('auth:web_admin');
     }
 
     public function index()

@@ -5,9 +5,9 @@ namespace Tests\Integration;
 use Tests\TestCase;
 
 use App\Customer;
-use App\Employee;
 use App\BusinessOwner;
 use App\Booking;
+use App\Employee;
 use App\WorkingTime;
 
 use Carbon\Carbon;
@@ -54,6 +54,9 @@ class WorkingTimeTest extends TestCase
      */
     public function testAddWorkingTimeForEmployee()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
     	// Create employee
     	$employee = factory(Employee::class)->create();
 
@@ -80,7 +83,7 @@ class WorkingTimeTest extends TestCase
     	];
 
     	// Send a POST request to /admin/roster with working time data
-    	$response = $this->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Check for a session message
         $response->assertSessionHas('message', 'New working time has been added.');
@@ -99,6 +102,9 @@ class WorkingTimeTest extends TestCase
      */
     public function testAllFieldsThatAreRequired()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
         // Build working time data
         $workingTimeData = [
             'employee_id' => '',
@@ -108,7 +114,7 @@ class WorkingTimeTest extends TestCase
         ];
 
     	// Send a POST request to /admin/roster with nothing
-    	$response = $this->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Check if errors occured
         $response->assertJson([
@@ -126,6 +132,9 @@ class WorkingTimeTest extends TestCase
      */
     public function testStartTimeAndEndTimeFieldsMustBeATimeFormat()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
     	// When time fields are not in time format
     	$workingTimeData = [
     		'start_time' => 'johndoe',
@@ -133,7 +142,7 @@ class WorkingTimeTest extends TestCase
     	];
 
     	// Send a POST request to /admin/roster with nothing
-    	$response = $this->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Find in JSON response for error
         $response->assertJsonFragment(['The start time field must be in the correct time format.']);
@@ -147,6 +156,9 @@ class WorkingTimeTest extends TestCase
      */
     public function testErrorIfStartTimeIsLaterThanEndTime()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
     	// Create working time data
     	// and add a one hour shift
     	$workingTimeData = [
@@ -161,7 +173,7 @@ class WorkingTimeTest extends TestCase
     	];
 
     	// Send a POST request to /admin/roster with working time data
-    	$response = $this->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Find in JSON response for error
         $response->assertJsonFragment([
@@ -177,7 +189,11 @@ class WorkingTimeTest extends TestCase
      *
      * @return void
      */
-    public function testErrorIfEmployeeDoesNotExist() {
+    public function testErrorIfEmployeeDoesNotExist() 
+    {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
     	// Create working time data
     	// and set employee ID to 1 (non-existant)
     	$workingTimeData = [
@@ -185,7 +201,7 @@ class WorkingTimeTest extends TestCase
     	];
 
     	// Send a POST request to /admin/roster with working time data
-    	$response = $this->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Find in JSON response for error
         $response->assertJsonFragment([
@@ -198,7 +214,8 @@ class WorkingTimeTest extends TestCase
      *
      * @return void
      */
-    public function testGetRosterIsSortedByStartTime() {
+    public function testGetRosterIsSortedByStartTime()
+    {
         // Create a working time at the start of the month
         // and add two hours
         $laterWorkingTime = factory(WorkingTime::class)->create([
@@ -232,7 +249,8 @@ class WorkingTimeTest extends TestCase
      *
      * @return void
      */
-    public function testGetRosterOfNextMonth() {
+    public function testGetRosterOfNextMonth()
+    {
         // Create a working time at the start of next month
         factory(WorkingTime::class)->create([
             'date' => Carbon::now()
@@ -258,7 +276,11 @@ class WorkingTimeTest extends TestCase
      *
      * @return void
      */
-    public function testEmployeeCanOnlyHaveOneWorkingTimePerDay() {
+    public function testEmployeeCanOnlyHaveOneWorkingTimePerDay()
+    {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
         // Create a working time
         // Two hour shift 1:00PM - 3:00PM
         // Date is within next month from today
@@ -282,7 +304,7 @@ class WorkingTimeTest extends TestCase
         // Assign to the same employee
         // Two hour shift 1:00PM - 3:00PM
         // Use the same working time date as the factory
-        $response = $this->json('POST', '/admin/roster', [
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', [
             'employee_id' => $workingTime->employee->id,
             'start_time' => Carbon::now()
                 ->startOfDay()
