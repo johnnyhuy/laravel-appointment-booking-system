@@ -4,6 +4,7 @@ namespace Tests\Integration;
 
 use Tests\TestCase;
 
+use App\BusinessOwner;
 use App\Employee;
 use App\Activity;
 use App\Booking;
@@ -37,7 +38,10 @@ class ActivityTest extends TestCase
      * @return void
      */
     public function testAdminCreateActivity()
-    {           
+    {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
         // Create fake data
         $activity = factory(Activity::class)->make();
         
@@ -49,8 +53,8 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->json('POST', 'admin/activity', $activityData);
-
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+        
         // Check if redirected after request
         $response->assertRedirect('admin/activity');
 
@@ -73,6 +77,9 @@ class ActivityTest extends TestCase
      */
     public function testAdminEditActivity()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
         // Create an activity
         $initActivity = factory(Activity::class)->create();
         $editedActivity = factory(Activity::class)->make();
@@ -85,7 +92,7 @@ class ActivityTest extends TestCase
         ];
         
         // Send PUT/PATCH request to admin/activity/{activity}
-        $response = $this->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
+        $response = $this->actingAs($bo, 'web_admin')->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
 
         // Check if redirected after request
         $response->assertRedirect('admin/activity');
@@ -109,11 +116,14 @@ class ActivityTest extends TestCase
      */
     public function testAdminRemoveActivity()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
         // Create an activity
         $activity = factory(Activity::class)->create();
 
         // Send DELETE request to admin/activity/{activity}
-        $response = $this->json('DELETE', 'admin/activity/' . $activity->id);
+        $response = $this->actingAs($bo, 'web_admin')->json('DELETE', 'admin/activity/' . $activity->id);
 
         // Check if redirected after request
         $response->assertRedirect('admin/activity');
@@ -132,6 +142,9 @@ class ActivityTest extends TestCase
      */
     public function testActivityValidation()
     {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+        
         // Create fake data
         $activity = factory(Activity::class)->make();
         
@@ -150,7 +163,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -165,7 +178,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -179,7 +192,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -194,7 +207,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -208,7 +221,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
