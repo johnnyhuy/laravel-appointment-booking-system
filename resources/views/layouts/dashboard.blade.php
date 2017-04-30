@@ -35,11 +35,20 @@
 					elseif (Request::is('admin/history')) {
 						$title .= "History";
 					}
-					elseif (Request::is('admin/roster')) {
-						$title .= "Roster";
-					}
 					elseif (Request::is('admin/employees')) {
 						$title .= "Employees";
+					}
+					elseif (Request::is('admin/activity')) {
+						$title .= "Activities";
+					}
+					elseif (Request::is('admin/booking')) {
+						$title .= "Bookings";
+					}
+					elseif (Request::is('admin/roster/*')) {
+						$title .= "Roster";
+					}
+					elseif( Request::is('admin/employees/assign')) {
+						$title .= "Assign Employees";
 					}
 					else {
 						// Else default
@@ -60,11 +69,14 @@
 		<div class="row">
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
-					<li class="{{ Request::is('admin') ? 'active' : null }}"><a title="Show Business Information" href="/admin">Information<span class="sr-only">(current)</span></a></li>
-					<li class="{{ Request::is('admin/summary') ? 'active' : null }}"><a title="Show a summary of bookings" href="/admin/summary">Summary<span class="sr-only">(current)</span></a></li>
+					<li class="{{ Request::is('admin') ? 'active' : null }}"><a title="Show Business Information" href="/admin">Information</a></li>
+					<li class="{{ Request::is('admin/summary') ? 'active' : null }}"><a title="Show a summary of bookings" href="/admin/summary">Summary</a></li>
 					<li class="{{ Request::is('admin/history') ? 'active' : null }}"><a title="Show a history of bookings" href="/admin/history">History</a></li>
-					<li class="{{ Request::is('admin/roster') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster">Roster</a></li>
+					<li class="{{ Request::is('admin/roster/*') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster">Roster</a></li>
 					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a title="Show all employees" href="/admin/employees">Employees</a></li>
+					<li class="{{ Request::is('admin/activity') ? 'active' : null }}"><a title="Show activitites" href="/admin/activity">Activities</a></li>
+					<li class="{{ Request::is('admin/booking/*') ? 'active' : null }}"><a title="Show a bookings" href="/admin/booking">Bookings</a></li>
+					<li class="{{ Request::is('admin/employees/assign/*') ? 'active' : null }}"><a title="Assign Employees to Bookings" href="/admin/employees/assign">Assign Employees</a></li>
 				</ul>
 				<footer class="dashboard">LCJJ Development Team</footer>
 			</div>

@@ -2,34 +2,94 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
-use App\BusinessOwner;
+use App\Activity;
 use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
+
+use Carbon\Carbon;
 
 class BusinessOwnerController extends Controller
 {
     public function __construct() {
-        // Check if guest then stay, else redirect
-        $this->middleware('guest:web_admin');
-        $this->middleware('guest:web_user');
+        // Business Owner auth
+        $this->middleware('auth:web_admin', [
+            'only' => [
+                'index',
+                'summary',
+            ]
+        ]);
+
+        // Guest view
+        // Allow guests to register business
+        $this->middleware('guest:web_user', [
+            'only' => [
+                'create',
+                'register',
+            ]
+        ]);
     }
-    
+
+    /**
+     * Show business information
+     * E.g. Business name, owner full name
+     */
+    public function index() {
+        return view('admin.index', ['business' => BusinessOwner::first()]);
+    }
+
+    /**
+     * Show summary of bookings
+     * and employee availability
+     */
+    public function summary()
+    {
+        return view('admin.summary', [
+            'bookings' => Booking::allLatest('7'),
+            'business' => BusinessOwner::first(),
+            'latest' => Booking::allLatest('+7 days')
+        ]);
+    }
+
+     /**
+     * Show business registration form
+     * Registers the business once
+     */
     public function register() {
         // Redirect to /admin if business exists
         if (BusinessOwner::first() and Auth::guard('web_admin')) {
+            Log::notice('Tried to visit business owner registration form, redirected to /admin since business already exists');
             return redirect('/admin');
         }
 
         return view('admin.register');
     }
 
-    //Register's a business owner
-    public function create()
+     /**
+     * Send receives a POST request
+     * Creates Business Owner
+     * Includes all business information
+     */
+    public function create(Request $request)
     {
+        //Check a business owner doesn't already exist
+        if(count(BusinessOwner::all()) > 1) {
+            //Log a critical failure if an attempt is made to register more than 1 business
+            Log::critical("More than one business was attempted to be registered", $request->all());
+            return 0;
+        }
+
         // Validation error messages
         $messages = [
             'businessname.regex' => 'The :attribute is invalid, do not use special characters except "." and "-".',
@@ -57,18 +117,21 @@ class BusinessOwnerController extends Controller
         ];
 
     	// Validate form
-        $this->validate(request(), $rules, $messages, $attributes);
+        $this->validate($request, $rules, $messages, $attributes);
 
     	// Create customer
         $businessOwner = BusinessOwner::create([
-            'business_name' => request('businessname'),
-            'firstname' => request('firstname'),
-            'lastname' => request('lastname'),
-            'username' => request('username'),
-            'password' => bcrypt(request('password')),
-            'address' => request('address'),
-            'phone' => request('phone'),
+            'business_name' => $request->businessname,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+            'address' => $request->address,
+            'phone' => $request->phone,
         ]);
+
+        // Log business owner creation
+        Log::notice("A Business Owner was registered with username " . $businessOwner->username);
 
         // Session flash
         session()->flash('message', 'Business Owner registration success.');

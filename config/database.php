@@ -39,6 +39,18 @@ return [
 			'prefix' => '',
 		],
 
+		'sqlite-testing' => [
+			'driver' => 'sqlite',
+			'database' => env('DB_DATABASE', database_path('test-database.sqlite')),
+			'prefix' => '',
+		],
+
+		'sqlite-dusk' => [
+			'driver' => 'sqlite',
+			'database' => env('DB_DATABASE', database_path('dusk-database.sqlite')),
+			'prefix' => '',
+		],
+
 		'mysql' => [
 			'driver' => 'mysql',
 			'host' => env('DB_HOST', '127.0.0.1'),

@@ -3,19 +3,18 @@
 namespace Tests\Integration;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+use App\Activity;
+use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
 use App\Employee;
+use App\WorkingTime;
 
 use Carbon\Carbon;
 
 class AvailabilityTest extends TestCase
 {
-	// Rollback database actions once test is complete with this trait
-    use DatabaseTransactions;
-
     /**
      * Call a function and return true or false
      * If returns true, employee is available and vice versa
@@ -37,6 +36,6 @@ class AvailabilityTest extends TestCase
     	// Create an employee
     	$employee = factory(Employee::class)->create();
 
-    	
+
     }
 }

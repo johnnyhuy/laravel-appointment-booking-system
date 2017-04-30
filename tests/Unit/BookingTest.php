@@ -3,14 +3,17 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+use App\Activity;
 use App\Booking;
-use App\Http\Controllers\CustomerController;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
+
 use Carbon\Carbon;
 
-class BookingsTest extends TestCase
+class BookingTest extends TestCase
 {
 	/**
      * Get the total duration of the booking
@@ -50,5 +53,27 @@ class BookingsTest extends TestCase
 
 		// Expect duration to be in a time string HH:MM
 		$this->assertEquals('2:00', $duration);
+	}
+
+	/**
+     * Get the duration time of booking in a time format
+     *
+     * @return void
+     */
+	public function testCalculateEndTimeOfBooking() {
+		// Create an activity
+		// Activity is two hours long
+		$activity = factory(Activity::class)->make([
+			'duration' => '02:00'
+		]);
+
+		// Booking starts at 9:00 AM
+		$startTime = '09:00';
+
+		// Create a booking
+		$booking = factory(Booking::class)->make([
+			'start_time' => $startTime,
+			'end_time' => Booking::calcEndTime($activity->duration, $startTime)
+		]);
 	}
 }
