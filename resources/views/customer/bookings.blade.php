@@ -11,9 +11,9 @@
 					<th>Date</th>
 					<th>Duration</th>
 				</tr>
-				@foreach (factory(App\Booking::class, 15)->make() as $booking)
+				@foreach (App\Booking::all()->where('customer_id', Auth::user()->id) as $booking)
 					@php
-						$bookingID = rand(0, 999);
+						$bookingID = $booking->id;
 					@endphp
 					<tr>
 						<td class="customer_bookings__left-solid">{{ $bookingID }}</td>
