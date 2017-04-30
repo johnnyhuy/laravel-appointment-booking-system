@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use App\BusinessOwner;
 use App\Booking;
@@ -71,6 +72,13 @@ class BusinessOwnerController extends Controller
      */
     public function create(Request $request)
     {
+        //Check a business owner doesn't already exist
+        if(count(BusinessOwner::all()) > 1) {
+            //Log a critical failure if an attempt is made to register more than 1 business
+            Log::critical("More than one business was attempted to be registered", $request);
+            return 0;
+        }
+
         // Validation error messages
         $messages = [
             'businessname.regex' => 'The :attribute is invalid, do not use special characters except "." and "-".',
@@ -110,6 +118,9 @@ class BusinessOwnerController extends Controller
             'address' => $request->address,
             'phone' => $request->phone,
         ]);
+
+        //Log business owner creation
+        Log::notice("A Business Owner was registered with username " . $businessOwner->username);
 
         // Session flash
         session()->flash('message', 'Business Owner registration success.');
