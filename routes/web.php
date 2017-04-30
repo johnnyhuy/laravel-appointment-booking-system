@@ -17,12 +17,7 @@ Route::get('/', function() {
 
 // Customer handling
 
-/**
- *
- * Session handling
- *
- */
-
+// Session handling
 // GET
 Route::get('/login', 'Auth\SessionController@index')->name('login');
 Route::get('/logout', 'Auth\SessionController@logout');
@@ -38,18 +33,20 @@ Route::get('/bookings', 'BookingController@indexCustomer');
 Route::get('/bookings/new', 'BookingController@newCustomerBooking');
 
 
-/**
- *
- * Admin handling
- *
- */
 
-// Dashboard views
+// Admin handling
+
+// Admin views
 Route::get('/admin', 'BusinessOwnerController@index');
 Route::get('/admin/register', 'BusinessOwnerController@register');
 Route::get('/admin/summary', 'BusinessOwnerController@summary');
-Route::get('/admin/employees', 'EmployeeController@index');
 Route::get('/admin/history', 'BookingController@history');
+
+// Employees
+Route::get('/admin/employees', 'EmployeeController@index');
+Route::get('/admin/employees/assign', 'EmployeeController@assign');
+Route::get('/admin/employees/assign/{employee_id}', 'EmployeeController@assign');
+Route::post('/admin/employees/assign', 'BookingController@assignEmployee');
 
 // Roster
 Route::get('/admin/roster', function() {

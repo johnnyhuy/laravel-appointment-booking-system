@@ -7,7 +7,7 @@
 	<h4 class="dash__description">Add a new employee to the system</h4>
 	@if ($flash = session('message'))
 		<div class="alert alert-success">
-			{{ $flash }}	
+			{{ $flash }}
 		</div>
 	@endif
 	@if (count($errors))
@@ -63,11 +63,10 @@
 		    </table>
 		</div>
 	@else
-		<div class="notice">
-			<span class="glyphicon glyphicon-thumbs-down notice__icon" aria-hidden="true"></span>
-			<h1 class="notice__message">No employees found.</h1>
-			<h4 class="notice__description">Try add an employee using the form above.</h4>
-		</div>
+		@include('shared.error_message_thumbs_down', [
+			'message' => 'No employees found.',
+			'subMessage' => 'Try add an employee using the form above.'
+		])
 	@endif
 </div>
 @endsection

@@ -10,6 +10,27 @@
 			{{ $flash }}
 		</div>
 	@endif
+	@if (!App\Customer::first())
+		@include('shared.error_message_custom', [
+			'title' => 'Customers do not exist.',
+			'message' => 'Register as a customer when you logout.',
+			'type' => 'danger'
+		])
+	@endif
+	@if (!App\Employee::first())
+		@include('shared.error_message_custom', [
+			'title' => 'Employees do not exist.',
+			'message' => 'Create an employee <a href="/admin/employees">here</a>.',
+			'type' => 'danger'
+		])
+	@endif
+	@if (!App\Activity::first())
+		@include('shared.error_message_custom', [
+			'title' => 'Activities do not exist.',
+			'message' => 'Create an activity <a href="/admin/activity">here</a>.',
+			'type' => 'danger'
+		])
+	@endif
 	@include('shared.error_message')
 	<form class="request" method="POST" action="/admin/booking">
 		{{ csrf_field() }}
@@ -45,6 +66,7 @@
 				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $employee)
 					<option value="{{ $employee->id }}">{{ $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname . ' - ' . $employee->id }}</option>
 				@endforeach
+				<option value="none">-- None --</option>
 			</select>
 		</div>
 		<div class="form-group">
@@ -61,20 +83,6 @@
 		</div>
 		<button class="btn btn-lg btn-primary btn-block btn--margin-top">Add Booking</button>
 	</form>
-</div>
-<hr>
-<div class="dash__block" id="roster">
-	<h1 class="dash__header dash__header--margin-top">Roster</h1>
-	<h4 class="dash__description">Show the roster of a given month.</h4>
-	<div class="form-group">
-			<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
-		    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/booking/' + this.value + '#roster'">
-		        @foreach ($months as $month)
-		            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
-		        @endforeach
-		    </select>
-	    </div>
-	@include('shared.calender')
 </div>
 <hr>
 <div class="dash__block" id="bookings">
@@ -96,8 +104,9 @@
 					<th class="table--name">Customer</th>
 					<th class="table--name">Employee</th>
 					<th class="table--name">Activity</th>
-					<th class="table--time">Start Time</th>
-					<th class="table--time">End Time</th>
+					<th class="table--time">Start</th>
+					<th class="table--time">End</th>
+					<th class="table--time">Duration</th>
 					<th class="table--date">Date</th>
 				</tr>
 				@foreach ($bookings as $booking)
@@ -110,22 +119,37 @@
 							</td>
 						@else
 							<td class="table--name table--right-dotted table--red">
-								No Employee Selected
+								Unassigned
 							</td>
 						@endif
 						<td class="table--name table--right-dotted">{{ $booking->activity->name }}</td>
 						<td class="table--time table--right-dotted">{{ $booking->start_time }}</td>
 						<td class="table--time table--right-dotted">{{ $booking->end_time }}</td>
+						<td class="table--time table--right-dotted">{{ $booking->activity->duration }}</td>
 						<td class="table--date">{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
 					</tr>
 				@endforeach
 		    </table>
 		</div>
 	@else
-		@include('shared.thumbs_down_error_message', [
+		@include('shared.error_message_thumbs_down', [
 			'message' => 'No bookings found.',
 			'subMessage' => 'Try add an employee using the form above.'
 		])
 	@endif
+</div>
+<hr>
+<div class="dash__block" id="roster">
+	<h1 class="dash__header dash__header--margin-top">Roster</h1>
+	<h4 class="dash__description">Show the roster of a given month.</h4>
+	<div class="form-group">
+			<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
+		    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/booking/' + this.value + '#roster'">
+		        @foreach ($months as $month)
+		            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
+		        @endforeach
+		    </select>
+	    </div>
+	@include('shared.calender')
 </div>
 @endsection

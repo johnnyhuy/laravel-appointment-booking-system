@@ -29,6 +29,7 @@ class BookingController extends Controller
                 'indexAdmin',
                 'storeAdminBooking',
                 'history',
+                'assignEmployee',
             ]
         ]);
     }
@@ -113,6 +114,13 @@ class BookingController extends Controller
             'end_time' => 'end time',
         ];
 
+        // If none is selected
+        if ($request->employee_id == 'none') {
+            // Clear rules for employee ID
+            $rules['employee_id'] = '';
+            $request->merge(['employee_id' => null]);
+        }
+
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
 
@@ -152,8 +160,8 @@ class BookingController extends Controller
 
         // Validation rules
         $rules = [
-            'customer_id' => 'required|exists:customers,id|is_on_booking',
             'activity_id' => 'required|exists:activities,id|is_end_time_valid',
+            'customer_id' => 'required|exists:customers,id|is_on_booking',
             'start_time' => 'required|date_format:H:i',
             'date' => 'required|date',
         ];
