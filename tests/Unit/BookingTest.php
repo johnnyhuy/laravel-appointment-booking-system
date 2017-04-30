@@ -24,8 +24,8 @@ class BookingTest extends TestCase
 		// Given booking exists
 		// and duration is two hours
 		$booking = new Booking([
-			'start_time' => Carbon::now()->subHour(4),
-			'end_time' => Carbon::now()->subHour(2),
+			'start_time' => Carbon::now('Australia/Melbourne')->subHour(4),
+			'end_time' => Carbon::now('Australia/Melbourne')->subHour(2),
 		]);
 
 		// Calculate duration of booking
@@ -44,8 +44,8 @@ class BookingTest extends TestCase
 		// Given booking exists
 		// and duration is two hours
 		$booking = new Booking([
-			'start_time' => Carbon::now()->subHour(4),
-			'end_time' => Carbon::now()->subHour(2),
+			'start_time' => Carbon::now('Australia/Melbourne')->subHour(4),
+			'end_time' => Carbon::now('Australia/Melbourne')->subHour(2),
 		]);
 
 		// Calculate duration of booking

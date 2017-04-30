@@ -29,8 +29,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 //Go to summary page (default directory of /admin)
                 ->visit('/admin/summary')
                 ->assertPathIs('/admin/summary')
-                ->assertSee('Summary of Bookings')
-                ->assertSee('Employee Availability');
+                ->assertSee('Summary of Bookings');
         });
     }
 
@@ -45,7 +44,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for yesterday
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now()->addDay(),
+            'date' => Carbon::now('Australia/Melbourne')->addDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -71,13 +70,13 @@ class BusinessOwnerSummaryTest extends DuskTestCase
      *
      * @return void
      */
-    public function testPastEntriesNotDisplayed() 
+    public function testPastEntriesNotDisplayed()
     {
         //Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for yesterday
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now()->subDay(),
+            'date' => Carbon::now('Australia/Melbourne')->subDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -101,17 +100,17 @@ class BusinessOwnerSummaryTest extends DuskTestCase
      *
      * @return void
      */
-    public function testMultipleEntriesDisplayed() 
+    public function testMultipleEntriesDisplayed()
     {
         //Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for tommorow
         $booking1 = factory(Booking::class)->create([
-            'date' => Carbon::now()->addDay(),
+            'date' => Carbon::now('Australia/Melbourne')->addDay(),
         ]);
         //Create a booking for 2 days from now
         $booking2 = factory(Booking::class)->create([
-            'date' => Carbon::now()->addDay()->addDay(),
+            'date' => Carbon::now('Australia/Melbourne')->addDay()->addDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking1, $booking2) {
@@ -157,9 +156,9 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for today
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now(),
-            'start_time' => Carbon::now(),
-            'end_time' => Carbon::now()->addHour(),
+            'date' => Carbon::now('Australia/Melbourne'),
+            'start_time' => Carbon::now('Australia/Melbourne'),
+            'end_time' => Carbon::now('Australia/Melbourne')->addHour(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -191,7 +190,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for today
         $booking = factory(Booking::class)->create( [
-            'date' => Carbon::now()->addMonth()
+            'date' => Carbon::now('Australia/Melbourne')->addMonth()
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -209,96 +208,4 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 ->assertDontSee(Carbon::parse($booking->date)->format('d/m/y'));
         });
     }
-
-    /**
-     * Test whether an employee is displayed under the Employee Availability table
-     *
-     * @return void
-     */
-    public function testDisplayEmployeeAvailability()
-    {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-        //Create an employee
-        $employee = factory(Employee::class)->create();
-
-        $this->browse(function ($browser) use ($bo, $employee) {
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
-                ->visit('/admin/summary')
-                //Check for full name on page
-                ->assertSee($employee->firstname . " " . $employee->lastname)
-                //Assert Employe isn't available
-                ->assertSee('Not Available');
-        });
-    }
-
-    /**
-     * Tests employee is displayed with relevant availabilities
-     *
-     * @return void
-     */
-    public function testDisplayEmployeeWithAvailabilities()
-    {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-        //Create an employee
-        $employee = factory(Employee::class)->create();
-
-        //Create Availabilities for Employee
-        $a1 = factory(Availability::class)->create();
-        $a2 = factory(Availability::class)->create([
-            'day' => 'TUESDAY',
-            'start_time' => '09:00',
-            'end_time' => '17:00',
-        ]);
-
-        $this->browse(function ($browser) use ($bo, $employee, $a1, $a2) {
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
-                ->visit('/admin/summary')
-                //Check for full name on page
-                ->assertSee($employee->firstname . " " . $employee->lastname)
-                //Assert Employe isn't available for days where they are unavailable
-                ->assertSee('Not Available')
-                //Assert Availabilites appear
-                ->assertSee('09:00 AM - 05:00 PM');
-        });
-    }
-
-    /**
-     * Tests employee is displayed with no not availables
-     *
-     * @return void
-     */
-    public function testDisplayEmployeeWithNoNotAvailables() 
-    {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-        //Create an employee
-        $employee = factory(Employee::class)->create();
-
-        //Create Availabilities for Employee
-        $a2 = factory(Availability::class)->create(['day' => 'MONDAY']);
-        $a2 = factory(Availability::class)->create(['day' => 'TUESDAY']);
-        $a2 = factory(Availability::class)->create(['day' => 'WEDNESDAY']);
-        $a2 = factory(Availability::class)->create(['day' => 'THURSDAY']);
-        $a2 = factory(Availability::class)->create(['day' => 'FRIDAY']);
-        $a2 = factory(Availability::class)->create(['day' => 'SATURDAY']);
-        $a2 = factory(Availability::class)->create(['day' => 'SUNDAY']);
-
-        $this->browse(function ($browser) use ($bo, $employee) {
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
-                //Go to summary page (default directory of /admin)
-                ->visit('/admin/summary')
-                //Check for full name on page
-                ->assertSee($employee->firstname . " " . $employee->lastname)
-                //Assert Employe isn't available for days where they are unavailable
-                ->assertDontSee('Not Available');
-        });
-    }
-    
 }

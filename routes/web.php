@@ -58,7 +58,7 @@ Route::post('/admin/employees/assign', 'BookingController@assignEmployee');
 
 // Roster
 Route::get('/admin/roster', function() {
-	return redirect('/admin/roster/' . Carbon\Carbon::now()->format('m-Y'));
+	return redirect('/admin/roster/' . Carbon\Carbon::now('Australia/Melbourne')->format('m-Y'));
 });
 Route::get('/admin/roster/{monthYear}', 'WorkingTimeController@index');
 Route::get('/admin/roster/{id}/edit', 'WorkingTimeController@edit');
@@ -68,7 +68,7 @@ Route::post('/admin/roster/{monthYear}', 'WorkingTimeController@create');
 
 // Booking
 Route::get('/admin/booking', function() {
-    return redirect('/admin/booking/' . Carbon\Carbon::now()->format('m-Y'));
+    return redirect('/admin/booking/' . Carbon\Carbon::now('Australia/Melbourne')->format('m-Y'));
 });
 Route::get('/admin/booking/{monthYear}', 'BookingController@indexAdmin');
 Route::post('/admin/booking/{monthYear}', 'BookingController@storeAdminBooking');
