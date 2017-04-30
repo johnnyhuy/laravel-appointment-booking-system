@@ -41,7 +41,7 @@ class ActivityController extends Controller
 
         // Validation rules
         $rules = [
-            'name' => 'required|min:2|max:32|regex:/^[A-z0-9\s]+$/',
+            'name' => 'required|unique:activities,name|min:2|max:32|regex:/^[A-z0-9\s]+$/',
             'description' => 'max:64',
             'duration' => 'required|date_format:H:i',
         ];
@@ -61,7 +61,7 @@ class ActivityController extends Controller
             'duration' => $request->duration,
         ]);
 
-        Log::notice("A new activity was created", $activity);
+        Log::notice("A new activity was created");
 
         // Session flash
         session()->flash('message', 'Activity has successfully been created.');
@@ -78,7 +78,7 @@ class ActivityController extends Controller
      */
     public function edit(Activity $activity)
     {
-        // 
+        //
     }
 
     /**

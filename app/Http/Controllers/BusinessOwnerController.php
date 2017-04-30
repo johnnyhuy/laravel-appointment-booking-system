@@ -77,7 +77,7 @@ class BusinessOwnerController extends Controller
         //Check a business owner doesn't already exist
         if(count(BusinessOwner::all()) > 1) {
             //Log a critical failure if an attempt is made to register more than 1 business
-            Log::critical("More than one business was attempted to be registered", $request);
+            Log::critical("More than one business was attempted to be registered", $request->all());
             return 0;
         }
 
