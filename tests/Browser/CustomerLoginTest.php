@@ -5,7 +5,6 @@ namespace Tests\Browser;
 use App\Customer;
 
 use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class CustomerLoginTest extends DuskTestCase
 {

@@ -3,20 +3,59 @@
 namespace Tests\Integration;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-use App\Customer;
-use App\BusinessOwner;
+use App\Activity;
 use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
 
 use Carbon\Carbon;
 
 class BookingTest extends TestCase
 {
-    // Rollback database actions once test is complete with this trait
-    use DatabaseTransactions;
+    /**
+     * Customer successfully create a booking
+     *
+     * @return void
+     */
+    public function testCustomerCreateBookingSuccessful()
+    {
+        // There exists a customer and employee
+        $customer = factory(Customer::class)->create();
+
+        // Create an activity that is 2 hours long
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Build booking data
+        // Booking is set to tomorrow at 09:00 AM
+        $bookingData = [
+            'activity_id' => $activity->id,
+            'start_time' => '09:00',
+            'date' => Carbon::now()->addDay()->toDateString(),
+        ];
+
+        // Send POST request to /bookings
+        $response = $this->actingAs($customer, 'web_user')
+            ->json('POST', 'bookings', $bookingData);
+
+        // Check message add booking is successful
+        $response->assertSessionHas('message', 'Booking has successfully been created. No employee is assigned to your booking, please come back soon when an adminstrator verifies your booking.');
+
+        // Check the database if booking exists
+        $this->assertDatabaseHas('bookings', [
+            'id' => 1,
+            'customer_id' => $customer->id,
+            'employee_id' => null,
+            'activity_id' => $activity->id,
+            'start_time' => $bookingData['start_time'],
+            'end_time' => Booking::calcEndTime($activity->duration, $bookingData['start_time']),
+            'date' => $bookingData['date'],
+        ]);
+    }
 
     /**
      * Customer has many bookings, make 4 bookings and assign it to a customer
@@ -27,7 +66,7 @@ class BookingTest extends TestCase
     {
         // Given customer created
         $customer = factory(Customer::class)->create();
-        
+
         // When customer has 4 bookings
         factory(Booking::class, 4)->create([
             'customer_id' => $customer->id,
@@ -35,6 +74,521 @@ class BookingTest extends TestCase
 
         // Then there exists 4 bookings from customer
         $this->assertCount(4, Customer::first()->bookings);
+    }
+
+    /**
+     * Creating a booking through the Business Owner view (admin)
+     *
+     * @return void
+     */
+    public function testAdminAddBooking()
+    {
+        // Build fake data
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Create an activity that is 2 hours
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Get the current date
+        $date = Carbon::now()->toDateString();
+
+        // Create fake data that adds to database
+        $employee = factory(Employee::class)->create();
+        $customer = factory(Customer::class)->create();
+
+        // Create a working time for given employee today
+        // Employee starts at 9:00 AM to 5:00 PM
+        $workingTime = factory(WorkingTime::class)->create([
+            'employee_id' => $employee->id,
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+            'date' => $date,
+        ]);
+
+        // Booking start time is 11:00AM in 24 hour format
+        $startTime = '11:00';
+
+        // Calculate end time given by activity duration (11:00 + 02:00 = 13:00)
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
+
+        // Add a booking from activity duration
+        // Build booking data
+        $bookingData = [
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'date' => $date,
+        ];
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check message add booking is successful
+        $response->assertSessionHas('message', 'Booking has successfully been created.');
+
+        // Check the database if booking exists
+        $this->assertDatabaseHas('bookings', [
+            'id' => 1,
+            'customer_id' => $bookingData['customer_id'],
+            'employee_id' => $bookingData['employee_id'],
+            'activity_id' => $bookingData['activity_id'],
+            'start_time' => $bookingData['start_time'],
+            'end_time' => $bookingData['end_time'],
+            'date' => $bookingData['date'],
+        ]);
+    }
+
+    /**
+     * Business Owner add booking validation rules
+     *
+     * @return void
+     */
+    public function testAdminAddBookingValidation()
+    {
+        // Build fake data
+        $bo = factory(BusinessOwner::class)->create();
+
+        // User selects no customer
+        // Build booking data
+        $bookingData = [
+            'customer_id' => '',
+        ];
+
+        // Send POST request to admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The customer field is required.'
+        ]);
+
+
+        // User selects a customer that does not exist
+        // Build booking data
+        $bookingData = [
+            'customer_id' => 1337,
+        ];
+
+        // Send POST request to admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The customer does not exist.'
+        ]);
+
+
+        // User selects no activity
+        // Build booking data
+        $bookingData = [
+            'activity_id' => '',
+        ];
+
+        // Send POST request to admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The activity field is required.'
+        ]);
+
+
+        // User selects a activity that does not exist
+        // Build booking data
+        $bookingData = [
+            'activity_id' => 1337,
+        ];
+
+        // Send POST request to admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The activity does not exist.'
+        ]);
+
+
+        // User selects a employee that does not exist
+        // Build booking data
+        $bookingData = [
+            'employee_id' => 1337,
+        ];
+
+        // Send POST request to admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee does not exist.'
+        ]);
+
+
+        // User inputs invalid start time
+        // Build booking data
+        $bookingData = [
+            'start_time' => '@@@',
+        ];
+
+        // Send POST request to admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The start time field must be in the correct time format.'
+        ]);
+    }
+
+    /**
+     * Create an existing booking and assign it to an employee
+     * Send a request to create another booking and try to assign it to an employee
+     * If both bookings have the employee working at the same time
+     * Then show an error
+     *
+     * @return void
+     */
+    public function testEmployeeIsAlreadyWorkingOnBooking()
+    {
+        // Business Owner must be created and logged in
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Generate fake data
+        $employee = factory(Employee::class)->create();
+        $customer = factory(Customer::class)->create();
+
+        // Create an acitivity with a duration of 2 hours
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00',
+        ]);
+
+        // Get the current date
+        $date = Carbon::now()->toDateString();
+
+        // Create a working time for given employee today
+        // Employee starts at 6:00 AM to 5:00 PM
+        $workingTime = factory(WorkingTime::class)->create([
+            'employee_id' => $employee->id,
+            'start_time' => '06:00',
+            'end_time' => '17:00',
+            'date' => $date,
+        ]);
+
+        // Start time is 10:00AM
+        $startTime = '10:00';
+
+        // Calculate the end time depending on the activity duration
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
+
+        // Build booking data
+        $bookingData = [
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'date' => $date,
+        ];
+
+        // There exists a booking
+        $booking = factory(Booking::class)->create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $bookingData['start_time'],
+            'end_time' => $bookingData['end_time'],
+            'date' => $bookingData['date'],
+        ]);
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee is already working on another booking at that time.'
+        ]);
+
+
+        // When employee starts before start time and finishes before end time
+        // Subtract an hour from start and end time (offset)
+        $bookingData['start_time'] = Carbon::parse($startTime)->subHour()->format('H:i');
+        $bookingData['end_time'] = Carbon::parse($endTime)->subHour()->format('H:i');
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee is already working on another booking at that time.'
+        ]);
+
+
+        // When employee starts after start time and finishes after end time
+        // Add an hour from start and end time (offset)
+        $bookingData['start_time'] = Carbon::parse($startTime)->addHour()->format('H:i');
+        $bookingData['end_time'] = Carbon::parse($endTime)->addHour()->format('H:i');
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee is already working on another booking at that time.'
+        ]);
+
+        // When employee working on booking starts before existing booking
+        $bookingData['start_time'] = Carbon::parse($booking->start_time)
+            ->subHours($activity->hour)
+            ->subMinutes($activity->minute)
+            ->format('H:i');
+        $bookingData['end_time'] = Carbon::parse($booking->end_time)
+            ->subHours($activity->hour)
+            ->subMinutes($activity->minute)
+            ->format('H:i');
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check message add booking is successful
+        $response->assertSessionHas('message', 'Booking has successfully been created.');
+
+
+        // When employee working on booking starts after existing booking
+        $bookingData['start_time'] = Carbon::parse($booking->start_time)
+            ->addHours($activity->hour)
+            ->addMinutes($activity->minute)
+            ->format('H:i');
+        $bookingData['end_time'] = Carbon::parse($booking->end_time)
+            ->addHours($activity->hour)
+            ->addMinutes($activity->minute)
+            ->format('H:i');
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check message add booking is successful
+        $response->assertSessionHas('message', 'Booking has successfully been created.');
+    }
+
+    /**
+     * When user attempts to add a booking activity duration that goes to the next day
+     * Then show an error
+     *
+     * @return void
+     */
+    public function testBookingAddActivityDurationWhereBookingEndTimeIsInvalid()
+    {
+        // Business Owner must be created and logged in
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Generate fake data
+        $employee = factory(Employee::class)->create();
+        $customer = factory(Customer::class)->create();
+
+        // Set duration for 2 hours
+        $activity = factory(Activity::class)->create([
+            'duration' => '2:00'
+        ]);
+
+        // Booking starts at 22:00
+        $startTime = '22:00';
+
+        // End time is 24:00 or 00:00, which is the next day
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
+
+        // Build booking data
+        $bookingData = [
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'date' => Carbon::now()->toDateString(),
+        ];
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The activity duration added on start time is invalid. Please add a start time that does not go to the next day.'
+        ]);
+    }
+
+    /**
+     * When user adds a booking
+     * If the employee is not working in that time
+     * Then show an error
+     *
+     * @return void
+     */
+    public function testAddBookingWhenEmployeeIsNotWorking() {
+        // Business Owner must be created and logged in
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Create an activity that is 2 hours
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Get the current date
+        $date = Carbon::now()->toDateString();
+
+        // Create fake data that adds to database
+        $employee = factory(Employee::class)->create();
+        $customer = factory(Customer::class)->create();
+
+        // Create a working time for given employee today
+        // Employee starts at 9:00 AM to 11:00 AM
+        $workingTime = factory(WorkingTime::class)->create([
+            'employee_id' => $employee->id,
+            'start_time' => '09:00',
+            'end_time' => '11:00',
+            'date' => $date,
+        ]);
+
+        // Booking starts at 1:00 PM
+        $startTime = '13:00';
+
+        // Calculate the end time depending on the activity duration
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
+
+        // Build booking data
+        $bookingData = [
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'date' => $date,
+        ];
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee either has a conflict with another booking or employee is not working on that time.'
+        ]);
+    }
+
+    /**
+     * When a booking activity is added and employee finishes before the end time
+     *
+     * @return void
+     */
+    public function testAddBookingWhenEmployeeFinishesEarly()
+    {
+        // Business Owner must be created and logged in
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Create an activity that is 4 hours
+        $activity = factory(Activity::class)->create([
+            'duration' => '04:00'
+        ]);
+
+        // Get the current date
+        $date = Carbon::now()->toDateString();
+
+        // Create fake data that adds to database
+        $employee = factory(Employee::class)->create();
+        $customer = factory(Customer::class)->create();
+
+        // Create a working time for given employee today
+        // Employee starts at 9:00 AM to 5:00 PM
+        $workingTime = factory(WorkingTime::class)->create([
+            'employee_id' => $employee->id,
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+            'date' => $date,
+        ]);
+
+        // Booking starts at 8:00 AM
+        $startTime = '08:00';
+
+        // Calculate the end time depending on the activity duration
+        $endTime = Booking::calcEndTime($activity->duration, $startTime);
+
+        // Build booking data
+        $bookingData = [
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'date' => $date,
+        ];
+
+        // Send POST request to /admin/booking
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('POST', 'admin/booking', $bookingData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee either has a conflict with another booking or employee is not working on that time.'
+        ]);
+    }
+
+    /**
+     * Booking belongs to one employee, make 4 bookings and assign it to an employee
+     *
+     * @return void
+     */
+    public function testBookingHasOnlyOneEmployee()
+    {
+        // There exists an employee
+        $employee = factory(employee::class)->create();
+
+        // Create 4 new bookings and assign it to employee
+        $bookings = factory(Booking::class, 4)->create([
+            'employee_id' => $employee->id,
+        ]);
+
+        // Get employee from booking class
+        // Check if 4 bookings belong to 1 employee
+        // Call attribute employee will return one employee from each booking
+        foreach ($bookings as $booking) {
+            $this->assertEquals($employee->id, $booking->employee->id);
+        }
+    }
+
+    /**
+     * Booking belongs to one activity, make 4 bookings and assign it to an activity
+     *
+     * @return void
+     */
+    public function testBookingHasOnlyOneActivity()
+    {
+        // There exists an activity
+        $activity = factory(Activity::class)->create();
+
+        // Create 4 new bookings and assign it to activity
+        $bookings = factory(Booking::class, 4)->create([
+            'activity_id' => $activity->id,
+        ]);
+
+        // Get activity from booking class
+        // Check if 4 bookings belong to 1 activity
+        // Call attribute activity will return one activity from each booking
+        foreach ($bookings as $booking) {
+            $this->assertEquals($activity->id, $booking->activity->id);
+        }
     }
 
     /**
@@ -82,7 +636,7 @@ class BookingTest extends TestCase
      */
     public function testOnlyShowHistoryBookings()
     {
-        // a previous booking 
+        // a previous booking
         $validBooking = factory(Booking::class)->create([
             'date' => Carbon::now('Australia/Melbourne')
                 ->subWeek()
@@ -120,7 +674,7 @@ class BookingTest extends TestCase
         $laterBooking = factory(Booking::class)->create([
             'date' => Carbon::now('Australia/Melbourne')->subWeek(2)->toDateString()
         ]);
-        
+
         // Use a static function to get history bookings
         $history = Booking::allHistory();
 
@@ -138,9 +692,16 @@ class BookingTest extends TestCase
     {
         // this means if the booking is exactly now it should not be displayed
         // a form of boundry testing for the middle since startTime < now
+        // Create a two hour booking from today
 
+        // Current time in Melbourne Australia
+        $timeNow = Carbon::now('Australia/Melbourne');
+
+        // Build booking data
         $nowBooking = factory(Booking::class)->create([
-            'date' => Carbon::now('Australia/Melbourne')->toDateString()
+            'start_time' => $timeNow->toTimeString(),
+            'end_time' => $timeNow->addHours(2)->toTimeString(),
+            'date' => $timeNow->toDateString()
         ]);
 
         // Use a static function to get history bookings
@@ -176,7 +737,7 @@ class BookingTest extends TestCase
      */
     public function testOnlyShowLastestBookings()
     {
-        // a previous booking 
+        // a previous booking
         $validBooking = factory(Booking::class)->create([
             'date' => Carbon::now('Australia/Melbourne')
                 ->addWeek()
@@ -214,7 +775,7 @@ class BookingTest extends TestCase
         $laterBooking = factory(Booking::class)->create([
             'date' => Carbon::now('Australia/Melbourne')->addWeeks(2)->toDateString()
         ]);
-        
+
         // Use a static function to get latest bookings
         $latest = Booking::allLatest();
 
@@ -224,22 +785,27 @@ class BookingTest extends TestCase
     }
 
     /**
-     * Do not show booking that starts now in latest bookings
+     * Do show booking that starts now in latest bookings
      *
      * @return void
      */
-    public function testDontShowNowLatestBookings()
+    public function testShowNowLatestBookings()
     {
-        // Create a booking that starts now
+        // Get current time
+        $now = Carbon::now('Australia/Melbourne');
+
+        // Create a two hour booking that starts now
         $nowBooking = factory(Booking::class)->create([
-            'date' => Carbon::now('Australia/Melbourne')->toDateString()
+            'start_time' => $now->toTimeString(),
+            'end_time' => $now->addHours(2)->toTimeString(),
+            'date' => $now->toDateString()
         ]);
 
         // Use a static function to get latest bookings
         $latest = Booking::allLatest();
 
         // check if this booking is displayed, assuming it must return false
-        $this->assertFalse($latest->contains('date', $nowBooking->date));
+        $this->assertTrue($latest->contains('date', $nowBooking->date));
     }
 
     /**

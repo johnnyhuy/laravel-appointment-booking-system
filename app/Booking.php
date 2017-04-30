@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Activity;
+use App\WorkingTime;
+
 use Carbon\Carbon;
 
 class Booking extends Model
@@ -11,9 +14,28 @@ class Booking extends Model
 	protected $guarded = [];
 
 	/**
+	 * Calculate end time of a booking given its activity duration
 	 *
+	 * @return string
+	 */
+	public static function calcEndTime($pDuration, $pStartTime) {
+		// Set duration
+		$duration = Carbon::parse($pDuration);
+
+		// Set start time
+		$startTime = Carbon::parse($pStartTime);
+
+	    // Calculate end time
+	    return Carbon::createFromTime($startTime->hour, $startTime->minute)
+	    	->addHours($duration->hour)
+	    	->addMinutes($duration->minute)
+	    	->format('H:i');
+	}
+
+	/**
 	 * Calculate the duration of the booking
 	 *
+	 * @return string
 	 */
 	public function duration($toTimeString = false)
 	{
@@ -28,32 +50,31 @@ class Booking extends Model
 		if ($toTimeString) {
 			$duration = gmdate('G:i', $duration);
 		}
-		
+
 		// Return duration
 		return $duration;
 	}
 
 	/**
-	 *
 	 * Show all history of bookings
 	 *
+	 * @return App\Booking
 	 */
 	public static function allHistory() {
 		// Return past bookings eloquent model
-		return Booking::where('date', '<', Carbon::now()->subDay())	
-			->get()	
+		return Booking::where('date', '<', Carbon::now()->toDateString())
+			->get()
 			// Sort by start time using an eloquent collection function
 			->sortByDESC('date');
 	}
 
 	/**
-	 *
 	 * Show all latest of bookings
 	 *
+	 * @return App\Booking
 	 */
 	public static function allLatest($max = null) {
-		$startDay = Carbon::now()->startOfDay();
-		$booking = Booking::where('date', '>=', $startDay);
+		$booking = Booking::where('date', '>=', Carbon::now()->toDateString());
 
 		if (isset($max)) {
 			$max = Carbon::now()->addDays($max);
@@ -69,13 +90,68 @@ class Booking extends Model
 	}
 
 	/**
+	 * Show all bookings a given employee is available to work
 	 *
+	 * @return App\Booking[]
+	 */
+	public static function getWorkableBookingsForEmployee($employeeID, $ndays)
+	{
+		// Get all bookings from the next 30 days
+		$bookings = Booking::allLatest($ndays);
+
+		// Get all working times for the employee for next 30 days
+		$workingTimes = WorkingTime::getWorkingTmesForEmployee($employeeID, $ndays)->get();
+
+		// Final bookings
+		$finalBookings = [];
+
+		// Iterate through each booking
+		foreach ($bookings as $booking) {
+			// Iterate through each working time
+			foreach ($workingTimes as $workingTime) {
+				// If the employee is working during the entirety of this booking
+				// And the booking is on the same day the employee is working
+				if ($workingTime->start_time <= $booking->start_time &&
+					$workingTime->end_time >= $booking->end_time &&
+					$workingTime->date == $booking->date) {
+
+					// Push booking to list of final bookings
+					array_push($finalBookings, $booking);
+				}
+			}
+		}
+
+		// Return bookings
+		return $finalBookings;
+	}
+
+	/**
+	 * Get employee from bookings
+	 *
+	 * @return \App\Employee
+	 */
+	public function employee()
+	{
+		return $this->belongsTo(Employee::class);
+	}
+
+	/**
 	 * Get customer from bookings
 	 *
+	 * @return \App\Customer
 	 */
 	public function customer()
 	{
-		//return Customer::where('id', $this->customer_id);
 		return $this->belongsTo(Customer::class);
+	}
+
+	/**
+	 * Get activity from bookings
+	 *
+	 * @return \App\Activity
+	 */
+	public function activity()
+	{
+		return $this->belongsTo(Activity::class);
 	}
 }

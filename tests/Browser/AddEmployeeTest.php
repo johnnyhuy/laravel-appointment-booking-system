@@ -3,7 +3,6 @@
 namespace Tests\Browser;
 
 use Tests\DuskTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 use App\BusinessOwner;
 use App\Employee;
@@ -65,7 +64,7 @@ class AddEmployeeTest extends DuskTestCase
      *
      * @return void
      */
-    public function testNoEmployeesMsgAppears()
+    public function testNoEmployeesMessageAppears()
     {
         //Creates business owner
         $bo = factory(BusinessOwner::class)->create();

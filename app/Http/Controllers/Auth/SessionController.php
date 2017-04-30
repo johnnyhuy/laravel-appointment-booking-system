@@ -3,11 +3,21 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\BusinessOwnerController;
+use App\Activity;
+use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
+
+use Carbon\Carbon;
 
 class SessionController extends Controller
 {
@@ -23,8 +33,12 @@ class SessionController extends Controller
 
     public function login()
     {
+        Log::info("An attempt to login was made", request(['username', 'password']));
+
         // Sign in as customer
         if (Auth::guard('web_user')->attempt(request(['username', 'password']))) {
+            //Log customer login success
+            Log::info("Customer Login with username " . request('username') . " was successful");
             // Session flash
             session()->flash('message', 'Successfully logged in!');
 
@@ -33,7 +47,9 @@ class SessionController extends Controller
         }
         // If sign in as a customer doesn't work, attempt business owner sign in
         elseif (Auth::guard('web_admin')->attempt(request(['username', 'password']))) {
-             // Session flash
+            //Log business owner login success
+            Log::info("Business Owner login with username " . request('username') . " was successful");
+            // Session flash
             session()->flash('message', 'Business Owner login success.');
 
             // Success, go to business owner's admin page
@@ -41,6 +57,7 @@ class SessionController extends Controller
         }
 
         //Login failed (handle failed login)
+        Log::notice("An attempt to login failed with username and password: " . request('username') . ", " . request('password'));
 
         // Session flash
         session()->flash('error', 'Error! Invalid credentials.');
@@ -52,14 +69,18 @@ class SessionController extends Controller
     public function logout()
     {
         //If logged in as a customer, log out from customer
-        if (Auth::guard('web_user')->check()) 
+        if (Auth::guard('web_user')->check())
         {
             Auth::guard('web_user')->logout();
         }
         //If already logged in as a business owner, log out from buisness owner
-        elseif (Auth::guard('web_admin')->check()) 
+        elseif (Auth::guard('web_admin')->check())
         {
             Auth::guard('web_admin')->logout();
+        }
+        else {
+            //If the user has a non-default guard or they weren't logged in
+            Log::error("Unkown user attempted logout");
         }
 
         //Session flash
