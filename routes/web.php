@@ -17,7 +17,12 @@ Route::get('/', function() {
 
 // Customer handling
 
-// Session handling
+/**
+ *
+ * Session handling
+ *
+ */
+
 // GET
 Route::get('/login', 'Auth\SessionController@index')->name('login');
 Route::get('/logout', 'Auth\SessionController@logout');
@@ -33,8 +38,11 @@ Route::get('/bookings', 'BookingController@indexCustomer');
 Route::get('/bookings/new', 'BookingController@newCustomerBooking');
 
 
-
-// Admin handling
+/**
+ *
+ * Admin handling
+ *
+ */
 
 // Admin views
 Route::get('/admin', 'BusinessOwnerController@index');

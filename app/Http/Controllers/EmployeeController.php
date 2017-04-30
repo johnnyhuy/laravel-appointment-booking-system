@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Employee;
 use App\Booking;
@@ -24,6 +25,8 @@ class EmployeeController extends Controller
     // Create a new employee
     public function create(Request $request)
     {
+        Log::info("An attempt was made to create a new employee", $request->all());
+
     	// Validate form
         $this->validate($request, [
             'firstname' => 'required|min:2|max:32|regex:/^[A-z\-\.' . "\'" . ' ]+$/',
@@ -39,6 +42,8 @@ class EmployeeController extends Controller
             'title' => $request->title,
             'phone' => $request->phone,
         ]);
+
+        Log::notice("A new employee was created with name: " . $request['firstname'] . " " . $request['lastname']);
 
         // Session flash
         session()->flash('message', 'New Employee Added');
