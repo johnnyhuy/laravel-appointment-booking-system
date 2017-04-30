@@ -14,7 +14,7 @@ class Booking extends Model
 
 	/**
 	 * Calculate end time of a booking given its activity duration
-	 * 
+	 *
 	 * @return string
 	 */
 	public static function calcEndTime($pDuration, $pStartTime) {
@@ -33,7 +33,7 @@ class Booking extends Model
 
 	/**
 	 * Calculate the duration of the booking
-	 * 
+	 *
 	 * @return string
 	 */
 	public function duration($toTimeString = false)
@@ -49,19 +49,19 @@ class Booking extends Model
 		if ($toTimeString) {
 			$duration = gmdate('G:i', $duration);
 		}
-		
+
 		// Return duration
 		return $duration;
 	}
 
 	/**
 	 * Show all history of bookings
-	 * 
+	 *
 	 * @return App\Booking
 	 */
 	public static function allHistory() {
 		// Return past bookings eloquent model
-		return Booking::where('date', '<', Carbon::now()->toDateString())	
+		return Booking::where('date', '<', Carbon::now()->toDateString())
 			->get()
 			// Sort by start time using an eloquent collection function
 			->sortByDESC('date');
@@ -69,7 +69,7 @@ class Booking extends Model
 
 	/**
 	 * Show all latest of bookings
-	 * 
+	 *
 	 * @return App\Booking
 	 */
 	public static function allLatest($max = null) {
@@ -90,7 +90,7 @@ class Booking extends Model
 
 	/**
 	 * Get employee from bookings
-	 * 
+	 *
 	 * @return \App\Employee
 	 */
 	public function employee()
@@ -100,7 +100,7 @@ class Booking extends Model
 
 	/**
 	 * Get customer from bookings
-	 * 
+	 *
 	 * @return \App\Customer
 	 */
 	public function customer()
@@ -110,7 +110,7 @@ class Booking extends Model
 
 	/**
 	 * Get activity from bookings
-	 * 
+	 *
 	 * @return \App\Activity
 	 */
 	public function activity()

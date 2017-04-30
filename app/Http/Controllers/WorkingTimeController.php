@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\BusinessOwner;
+use App\Booking;
 use App\WorkingTime;
 
 use Carbon\Carbon;
@@ -29,17 +30,17 @@ class WorkingTimeController extends Controller
         $monthList = [];
 
         // Get months previous
-        for ($months = 6; $months > 0; $months--) { 
+        for ($months = 6; $months > 0; $months--) {
             $monthList[] = WorkingTime::getDate($monthYear)->subMonths($months);
         }
 
         // Get months now and ahead
-        for ($months = 0; $months < 6; $months++) { 
+        for ($months = 0; $months < 6; $months++) {
             $monthList[] = WorkingTime::getDate($monthYear)->addMonths($months);
         }
-        
+
         return view('admin.roster', [
-            'business' => BusinessOwner::first(), 
+            'business' => BusinessOwner::first(),
             'roster' => WorkingTime::all(),
             'date' => WorkingTime::getDate($monthYear),
             'months' => $monthList,
@@ -102,4 +103,78 @@ class WorkingTimeController extends Controller
         // Redirect to the business owner employee page
         return redirect('/admin/roster/' . $monthYear);
 	}
+
+    /**
+     * View edit booking page
+     */
+    public function edit($id)
+    {
+        // Find working time by ID
+        $workingTime = WorkingTime::find($id);
+
+        $business = BusinessOwner::first();
+
+        return view('admin.edit_working_time', compact(['workingTime', 'business']));
+    }
+
+    /**
+     * Update a working time by ID
+     * Sent by PUT/PATCH request
+     */
+    public function update(Request $request, $id)
+    {
+        // Custom error messages
+        $messages = [
+            'employee_id.exists' => 'The :attribute does not exist.',
+            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'date.unique' => 'The employee can only have one working time per day.',
+        ];
+
+        // Validation rules
+        $rules = [
+            // Employee ID is required and must exist in employees table
+            'employee_id' => 'required|exists:employees,id',
+
+            // Start time is required
+            'start_time' => 'required|before:end_time|date_format:H:i',
+
+            // End time is required and must be AFTER the start time (they can't be the same either)
+            'end_time' => 'required|after:start_time|date_format:H:i',
+
+            // Date must be unique where employee ID is unique
+            'date' => 'required',
+        ];
+
+        // Attributes replace the field name with a more readable name
+        $attributes = [
+            'employee_id' => 'employee',
+        ];
+
+        // Validate form
+        $this->validate($request, $rules, $messages, $attributes);
+
+        // Find working time
+        $workingTime = WorkingTime::find($id);
+
+        // Unassign employee that was previously working on a booking
+        Booking::where('start_time', '>=', $workingTime->start_time)
+            ->where('end_time', '<=', $workingTime->end_time)
+            ->update([
+                'employee_id' => null
+            ]);
+
+        // Save data
+        $workingTime->employee_id = $request->employee_id;
+        $workingTime->start_time = $request->start_time;
+        $workingTime->end_time = $request->end_time;
+        $workingTime->date = $request->date;
+        $workingTime->save();
+
+        // Session flash
+        session()->flash('message', 'Edited working time has been successful.');
+
+        // Redirect to the business owner employee page
+        return redirect('/admin/roster/' . Carbon::parse($request->date)->format('m-Y'));
+    }
 }

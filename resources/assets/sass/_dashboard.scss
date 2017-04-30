@@ -97,17 +97,25 @@ footer.dashboard {
 
 		@include e('block') {
 			margin-right: 25px;
-			padding: 5px;
+			padding: 5px 30px 5px 5px;
 			background-color: $brand-primary;
 			border-radius: $border-radius-large;
 			color: $white;
 			margin-bottom: $margin-base;
+			position: relative;
 		}
 
 		@include e('name') {
 			font-family: $font-primary;
 			font-weight: bold;
 			font-size: 18px;
+		}
+
+		@include e('edit') {
+			position: absolute;
+			top: 8px;
+			right: 12px;
+			color: white;
 		}
 	}
 }
