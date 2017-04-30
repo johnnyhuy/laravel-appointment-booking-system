@@ -31,9 +31,11 @@ Route::get('/register', 'CustomerController@register');
 // POST
 Route::post('/login', 'Auth\SessionController@login');
 Route::post('/register', 'CustomerController@create');
+Route::post('/create_booking', 'BookingController@createBooking');
 
 // Bookings
 Route::get('/bookings', 'BookingController@customerBookings');
+Route::get('/create_booking', 'BookingController@showCreateBooking');
 
 
 /**
