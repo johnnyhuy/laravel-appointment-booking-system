@@ -17,7 +17,12 @@ Route::get('/', function() {
 
 // Customer handling
 
-// Session handling
+/**
+ *
+ * Session handling
+ *
+ */
+
 // GET
 Route::get('/login', 'Auth\SessionController@index')->name('login');
 Route::get('/logout', 'Auth\SessionController@logout');
@@ -26,22 +31,51 @@ Route::get('/register', 'CustomerController@register');
 // POST
 Route::post('/login', 'Auth\SessionController@login');
 Route::post('/register', 'CustomerController@create');
+Route::post('/create_booking', 'BookingController@createBooking');
 
 // Bookings
-Route::get('/bookings', 'BookingController@index');
+Route::get('/bookings', 'BookingController@customerBookings');
+Route::get('/create_booking', 'BookingController@showCreateBooking');
 
 
-// Admin handling
+/**
+ *
+ * Admin handling
+ *
+ */
 
 // Dashboard views
-Route::get('/admin', 'AdminController@index');
+Route::get('/admin', 'BusinessOwnerController@index');
 Route::get('/admin/register', 'BusinessOwnerController@register');
-Route::get('/admin/summary', 'AdminController@summary');
-Route::get('/admin/employees', 'AdminController@employees');
-Route::get('/admin/history', 'AdminController@history');
-Route::get('/admin/roster', 'AdminController@roster');
+Route::get('/admin/summary', 'BusinessOwnerController@summary');
+Route::get('/admin/employees', 'EmployeeController@index');
+Route::get('/admin/history', 'BookingController@history');
+Route::get('/admin/roster', function() {
+	return redirect('/admin/roster/' . Carbon\Carbon::now()->format('m-Y'));
+});
+Route::get('/admin/roster/{monthYear}', 'WorkingTimeController@index');
+Route::get('/admin/booking', 'BookingController@index');
+Route::get('/admin/employees/assign', 'EmployeeController@assignEmployees');
+Route::get('/admin/employees/assign/{employee_id}', 'EmployeeController@assignEmployees');
 
 // Admin form submission handling
 Route::post('/admin/register', 'BusinessOwnerController@create');
 Route::post('/admin/employees', 'EmployeeController@create');
 Route::post('/admin/roster', 'WorkingTimeController@create');
+Route::post('/admin/roster/{monthYear}', 'WorkingTimeController@create');
+Route::post('/admin/employees/assign', "BookingController@assignEmployee");
+Route::post('/admin/employees/assign/{employee_id}', "BookingController@assignEmployee");
+
+// Activity management
+// Custom modified resourceful controller using CRUD routes
+Route::resource('admin/activity', 'ActivityController', [
+	'except' => [
+		'create'
+	]
+]);
+
+Route::resource('admin/booking', 'BookingController', [
+	'only' => [
+		'store', 'edit', 'update', 'destroy'
+	]
+]);
