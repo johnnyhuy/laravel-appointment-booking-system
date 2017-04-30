@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 use App\Activity;
+use App\Booking;
 use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
+
+use Carbon\Carbon;
 
 class ActivityController extends Controller
 {

@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
-use App\BusinessOwner;
+use App\Activity;
 use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
 use App\WorkingTime;
 
 use Carbon\Carbon;
@@ -100,7 +108,7 @@ class WorkingTimeController extends Controller
             'date' => $request->date,
         ]);
 
-        Log::notice("A new working time was created for employee with id " . $workingTime->employee_id . " for times: " . 
+        Log::notice("A new working time was created for employee with id " . $workingTime->employee_id . " for times: " .
             $workingTime->date . " => " . $workingTime->start_time . " - " . $workingTime->end_time);
 
         // Session flash

@@ -5,16 +5,58 @@ namespace Tests\Integration;
 use Tests\TestCase;
 
 use App\Activity;
-use App\Employee;
-use App\Customer;
-use App\BusinessOwner;
 use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
 use App\WorkingTime;
 
 use Carbon\Carbon;
 
 class BookingTest extends TestCase
 {
+    /**
+     * Customer successfully create a booking
+     *
+     * @return void
+     */
+    public function testCustomerCreateBookingSuccessful()
+    {
+        // There exists a customer and employee
+        $customer = factory(Customer::class)->create();
+
+        // Create an activity that is 2 hours long
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Build booking data
+        // Booking is set to tomorrow at 09:00 AM
+        $bookingData = [
+            'activity_id' => $activity->id,
+            'start_time' => '09:00',
+            'date' => Carbon::now()->addDay()->toDateString(),
+        ];
+
+        // Send POST request to /bookings
+        $response = $this->actingAs($customer, 'web_user')
+            ->json('POST', 'bookings', $bookingData);
+
+        // Check message add booking is successful
+        $response->assertSessionHas('message', 'Booking has successfully been created. No employee is assigned to your booking, please come back soon when an adminstrator verifies your booking.');
+
+        // Check the database if booking exists
+        $this->assertDatabaseHas('bookings', [
+            'id' => 1,
+            'customer_id' => $customer->id,
+            'employee_id' => null,
+            'activity_id' => $activity->id,
+            'start_time' => $bookingData['start_time'],
+            'end_time' => Booking::calcEndTime($activity->duration, $bookingData['start_time']),
+            'date' => $bookingData['date'],
+        ]);
+    }
+
     /**
      * Customer has many bookings, make 4 bookings and assign it to a customer
      *

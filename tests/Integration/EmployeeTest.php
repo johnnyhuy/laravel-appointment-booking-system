@@ -4,8 +4,14 @@ namespace Tests\Integration;
 
 use Tests\TestCase;
 
+use App\Activity;
+use App\Booking;
 use App\BusinessOwner;
+use App\Customer;
 use App\Employee;
+use App\WorkingTime;
+
+use Carbon\Carbon;
 
 class EmployeeTest extends TestCase
 {
@@ -132,7 +138,7 @@ class EmployeeTest extends TestCase
     {
         // Login as a business owner
         $bo = factory(BusinessOwner::class)->create();
-        
+
         // If user inputs nothing in the phone field
         $employeeData = [
             'phone' => ''
