@@ -11,7 +11,7 @@ use App\Booking;
 
 use Carbon\Carbon;
 
-class ActivityTest extends TestCase 
+class ActivityTest extends TestCase
 {
     /**
      * Activity has many bookings, make 4 bookings and assign it to an activity
@@ -22,7 +22,7 @@ class ActivityTest extends TestCase
     {
     	// Given activity created
         $activity = factory(Activity::class)->create();
-        
+
         // When activity has 4 bookings
         factory(Booking::class, 4)->create([
             'activity_id' => $activity->id,
@@ -44,7 +44,7 @@ class ActivityTest extends TestCase
 
         // Create fake data
         $activity = factory(Activity::class)->make();
-        
+
         // Build activity data
         $activityData = [
             'name' => $activity->name,
@@ -54,7 +54,7 @@ class ActivityTest extends TestCase
 
         // Send a POST request to admin/activity
         $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
-        
+
         // Check if redirected after request
         $response->assertRedirect('admin/activity');
 
@@ -90,7 +90,7 @@ class ActivityTest extends TestCase
             'description' => $editedActivity->description,
             'duration' => $editedActivity->duration,
         ];
-        
+
         // Send PUT/PATCH request to admin/activity/{activity}
         $response = $this->actingAs($bo, 'web_admin')->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
 
@@ -144,10 +144,10 @@ class ActivityTest extends TestCase
     {
         // Login as a business owner
         $bo = factory(BusinessOwner::class)->create();
-        
+
         // Create fake data
         $activity = factory(Activity::class)->make();
-        
+
         // Build activity data
         $activityData = [
             'name' => $activity->name,
@@ -184,6 +184,24 @@ class ActivityTest extends TestCase
         $response->assertJsonFragment([
             'The activity name may not be greater than 32 characters.'
         ]);
+
+        // There exists an activity name
+        $existActivity = factory(Activity::class)->create();
+
+        // User inputs name more than 32 characters
+        // Rebuild activity data
+        $activityData = [
+            'name' => $existActivity->name
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The activity name has already been taken.'
+        ]);
+
 
         // User inputs name with special characters
         // Rebuild activity data
