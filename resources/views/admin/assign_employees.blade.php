@@ -4,7 +4,7 @@
 
 <div class="dash__block">
 	<h1 class="dash__header">Assign Employee</h1>
-	<h4 class="dash__description">Assign an employee to a particular booking</h4>
+	<h4 class="dash__description">Assign an employee to a particular booking. All available bookings are display for the next 30 days.</h4>
 	@if ($flash = session('message'))
 		<div class="alert alert-success">
 			{{ $flash }}
@@ -26,7 +26,6 @@
 	@endif
 	<form class="request" method="POST" action="/admin/employees/assign">
 		{{ csrf_field() }}
-
 		<div class="form-group">
 			<label for="inputEmployee">Employee <span class="request__validate">(Title - Full Name - ID)</span></label>
 			<select name="employee_id" id="inputEmployee" class="form-control request__input" onchange="location = '/admin/employees/assign/' + this.value" value="{{ $selectedEmployee->id }}">
@@ -50,7 +49,7 @@
 					</tr>
 					@foreach ($bookings as $booking)
 						<tr>
-							<td class="table--id"><input name="bookings" value="{{ $booking->id }}" type="checkbox"></input></td>
+							<td class="table--id"><input name="bookings[]" value="{{ $booking->id }}" type="checkbox"></input></td>
 							<td class="table--left-solid">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
 							<td class="table--time table--left-dotted">{{ Carbon\Carbon::parse($booking->start_time)->format('H:i') }}</td>
 							<td class="table--time table--left-dotted">{{ Carbon\Carbon::parse($booking->end_time)->format('H:i') }}</td>
@@ -74,8 +73,8 @@
 		@endif
 	</form>
 </div>
-@if ($bookings)
-	<hr>
+<hr>
+@if ($unassignBookings->count())
 	<div class="dash__block" id="bookings">
 		<h1 class="dash__header dash__header--margin-top">All Unassigned Bookings</h1>
 		<h4 class="main_description">Present all unassigned bookings.</h4>
@@ -105,5 +104,11 @@
 		    </table>
 		</div>
 	</div>
+@else
+	@include('shared.notice_glyphicon', [
+		'glyphicon' => 'thumbs-up',
+		'message' => 'No unassigned bookings found.',
+		'subMessage' => 'Congratulations! There are no more unassigned bookings for the next 30 days'
+	])
 @endif
 @endsection

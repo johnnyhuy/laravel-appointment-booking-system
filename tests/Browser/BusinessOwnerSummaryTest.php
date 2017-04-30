@@ -45,7 +45,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for yesterday
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now()->addDay(),
+            'date' => Carbon::now('Australia/Melbourne')->addDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -71,13 +71,13 @@ class BusinessOwnerSummaryTest extends DuskTestCase
      *
      * @return void
      */
-    public function testPastEntriesNotDisplayed() 
+    public function testPastEntriesNotDisplayed()
     {
         //Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for yesterday
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now()->subDay(),
+            'date' => Carbon::now('Australia/Melbourne')->subDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -101,17 +101,17 @@ class BusinessOwnerSummaryTest extends DuskTestCase
      *
      * @return void
      */
-    public function testMultipleEntriesDisplayed() 
+    public function testMultipleEntriesDisplayed()
     {
         //Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for tommorow
         $booking1 = factory(Booking::class)->create([
-            'date' => Carbon::now()->addDay(),
+            'date' => Carbon::now('Australia/Melbourne')->addDay(),
         ]);
         //Create a booking for 2 days from now
         $booking2 = factory(Booking::class)->create([
-            'date' => Carbon::now()->addDay()->addDay(),
+            'date' => Carbon::now('Australia/Melbourne')->addDay()->addDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking1, $booking2) {
@@ -157,9 +157,9 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for today
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now(),
-            'start_time' => Carbon::now(),
-            'end_time' => Carbon::now()->addHour(),
+            'date' => Carbon::now('Australia/Melbourne'),
+            'start_time' => Carbon::now('Australia/Melbourne'),
+            'end_time' => Carbon::now('Australia/Melbourne')->addHour(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -191,7 +191,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         //Create a booking for today
         $booking = factory(Booking::class)->create( [
-            'date' => Carbon::now()->addMonth()
+            'date' => Carbon::now('Australia/Melbourne')->addMonth()
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -273,7 +273,7 @@ class BusinessOwnerSummaryTest extends DuskTestCase
      *
      * @return void
      */
-    public function testDisplayEmployeeWithNoNotAvailables() 
+    public function testDisplayEmployeeWithNoNotAvailables()
     {
         //Creates business owner
         $bo = factory(BusinessOwner::class)->create();
@@ -300,5 +300,5 @@ class BusinessOwnerSummaryTest extends DuskTestCase
                 ->assertDontSee('Not Available');
         });
     }
-    
+
 }

@@ -26,7 +26,7 @@
 			</div>
 			<div class="form-group">
 				<label for="inputDate">Date <span class="request__validate">(dd/mm/yyyy format)</span></label>
-				<input name="date" type="date" id="inputDate" class="form-control request__input" value="{{ old('date') ? old('date') : Carbon\Carbon::now()->addMonth()->startOfMonth()->format('Y-m-d') }}" autofocus>
+				<input name="date" type="date" id="inputDate" class="form-control request__input" value="{{ old('date') ? old('date') : Carbon\Carbon::now('Australia/Melbourne')->addMonth()->startOfMonth()->format('Y-m-d') }}" autofocus>
 			</div>
 			<button class="btn btn-lg btn-primary btn-block btn--margin-top">Add Booking</button>
 		</form>

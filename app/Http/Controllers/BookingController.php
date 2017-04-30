@@ -96,6 +96,7 @@ class BookingController extends Controller
             'start_time.date_format' => 'The :attribute field must be in the correct time format.',
             'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'customer_id.exists' => 'The :attribute does not exist.',
+            'customer_id.is_on_booking' => 'The :attribute is already set on at that time.',
             'employee_id.exists' => 'The :attribute does not exist.',
             'employee_id.is_employee_working' => 'The :attribute either has a conflict with another booking or :attribute is not working on that time.',
             'employee_id.is_on_booking' => 'The :attribute is already working on another booking at that time.',
@@ -105,7 +106,7 @@ class BookingController extends Controller
 
         // Validation rules
         $rules = [
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'required|exists:customers,id|is_on_booking',
             'employee_id' => 'exists:employees,id|is_employee_working|is_on_booking',
             'activity_id' => 'required|exists:activities,id|is_end_time_valid',
             'start_time' => 'required|date_format:H:i',
@@ -147,7 +148,7 @@ class BookingController extends Controller
         session()->flash('message', 'Booking has successfully been created.');
 
         //Redirect to the business owner admin page
-        return redirect('/admin/booking/' . Carbon::now()->format('m-Y'));
+        return redirect('/admin/booking/' . Carbon::now('Australia/Melbourne')->format('m-Y'));
     }
 
     /**

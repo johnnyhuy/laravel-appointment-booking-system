@@ -79,7 +79,10 @@ class EmployeeController extends Controller
                 'employees' => Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title'),
                 'selectedEmployee' => Employee::find($employee_id),
                 'bookings' => Booking::getWorkableBookingsForEmployee($employee_id,30),
-                'unassignBookings' => Booking::all()->where('employee_id', null)
+                'unassignBookings' => Booking::all()
+                    ->where('employee_id', null)
+                    ->where('date', '<=', Carbon::now('Australia/Melbourne')->endOfMonth()->toDateString())
+                    ->where('date', '>=', Carbon::now('Australia/Melbourne')->startOfMonth()->toDateString())
             ]);
         }
         else {
