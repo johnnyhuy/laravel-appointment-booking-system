@@ -58,6 +58,31 @@ class WorkingTime extends Model
         return Carbon::createFromDate($year, $month);
     }
 
+
+    /**
+     *
+     * Get the working times of an employee for a given amount of days
+     *
+     */
+    public static function getWorkingTmesForEmployee($employeeID, $days) 
+    {
+        //Get all working times for a particular employee
+        $workingTimes = WorkingTime::where('employee_id', $employeeID);
+
+        //Get working times from today onwards
+        $workingTimes = $workingTimes->where('date', '>=', Carbon::now()->toDateString());
+
+        //Final day of working times
+        $max = Carbon::now()->addDays($days);
+
+        //Restrict working times to amount of days
+        $WorkingTimes = $workingTimes->where('date', '<', $max);
+
+        //Return the working times for the employee
+        return $workingTimes;
+    }
+
+
     /**
 	 *
 	 * Get employee from working time

@@ -115,7 +115,7 @@
 						@endif
 						<td class="table--name table--right-dotted">{{ $booking->activity->name }}</td>
 						<td class="table--time table--right-dotted">{{ $booking->start_time }}</td>
-						<td class="table--time table--right-dotted">{{ App\Booking::calcEndTime($booking->activity->duration, $booking->start_time) }}</td>
+						<td class="table--time table--right-dotted">{{ $booking->end_time }}</td>
 						<td class="table--date">{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
 					</tr>
 				@endforeach

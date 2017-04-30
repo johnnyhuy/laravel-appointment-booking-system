@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Activity;
 use App\Booking;
@@ -132,6 +133,12 @@ class BookingController extends Controller
         return redirect('/admin/booking/' . Carbon::now()->format('m-Y'));
     }
 
+    /**
+     *  Create a booking from the customer form
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
 	public function storeCustomerBooking(Request $request) {
         // Validation error messages
         $messages = [
@@ -197,6 +204,29 @@ class BookingController extends Controller
     public function newCustomerBooking()
     {
         return view('customer.create_bookings');
+    }
+
+    /**
+     * Assign an employee to an existing booking
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function assignEmployee(Request $request)
+    {
+        print_r($request['bookings']);
+        //Iterate through each booking being set
+        for($i = 0; $i < count($request['bookings']); $i++)
+        {
+            //Update booking to given employee
+            DB::table('bookings')->where('id', $request['bookings'][$i])->update(['employee_id' => $request['employee_id']]);
+        }
+
+        // Session flash
+        session()->flash('message', 'Booking(s) have been successfully assigned.');
+
+        //Redirect to the business owner admin page
+        return redirect('admin/employees/assign/' . $request['employee_id']);
     }
 
     /**
