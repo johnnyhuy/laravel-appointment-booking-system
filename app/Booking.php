@@ -62,7 +62,7 @@ class Booking extends Model
 	 */
 	public static function allHistory() {
 		// Return past bookings eloquent model
-		return Booking::where('date', '<', Carbon::now()->toDateString())
+		return Booking::where('date', '<', Carbon::now('Australia/Melbourne')->toDateString())
 			->get()
 			// Sort by start time using an eloquent collection function
 			->sortByDESC('date');
@@ -74,10 +74,10 @@ class Booking extends Model
 	 * @return App\Booking
 	 */
 	public static function allLatest($max = null) {
-		$booking = Booking::where('date', '>=', Carbon::now()->toDateString());
+		$booking = Booking::where('date', '>=', Carbon::now('Australia/Melbourne')->toDateString());
 
 		if (isset($max)) {
-			$max = Carbon::now()->addDays($max);
+			$max = Carbon::now('Australia/Melbourne')->addDays($max);
 			$booking->where('date', '<=', $max);
 		}
 

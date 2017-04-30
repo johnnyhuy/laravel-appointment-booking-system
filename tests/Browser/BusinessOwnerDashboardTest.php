@@ -19,7 +19,7 @@ class BusinessOwnerDashboardTest extends DuskTestCase
     {
     	// Generate customer info
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
                 // Visit /admin route
@@ -39,7 +39,7 @@ class BusinessOwnerDashboardTest extends DuskTestCase
     public function testVisitRoster() {
     	// Generate customer info
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
             	->visit('/admin/roster')
@@ -56,7 +56,7 @@ class BusinessOwnerDashboardTest extends DuskTestCase
     public function testVisitEmployees() {
     	// Generate customer info
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
             	->visit('/admin/employees')
@@ -73,7 +73,7 @@ class BusinessOwnerDashboardTest extends DuskTestCase
     public function testVisitSummaryOfBookings() {
     	// Generate customer info
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
             	->visit('/admin/summary')
@@ -90,7 +90,7 @@ class BusinessOwnerDashboardTest extends DuskTestCase
     public function testVisitBusinessInformation() {
         // Generate customer info
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
                 ->visit('/admin')
@@ -107,7 +107,7 @@ class BusinessOwnerDashboardTest extends DuskTestCase
     public function testNoBookingsMessageHistoryOfBookings() {
         // Generate customer info
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
                 ->visit('/admin')
@@ -129,18 +129,18 @@ class BusinessOwnerDashboardTest extends DuskTestCase
 
         // Generate a 2 hour booking a day before today
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now()->subDays(1),
-            'start_time' => Carbon::now()
+            'date' => Carbon::now('Australia/Melbourne')->subDays(1),
+            'start_time' => Carbon::now('Australia/Melbourne')
                 ->startOfDay()
                 ->subDays(1)
                 ->toDatetimeString(),
-            'end_time' => Carbon::now()
+            'end_time' => Carbon::now('Australia/Melbourne')
                 ->startOfDay()
                 ->subDays(1)
                 ->addHours(2)
                 ->toDatetimeString(),
         ]);
-        
+
         $this->browse(function ($browser) use ($owner, $booking) {
             $browser->loginAs($owner, 'web_admin')
                 ->visit('/admin')

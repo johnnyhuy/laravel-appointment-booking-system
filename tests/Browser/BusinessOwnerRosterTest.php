@@ -24,7 +24,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
 
         // Change to the next two months from now
-        $nextTwoMonths = Carbon::now()->addMonths(2);
+        $nextTwoMonths = Carbon::now('Australia/Melbourne')->addMonths(2);
 
         $this->browse(function ($browser) use ($bo, $nextTwoMonths) {
             // Login as Business Owner
@@ -64,7 +64,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
      *
      * @return void
      */
-    public function testEmployeeExistsInDropDown() 
+    public function testEmployeeExistsInDropDown()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
@@ -86,7 +86,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
      *
      * @return void
      */
-    public function testAddWorkingTime() 
+    public function testAddWorkingTime()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
@@ -117,7 +117,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
      */
     public function testAddWorkingTimesOnSameDay()
     {
-      
+
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         // Creates an employee
@@ -195,7 +195,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
      * @return void
      */
     public function testAddWorkingTimesOnSameDayButDifferentEmployees()
-    {     
+    {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         // Creates 2 employees
@@ -235,7 +235,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
      *
      * @return void
      */
-    public function testStartTimeAfterEndTime() 
+    public function testStartTimeAfterEndTime()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
@@ -265,7 +265,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
      *
      * @return void
      */
-    public function testStartTimeEqualsEndTime() 
+    public function testStartTimeEqualsEndTime()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();

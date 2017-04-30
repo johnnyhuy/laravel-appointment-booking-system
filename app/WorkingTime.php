@@ -15,14 +15,14 @@ class WorkingTime extends Model
     public static function getRoster()
     {
     	// Start of week in the month
-    	$startDate = Carbon::now()
+    	$startDate = Carbon::now('Australia/Melbourne')
     		->addMonth()
     		->startOfMonth()
     		->startOfWeek()
     		// Subtract a day to capture the first day of week
     		->subDay();
     	// End of week in the month
-    	$endDate = Carbon::now()
+    	$endDate = Carbon::now('Australia/Melbourne')
     		->addMonth()
     		->endOfMonth()
     		->endOfWeek()
@@ -40,7 +40,7 @@ class WorkingTime extends Model
      * Get the date from month and year string
      * Usage for /admin/roster/10-2017
      * Where '10-2017' is the selected string
-     * 
+     *
      * @return Carbon\Carbon
      */
     public static function getDate($monthYear)
@@ -64,16 +64,16 @@ class WorkingTime extends Model
      * Get the working times of an employee for a given amount of days
      *
      */
-    public static function getWorkingTmesForEmployee($employeeID, $days) 
+    public static function getWorkingTmesForEmployee($employeeID, $days)
     {
         //Get all working times for a particular employee
         $workingTimes = WorkingTime::where('employee_id', $employeeID);
 
         //Get working times from today onwards
-        $workingTimes = $workingTimes->where('date', '>=', Carbon::now()->toDateString());
+        $workingTimes = $workingTimes->where('date', '>=', Carbon::now('Australia/Melbourne')->toDateString());
 
         //Final day of working times
-        $max = Carbon::now()->addDays($days);
+        $max = Carbon::now('Australia/Melbourne')->addDays($days);
 
         //Restrict working times to amount of days
         $WorkingTimes = $workingTimes->where('date', '<', $max);

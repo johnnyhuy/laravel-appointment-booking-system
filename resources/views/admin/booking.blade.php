@@ -66,7 +66,7 @@
 				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $employee)
 					<option value="{{ $employee->id }}">{{ $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname . ' - ' . $employee->id }}</option>
 				@endforeach
-				<option value="none">-- None --</option>
+				<option value="none" selected>-- None --</option>
 			</select>
 		</div>
 		<div class="form-group">

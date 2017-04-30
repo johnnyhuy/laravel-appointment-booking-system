@@ -24,7 +24,7 @@ class BusinessOwnerBookingTest extends DuskTestCase
     {
     	// Generate business owner
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
                 // Visit booking page
@@ -55,7 +55,7 @@ class BusinessOwnerBookingTest extends DuskTestCase
         ]);
 
         // Set the date as tomorrow
-        $date = Carbon::now()->addDay();
+        $date = Carbon::now('Australia/Melbourne')->addDay();
 
         // Create a working time where employee is working on the booking
         // Employee is working 09:00 AM to 05:00 PM
