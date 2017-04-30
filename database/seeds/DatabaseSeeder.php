@@ -2,6 +2,15 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Activity;
+use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
+
+use Carbon\Carbon;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -11,6 +20,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(CustomerTableSeeder::class);
+        // Create basic seeds
+        factory(Activity::class, 10)->create();
+        factory(Booking::class, 3)->create();
+        factory(Employee::class, 5)->create();
     }
 }

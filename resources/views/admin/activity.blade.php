@@ -19,16 +19,16 @@
 		<form class="request" method="POST" action="/admin/activity">
 			{{ csrf_field() }}
 			<div class="form-group">
-				<label for="inputName">Name <span class="request__validate">(e.g. Haircut, Coloring)</span></label>
+				<label for="input_name">Name <span class="request__validate">(e.g. Haircut, Coloring)</span></label>
 				<input name="name" type="text" id="inputName" class="form-control request__input" placeholder="Name" value="{{ old('name') }}" autofocus>
 			</div>
 			<div class="form-group">
-				<label for="inputDescription">Description <span class="request__validate">(optional)</span></label>
-				<input name="description" type="text" id="inputDescription" class="form-control request__input" placeholder="Description" value="{{ old('description') }}" autofocus>
+				<label for="input_description">Description <span class="request__validate">(optional)</span></label>
+				<input name="description" type="text" id="input_description" class="form-control request__input" placeholder="Description" value="{{ old('description') }}" autofocus>
 			</div>
 			<div class="form-group">
-				<label for="inputDuration">Duration <span class="request__validate">(24 hour format)</span></label>
-				<input name="duration" type="time" id="inputDuration" class="form-control request__input" value="{{ old('duration') }}" autofocus>
+				<label for="input_duration">Duration <span class="request__validate">(24 hour format)</span></label>
+				<input name="duration" type="time" id="input_duration" class="form-control request__input" value="{{ old('duration') }}" autofocus>
 			</div>
 			<button class="btn btn-lg btn-primary btn-block btn--margin-top">Add Activity</button>
 		</form>
