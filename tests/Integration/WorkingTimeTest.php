@@ -96,6 +96,52 @@ class WorkingTimeTest extends TestCase
     }
 
     /**
+     * Working time edit success
+     *
+     * @return void
+     */
+    public function testEditWorkingTimeSuccessful()
+    {
+        // Login as a business owner
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Create a working time from 09:00 AM to 05:00 PM today
+        $workingTime = factory(WorkingTime::class)->create([
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+            'date' => Carbon::now()
+                ->toDateString(),
+        ]);
+
+        // Create a booking that starts at 11:00 AM to 2:00 PM today
+        $booking = factory(Booking::class)->create([
+            'employee_id' => $workingTime->employee_id,
+            'start_time' => '11:00',
+            'end_time' => '14:00',
+            'date' => Carbon::now()
+                ->toDateString(),
+        ]);
+
+        // Build working time data
+        $workingTimeData = [
+            'employee_id' => $workingTime->employee_id,
+            'start_time' => $workingTime->start_time,
+            'end_time' => $workingTime->end_time,
+            'date' => $workingTime->date,
+        ];
+
+        // Send a PUT request to /admin/roster/{id} with working time data
+        $response = $this->actingAs($bo, 'web_admin')
+            ->json('PUT', '/admin/roster/' . $workingTime->employee_id, $workingTimeData);
+
+        // Check for a session message
+        $response->assertSessionHas('message', 'Edited working time has been successful.');
+
+        // Booking employee ID should be null after edit
+        $this->assertEquals(null, Booking::find($booking->id)->employee_id);
+    }
+
+    /**
      * Test all fields that are required
      *
      * @return void
@@ -189,7 +235,7 @@ class WorkingTimeTest extends TestCase
      *
      * @return void
      */
-    public function testErrorIfEmployeeDoesNotExist() 
+    public function testErrorIfEmployeeDoesNotExist()
     {
         // Login as a business owner
         $bo = factory(BusinessOwner::class)->create();

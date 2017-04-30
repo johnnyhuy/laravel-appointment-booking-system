@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use App\BusinessOwner;
 use App\Booking;
@@ -58,6 +59,7 @@ class BusinessOwnerController extends Controller
     public function register() {
         // Redirect to /admin if business exists
         if (BusinessOwner::first() and Auth::guard('web_admin')) {
+            Log::notice('Tried to visit business owner registration form, redirected to /admin since business already exists');
             return redirect('/admin');
         }
 
@@ -66,7 +68,7 @@ class BusinessOwnerController extends Controller
 
      /**
      * Send receives a POST request
-     * Creates Business Owner 
+     * Creates Business Owner
      * Includes all business information
      */
     public function create(Request $request)
@@ -110,6 +112,8 @@ class BusinessOwnerController extends Controller
             'address' => $request->address,
             'phone' => $request->phone,
         ]);
+
+        Log::info('Business owner has been registered');
 
         // Session flash
         session()->flash('message', 'Business Owner registration success.');

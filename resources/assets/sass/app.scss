@@ -47,7 +47,6 @@ footer {
 }
 
 .alert {
-	margin-top: $padding-base;
 }
 
 .form-group {
@@ -66,13 +65,16 @@ footer {
 	td {
 		text-align: center;
 		font-size: 16px;
-		color: $gray;
 	}
-	
+
 	// General modifiers
 
 	@include m('no-margin') {
 		margin: 0 !important;
+	}
+
+	@include m('red') {
+		color: red;
 	}
 
 	@include m('right-solid') {
@@ -214,7 +216,7 @@ footer {
 
 /* Small devices (tablets, 768px and up) */
 @media (min-width: $screen-sm-min) {
-	
+
 }
 
 /* Medium devices (desktops, 992px and up) */
@@ -226,5 +228,5 @@ footer {
 
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: $screen-lg-min) {
-	
+
 }

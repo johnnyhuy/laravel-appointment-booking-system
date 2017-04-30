@@ -24,7 +24,7 @@ class BookingTest extends TestCase
     {
         // Given customer created
         $customer = factory(Customer::class)->create();
-        
+
         // When customer has 4 bookings
         factory(Booking::class, 4)->create([
             'customer_id' => $customer->id,
@@ -55,7 +55,7 @@ class BookingTest extends TestCase
         // Create fake data that adds to database
         $employee = factory(Employee::class)->create();
         $customer = factory(Customer::class)->create();
-        
+
         // Create a working time for given employee today
         // Employee starts at 9:00 AM to 5:00 PM
         $workingTime = factory(WorkingTime::class)->create([
@@ -130,7 +130,7 @@ class BookingTest extends TestCase
         // User selects a customer that does not exist
         // Build booking data
         $bookingData = [
-            'customer_id' => 1,
+            'customer_id' => 1337,
         ];
 
         // Send POST request to admin/booking
@@ -162,7 +162,7 @@ class BookingTest extends TestCase
         // User selects a activity that does not exist
         // Build booking data
         $bookingData = [
-            'activity_id' => 1,
+            'activity_id' => 1337,
         ];
 
         // Send POST request to admin/booking
@@ -178,7 +178,7 @@ class BookingTest extends TestCase
         // User selects a employee that does not exist
         // Build booking data
         $bookingData = [
-            'employee_id' => 1,
+            'employee_id' => 1337,
         ];
 
         // Send POST request to admin/booking
@@ -223,7 +223,7 @@ class BookingTest extends TestCase
         // Generate fake data
         $employee = factory(Employee::class)->create();
         $customer = factory(Customer::class)->create();
-        
+
         // Create an acitivity with a duration of 2 hours
         $activity = factory(Activity::class)->create([
             'duration' => '02:00',
@@ -356,12 +356,12 @@ class BookingTest extends TestCase
         // Generate fake data
         $employee = factory(Employee::class)->create();
         $customer = factory(Customer::class)->create();
-        
+
         // Set duration for 2 hours
         $activity = factory(Activity::class)->create([
             'duration' => '2:00'
         ]);
-        
+
         // Booking starts at 22:00
         $startTime = '22:00';
 
@@ -410,7 +410,7 @@ class BookingTest extends TestCase
         // Create fake data that adds to database
         $employee = factory(Employee::class)->create();
         $customer = factory(Customer::class)->create();
-        
+
         // Create a working time for given employee today
         // Employee starts at 9:00 AM to 11:00 AM
         $workingTime = factory(WorkingTime::class)->create([
@@ -467,7 +467,7 @@ class BookingTest extends TestCase
         // Create fake data that adds to database
         $employee = factory(Employee::class)->create();
         $customer = factory(Customer::class)->create();
-        
+
         // Create a working time for given employee today
         // Employee starts at 9:00 AM to 5:00 PM
         $workingTime = factory(WorkingTime::class)->create([
@@ -594,7 +594,7 @@ class BookingTest extends TestCase
      */
     public function testOnlyShowHistoryBookings()
     {
-        // a previous booking 
+        // a previous booking
         $validBooking = factory(Booking::class)->create([
             'date' => Carbon::now('Australia/Melbourne')
                 ->subWeek()
@@ -632,7 +632,7 @@ class BookingTest extends TestCase
         $laterBooking = factory(Booking::class)->create([
             'date' => Carbon::now('Australia/Melbourne')->subWeek(2)->toDateString()
         ]);
-        
+
         // Use a static function to get history bookings
         $history = Booking::allHistory();
 
@@ -695,7 +695,7 @@ class BookingTest extends TestCase
      */
     public function testOnlyShowLastestBookings()
     {
-        // a previous booking 
+        // a previous booking
         $validBooking = factory(Booking::class)->create([
             'date' => Carbon::now('Australia/Melbourne')
                 ->addWeek()
@@ -733,7 +733,7 @@ class BookingTest extends TestCase
         $laterBooking = factory(Booking::class)->create([
             'date' => Carbon::now('Australia/Melbourne')->addWeeks(2)->toDateString()
         ]);
-        
+
         // Use a static function to get latest bookings
         $latest = Booking::allLatest();
 

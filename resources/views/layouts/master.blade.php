@@ -15,7 +15,10 @@
 	<div class="container">
 		<ul class="nav nav-pills pull-left">
 			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}"><a href="/">Home</a></li>
-			<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
+			@if (Auth::check())
+				<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
+				<li role="presentation" class="{{ Request::is('bookings/new') ? 'active' : null }}"><a href="/bookings/new">Create Booking</a></li>
+			@endif
 		</ul>
 		@if (Auth::check())
 			<div class="pull-right user">
@@ -24,16 +27,6 @@
 			</div>
 		@endif
 		<div class="clearfix"></div>
-		@if ($flash = session('message'))
-			<div class="alert alert-success">
-				{{ $flash }}	
-			</div>
-		@endif
-		@if ($flash = session('error'))
-			<div class="alert alert-danger">
-				{{ $flash }}	
-			</div>
-		@endif
 		<div class="header">
 			<a class="header__title" href="/">
 				<h1>
@@ -69,7 +62,14 @@
 			<h3 class="header__subtitle">Booking System{{ $title }}</h3>
 		</div>
 	</div>
-	@yield('content')
+	<div class="container">
+		@if ($flash = session('message'))
+			<div class="alert alert-success">
+				{{ $flash }}
+			</div>
+		@endif
+		@yield('content')
+	</div>
 	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 	<footer>
 		LCJJ Development Team

@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         // Create a validator to check if an employee is free when adding a booking
-        Validator::extend('is_employee_on_booking', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('is_on_booking', function ($attribute, $value, $parameters, $validator) {
             // Get request data
             $request = $validator->getData();
 
@@ -37,16 +37,16 @@ class AppServiceProvider extends ServiceProvider
 
             // Find activity
             $activity = Activity::find($request['activity_id']);
-            
+
             // Set time
             $pStartTime = $request['start_time'];
             $pEndTime = Booking::calcEndTime($activity->duration, $pStartTime);
 
             // Get bookings of the date
-            $bookings = Booking::where('employee_id', $value)
-                ->where('date', '=', $request['date'])
+            $bookings = Booking::where($attribute, $value)
+                ->where('date', $request['date'])
                 ->get();
-            
+
             // Is employee free
             $free = true;
 
@@ -80,13 +80,13 @@ class AppServiceProvider extends ServiceProvider
 
             // Find activity
             $activity = Activity::find($request['activity_id']);
-            
+
             // Set time
             $pStartTime = $request['start_time'];
             $pEndTime = Booking::calcEndTime($activity->duration, $pStartTime);
 
             // Get bookings of the date
-            $workingTime = WorkingTime::where('employee_id', $value)
+            $workingTime = WorkingTime::where($attribute, $value)
                 ->where('date', $request['date'])
                 ->first();
 
