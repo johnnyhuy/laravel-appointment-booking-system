@@ -7,6 +7,11 @@
 			<strong>No Business Found!</strong> Register your business <a href="/admin/register">here</a>
 		</div>
 	@endif
+	@if (session('error'))
+		<div class="alert alert-danger">
+			{{ session('error') }}<br>
+		</div>
+	@endif
 	<div class="block request">
 		<form class="request__form" method="POST" action="/login">
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
