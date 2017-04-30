@@ -137,7 +137,7 @@ class BookingController extends Controller
             'date' => $request->date,
         ]);
 
-        Log::notice("A booking was created from the Business Owner Dashboard", $booking);
+        Log::notice("A booking was created from the Business Owner Dashboard", $booking->toArray());
 
         // Session flash
         session()->flash('message', 'Booking has successfully been created.');
@@ -193,7 +193,7 @@ class BookingController extends Controller
             'date' => $request->date,
         ]);
 
-        Log::notice("A booking was created from the Customer Portal", $booking);
+        Log::notice("A booking was created from the Customer Portal", $booking->toArray());
 
         // Session flash
         session()->flash('message', 'Booking has successfully been created.');
