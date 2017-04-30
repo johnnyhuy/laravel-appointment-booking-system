@@ -47,7 +47,7 @@ class SessionController extends Controller
         }
         // If sign in as a customer doesn't work, attempt business owner sign in
         elseif (Auth::guard('web_admin')->attempt(request(['username', 'password']))) {
-            //Log business owner login success
+            // Log business owner login success
             Log::info("Business Owner login with username " . request('username') . " was successful");
             // Session flash
             session()->flash('message', 'Business Owner login success.');
