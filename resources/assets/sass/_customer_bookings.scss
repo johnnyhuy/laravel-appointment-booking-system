@@ -1,18 +1,62 @@
-.customer_bookings {
+.cus_table {
 	th {
 		border-top: none !important;
 		background-color: $gray-lightest;
 	}
 
-	@include e("left-solid") {
-		border-right: 1px solid $border-color;
+	// General modifiers
+
+	@include m('no-margin') {
+		margin: 0 !important;
 	}
 
-	@include e("left-dotted") {
-		border-right: 1px dotted $border-color;
+	@include m('red') {
+		color: red;
 	}
 
-	@include e("left-dashed") {
-		border-right: 1px dashed $border-color;
+	@include m('right-solid') {
+		border-right: $dash-table-border solid $border-color;
+	}
+
+	@include m('right-dotted') {
+		border-right: $dash-table-border dotted $border-color;
+	}
+
+	@include m('right-dashed') {
+		border-right: $dash-table-border dashed $border-color;
+	}
+
+	@include m('left-solid') {
+		border-left: $dash-table-border solid $border-color;
+	}
+
+	@include m('left-dotted') {
+		border-left: $dash-table-border dotted $border-color;
+	}
+
+	@include m('left-dashed') {
+		border-left: $dash-table-border dashed $border-color;
+	}
+
+	// Field specific modifiers
+
+	@include m('id') {
+		width: 80px;
+	}
+
+	@include m('description') {
+		min-width: 100px;
+	}
+
+	@include m('time') {
+		max-width: 40px;
+	}
+
+	@include m('name') {
+		min-width: 100px;
+	}
+
+	@include m('date') {
+		max-width: 40px;
 	}
 }

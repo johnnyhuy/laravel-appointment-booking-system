@@ -2,11 +2,12 @@
 
 @section('content')
 	<div class="block block--no-padding">
-		@if ($bookings)
-			<table class="table table--no-margin customer_bookings">
+		@if ($bookings->count())
+			<table class="table table--no-margin cus_table">
 				<tr>
-					<th class="customer_bookings__left-solid">ID</th>
+					<th class="cus_table--id cus_table--right-solid">ID</th>
 					<th>Start Time</th>
+					<th>End Time</th>
 					<th>End Time</th>
 					<th>Date</th>
 					<th>Duration</th>
@@ -22,7 +23,7 @@
 				@endforeach
 			</table>
 		@else
-			@include('shared.thumbs_down_error_message', [
+			@include('shared.error_message_thumbs_down', [
 				'message' => 'No customer bookings found.',
 				'subMessage' => 'Create a new booking <a href="/bookings/new">here</a>'
 			])

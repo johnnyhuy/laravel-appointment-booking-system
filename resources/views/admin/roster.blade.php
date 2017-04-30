@@ -19,6 +19,13 @@
 				@endforeach
 			</div>
 		@endif
+		@if (!App\Employee::first())
+			@include('shared.error_message_custom', [
+				'title' => 'Employees do not exist.',
+				'message' => 'Create an employee <a href="/admin/employees">here</a>.',
+				'type' => 'danger'
+			])
+		@endif
 		<div class="form-group">
 			<label for="inputEmployee">Employee <span class="request__validate">(ID - Title - Full Name)</span></label>
 			<select name="employee_id" id="inputEmployee" class="form-control request__input">

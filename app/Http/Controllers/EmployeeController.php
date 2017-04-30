@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Employee;
+use App\Booking;
 use App\BusinessOwner;
 
 class EmployeeController extends Controller
@@ -15,6 +16,7 @@ class EmployeeController extends Controller
             'only' => [
                 'create',
                 'index',
+                'assign',
             ]
         ]);
     }
@@ -53,18 +55,31 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function assignEmployees($employee_id = null) 
+    public function assign($employee_id = null)
     {
-        //If no employee is given
-        if(!isset($employee_id)) {
-            //Set the first employee to default
-            $employee_id = Employee::first()->id;
+        if ($employee_id) {
+            // Return the assign employees page
+            return view('admin.assign_employees', [
+                'business' => BusinessOwner::first(),
+                'employees' => Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title'),
+                'selectedEmployee' => Employee::find($employee_id),
+                'bookings' => Booking::getWorkableBookingsForEmployee($employee_id,30),
+                'unassignBookings' => Booking::all()->where('employee_id', null)
+            ]);
         }
+        else {
+            $employee = Employee::first();
 
-        //Return the assign employees page
-        return view('admin.assign_employees', [
-            'business' => BusinessOwner::first(),
-            'employee_id' => $employee_id
-        ]);
+            if ($employee) {
+                return redirect('/admin/employees/assign/' . $employee->id);
+            }
+            else {
+                return view('shared.error_page', [
+                    'business' => BusinessOwner::first(),
+                    'message' => 'No employees found',
+                    'subMessage' => 'There seems to be no employees on the business. Create one <a href="/admin/employees">here</a>'
+                ]);
+            }
+        }
     }
 }
