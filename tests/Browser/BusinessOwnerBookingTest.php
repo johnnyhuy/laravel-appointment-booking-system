@@ -24,13 +24,15 @@ class BusinessOwnerBookingTest extends DuskTestCase
     {
     	// Generate business owner
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
                 // Visit booking page
             	->visit('/admin/booking')
-                // Check if route is /admin
-            	->assertPathIs('/admin/booking')
+
+                // Route should go to booking
+            	->assertPathIs('/admin/booking/' . Carbon::now('Australia/Melbourne')->format('m-Y'))
+
                 // See if business name exists on page (header title)
                 ->assertSee($owner->business_name);
         });
@@ -55,7 +57,7 @@ class BusinessOwnerBookingTest extends DuskTestCase
         ]);
 
         // Set the date as tomorrow
-        $date = Carbon::now()->addDay();
+        $date = Carbon::now('Australia/Melbourne')->addDay();
 
         // Create a working time where employee is working on the booking
         // Employee is working 09:00 AM to 05:00 PM
@@ -74,8 +76,8 @@ class BusinessOwnerBookingTest extends DuskTestCase
                 ->select('customer_id', $customer->id)
                 ->select('employee_id', $employee->id)
                 ->select('activity_id', $activity->id)
-                ->keys('#inputStartTime', '11:00')
-                ->keys('#inputDate', $date->format('d/m/Y'))
+                ->keys('#input_start_time', '11:00')
+                ->keys('#input_month_year', $date->format('M Y'))
                 ->press('Add Booking')
 
                 // Check success message

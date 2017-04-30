@@ -35,7 +35,7 @@ class BookingTest extends TestCase
         $bookingData = [
             'activity_id' => $activity->id,
             'start_time' => '09:00',
-            'date' => Carbon::now()->addDay()->toDateString(),
+            'date' => Carbon::now('Australia/Melbourne')->addDay()->toDateString(),
         ];
 
         // Send POST request to /bookings
@@ -92,7 +92,7 @@ class BookingTest extends TestCase
         ]);
 
         // Get the current date
-        $date = Carbon::now()->toDateString();
+        $date = Carbon::now('Australia/Melbourne')->toDateString();
 
         // Create fake data that adds to database
         $employee = factory(Employee::class)->create();
@@ -272,7 +272,7 @@ class BookingTest extends TestCase
         ]);
 
         // Get the current date
-        $date = Carbon::now()->toDateString();
+        $date = Carbon::now('Australia/Melbourne')->toDateString();
 
         // Create a working time for given employee today
         // Employee starts at 6:00 AM to 5:00 PM
@@ -417,7 +417,7 @@ class BookingTest extends TestCase
             'activity_id' => $activity->id,
             'start_time' => $startTime,
             'end_time' => $endTime,
-            'date' => Carbon::now()->toDateString(),
+            'date' => Carbon::now('Australia/Melbourne')->toDateString(),
         ];
 
         // Send POST request to /admin/booking
@@ -447,7 +447,7 @@ class BookingTest extends TestCase
         ]);
 
         // Get the current date
-        $date = Carbon::now()->toDateString();
+        $date = Carbon::now('Australia/Melbourne')->toDateString();
 
         // Create fake data that adds to database
         $employee = factory(Employee::class)->create();
@@ -504,7 +504,7 @@ class BookingTest extends TestCase
         ]);
 
         // Get the current date
-        $date = Carbon::now()->toDateString();
+        $date = Carbon::now('Australia/Melbourne')->toDateString();
 
         // Create fake data that adds to database
         $employee = factory(Employee::class)->create();

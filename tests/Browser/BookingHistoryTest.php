@@ -60,7 +60,7 @@ class BookingHistoryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         // Create a booking for yesterday
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now()->subDay(),
+            'date' => Carbon::now('Australia/Melbourne')->subDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -86,13 +86,13 @@ class BookingHistoryTest extends DuskTestCase
      *
      * @return void
      */
-    public function testFutureEntriesNotDisplayed() 
+    public function testFutureEntriesNotDisplayed()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         // Create a booking for yesterday
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now()->addDay(),
+            'date' => Carbon::now('Australia/Melbourne')->addDay(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
@@ -116,17 +116,17 @@ class BookingHistoryTest extends DuskTestCase
      *
      * @return void
      */
-    public function testMultipleEntriesDisplayed() 
+    public function testMultipleEntriesDisplayed()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
         // Create a booking for yesterday
         $booking1 = factory(Booking::class)->create([
-            'date' => Carbon::now()->subDay(),
+            'date' => Carbon::now('Australia/Melbourne')->subDay(),
         ]);
         // Create a booking for a month ago
         $booking2 = factory(Booking::class)->create([
-            'date' => Carbon::now()->subMonth(),
+            'date' => Carbon::now('Australia/Melbourne')->subMonth(),
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking1, $booking2) {
@@ -172,7 +172,7 @@ class BookingHistoryTest extends DuskTestCase
         $bo = factory(BusinessOwner::class)->create();
         // Create a booking for today
         $booking = factory(Booking::class)->create([
-            'date' => Carbon::now()->toDateString()
+            'date' => Carbon::now('Australia/Melbourne')->toDateString()
         ]);
 
         $this->browse(function ($browser) use ($bo, $booking) {
