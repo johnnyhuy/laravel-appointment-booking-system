@@ -22,14 +22,14 @@ class SessionController extends Controller
         return view('customer.login');
     }
 
-    public function login()
+    public function login(Request $request)
     {
         Log::info("An attempt to login was made", request(['username', 'password']));
 
         // Sign in as customer
         if (Auth::guard('web_user')->attempt(request(['username', 'password']))) {
             //Log customer login success
-            Log::info("Customer Login with username " . request('username') . " was successful");
+            Log::info("Customer Login with username " . $request->username . " was successful");
             // Session flash
             session()->flash('message', 'Successfully logged in!');
 
@@ -39,7 +39,7 @@ class SessionController extends Controller
         // If sign in as a customer doesn't work, attempt business owner sign in
         elseif (Auth::guard('web_admin')->attempt(request(['username', 'password']))) {
             //Log business owner login success
-            Log::info("Business Owner login with username " . request('username') . " was successful");
+            Log::info("Business Owner login with username " . $request->username . " was successful");
             // Session flash
             session()->flash('message', 'Business Owner login success.');
 
@@ -48,7 +48,7 @@ class SessionController extends Controller
         }
 
         //Login failed (handle failed login)
-        Log::notice("An attempt to login failed with username and password: " . request('username') . ", " . request('password'));
+        Log::notice("An attempt to login failed with username and password: " . $request->username . ", " . $request->password);
 
         // Session flash
         session()->flash('error', 'Error! Invalid credentials.');
@@ -60,12 +60,12 @@ class SessionController extends Controller
     public function logout()
     {
         //If logged in as a customer, log out from customer
-        if (Auth::guard('web_user')->check()) 
+        if (Auth::guard('web_user')->check())
         {
             Auth::guard('web_user')->logout();
         }
         //If already logged in as a business owner, log out from buisness owner
-        elseif (Auth::guard('web_admin')->check()) 
+        elseif (Auth::guard('web_admin')->check())
         {
             Auth::guard('web_admin')->logout();
         }

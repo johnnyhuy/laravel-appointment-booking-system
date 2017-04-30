@@ -43,7 +43,7 @@ class EmployeeController extends Controller
             'phone' => $request->phone,
         ]);
 
-        Log::notice("A new employee was created with name: " . $request['firstname'] . " " . $request['lastname']);
+        Log::notice("A new employee was created with name: " . $request->firstname . " " . $request->lastname);
 
         // Session flash
         session()->flash('message', 'New Employee Added');
