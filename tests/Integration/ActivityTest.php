@@ -4,10 +4,12 @@ namespace Tests\Integration;
 
 use Tests\TestCase;
 
-use App\BusinessOwner;
-use App\Employee;
 use App\Activity;
 use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
 
 use Carbon\Carbon;
 

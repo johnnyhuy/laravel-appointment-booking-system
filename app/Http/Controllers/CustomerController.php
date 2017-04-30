@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+
+use App\Activity;
+use App\Booking;
+use App\BusinessOwner;
 use App\Customer;
+use App\Employee;
+use App\WorkingTime;
+
+use Carbon\Carbon;
 
 class CustomerController extends Controller
 {
@@ -19,13 +28,13 @@ class CustomerController extends Controller
     }
 
 	// Opens the customer registration page
-	public function register() 
+	public function register()
 	{
 		return view('customer.register');
 	}
 
 	// Registers a new customer account
-	public function create() 
+	public function create()
 	{
         Log::info("An attempt was made to register a customer account", request()->all());
 

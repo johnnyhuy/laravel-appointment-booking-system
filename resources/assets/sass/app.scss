@@ -46,9 +46,6 @@ footer {
 	}
 }
 
-.alert {
-}
-
 .form-group {
 	margin-bottom: $margin-base;
 }
@@ -120,7 +117,8 @@ footer {
 	}
 
 	@include m('date') {
-		max-width: 40px;
+		min-width: 60px;
+		max-width: 120px;
 	}
 }
 
@@ -222,7 +220,7 @@ footer {
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: $screen-md-min) {
 	.container {
-		width: 680px;
+		width: 1100px;
 	}
 }
 

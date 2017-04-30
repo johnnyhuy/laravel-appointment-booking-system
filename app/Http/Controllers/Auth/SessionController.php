@@ -3,12 +3,21 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\BusinessOwnerController;
+use App\Activity;
+use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
+
+use Carbon\Carbon;
 
 class SessionController extends Controller
 {
@@ -22,14 +31,14 @@ class SessionController extends Controller
         return view('customer.login');
     }
 
-    public function login(Request $request)
+    public function login()
     {
         Log::info("An attempt to login was made", request(['username', 'password']));
 
         // Sign in as customer
         if (Auth::guard('web_user')->attempt(request(['username', 'password']))) {
             //Log customer login success
-            Log::info("Customer Login with username " . $request->username . " was successful");
+            Log::info("Customer Login with username " . request('username') . " was successful");
             // Session flash
             session()->flash('message', 'Successfully logged in!');
 
@@ -39,7 +48,7 @@ class SessionController extends Controller
         // If sign in as a customer doesn't work, attempt business owner sign in
         elseif (Auth::guard('web_admin')->attempt(request(['username', 'password']))) {
             //Log business owner login success
-            Log::info("Business Owner login with username " . $request->username . " was successful");
+            Log::info("Business Owner login with username " . request('username') . " was successful");
             // Session flash
             session()->flash('message', 'Business Owner login success.');
 
@@ -48,7 +57,7 @@ class SessionController extends Controller
         }
 
         //Login failed (handle failed login)
-        Log::notice("An attempt to login failed with username and password: " . $request->username . ", " . $request->password);
+        Log::notice("An attempt to login failed with username and password: " . request('username') . ", " . request('password'));
 
         // Session flash
         session()->flash('error', 'Error! Invalid credentials.');

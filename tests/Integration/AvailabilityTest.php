@@ -4,7 +4,12 @@ namespace Tests\Integration;
 
 use Tests\TestCase;
 
+use App\Activity;
+use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
 use App\Employee;
+use App\WorkingTime;
 
 use Carbon\Carbon;
 
@@ -31,6 +36,6 @@ class AvailabilityTest extends TestCase
     	// Create an employee
     	$employee = factory(Employee::class)->create();
 
-    	
+
     }
 }

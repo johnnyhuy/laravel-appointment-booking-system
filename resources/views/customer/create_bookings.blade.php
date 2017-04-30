@@ -12,12 +12,11 @@
 		@endif
 		<form class="request" method="POST" action="/bookings">
 			{{ csrf_field() }}
-			<input name='employee_id' value='-1' type='hidden'></input>
 			<div class="form-group">
-				<label for="inputActivity">Activity <span class="request__validate">(ID - Name - Duration)</span></label>
+				<label for="inputActivity">Activity <span class="request__validate">(Name - Duration)</span></label>
 				<select name="activity_id" id="inputActivity" class="form-control request__input">
-					@foreach (App\Activity::all()->sortBy('name') as $activity)
-						<option value="{{ $activity->id }}">{{ $activity->id . ' - ' . $activity->name . ' - ' . $activity->duration }}</option>
+					@foreach (App\Activity::all()->sortBy('duration')->sortBy('name') as $activity)
+						<option value="{{ $activity->id }}">{{ $activity->name . ' - ' . $activity->duration }}</option>
 					@endforeach
 				</select>
 			</div>

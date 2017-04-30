@@ -15,18 +15,13 @@
 	<div class="container">
 		@if (Auth::check())
 		<ul class="nav nav-pills pull-left">
-<<<<<<< HEAD
 			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}"><a href="/">Home</a></li>
 			@if (Auth::check())
 				<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
 				<li role="presentation" class="{{ Request::is('bookings/new') ? 'active' : null }}"><a href="/bookings/new">Create Booking</a></li>
 			@endif
-=======
-			<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
-			<li role="presentation" class="{{ Request::is('create_booking') ? 'active' : null }}"><a href="/create_booking">Create Booking</a></li>
->>>>>>> 812c2dc24e48fdd28042bad4fbba8c86969bf008
 		</ul>
-		
+
 			<div class="pull-right user">
 				Logged in as {{ Auth::user()->username }}
 				<a href="/logout">Logout</a>

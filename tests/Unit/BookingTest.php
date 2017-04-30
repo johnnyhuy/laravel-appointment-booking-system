@@ -6,6 +6,10 @@ use Tests\TestCase;
 
 use App\Activity;
 use App\Booking;
+use App\BusinessOwner;
+use App\Customer;
+use App\Employee;
+use App\WorkingTime;
 
 use Carbon\Carbon;
 

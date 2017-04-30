@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 use App\Activity;
 use App\Booking;
 use App\BusinessOwner;
 use App\Customer;
+use App\Employee;
 use App\WorkingTime;
 
 use Carbon\Carbon;
@@ -155,11 +159,12 @@ class BookingController extends Controller
 	public function storeCustomerBooking(Request $request) {
         Log::info("An attempt to create a booking from the Customer Portal was made", $request->all());
 
+        $request->merge(['customer_id' => Auth::id()]);
+
         // Validation error messages
         $messages = [
             'start_time.date_format' => 'The :attribute field must be in the correct time format.',
             'end_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'customer_id.exists' => 'The :attribute does not exist.',
             'customer_id.is_on_booking' => 'You already have an existing booking at that time.',
             'activity_id.exists' => 'The :attribute does not exist.',
             'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
@@ -168,7 +173,7 @@ class BookingController extends Controller
         // Validation rules
         $rules = [
             'activity_id' => 'required|exists:activities,id|is_end_time_valid',
-            'customer_id' => 'required|exists:customers,id|is_on_booking',
+            'customer_id' => 'is_on_booking',
             'start_time' => 'required|date_format:H:i',
             'date' => 'required|date',
         ];
@@ -196,7 +201,7 @@ class BookingController extends Controller
         Log::notice("A booking was created from the Customer Portal", $booking->toArray());
 
         // Session flash
-        session()->flash('message', 'Booking has successfully been created.');
+        session()->flash('message', 'Booking has successfully been created. No employee is assigned to your booking, please come back soon when an adminstrator verifies your booking.');
 
         //Redirect to the business owner admin page
         return redirect('/bookings');
