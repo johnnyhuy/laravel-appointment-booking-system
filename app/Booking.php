@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Activity;
+use App\WorkingTime;
 
 use Carbon\Carbon;
 
@@ -86,6 +87,42 @@ class Booking extends Model
 			->get()
 			// Sort by start time using an eloquent collection function
 			->sortBy('date');
+	}
+
+	/**
+	 * Show all bookings a given employee is available to work
+	 * 
+	 * @return App\Booking[]
+	 */
+	public static function getWorkableBookingsForEmployee($employeeID, $ndays) 
+	{
+		//Get all bookings from the next 30 days
+		$bookings = Booking::allLatest($ndays);
+
+		//Get all working times for the employee for next 30 days
+		$workingTimes = WorkingTime::getWorkingTmesForEmployee($employeeID, $ndays)->get();
+
+		//Final bookings
+		$finalBookings = [];
+
+		//Iterate through each booking
+		foreach($bookings as $booking) {
+			//Iterate through each working time
+			foreach($workingTimes as $workingTime) {
+				//If the employee is working during the entirety of this booking
+				//And the booking is on the same day the employee is working
+				if($workingTime->start_time <= $booking->start_time &&
+					$workingTime->end_time >= $booking->end_time &&
+					$workingTime->date == $booking->date) {
+
+					//Push booking to list of final bookings
+					array_push($finalBookings, $booking);
+				}
+			}
+		}
+
+		//Return bookings
+		return $finalBookings;
 	}
 
 	/**
