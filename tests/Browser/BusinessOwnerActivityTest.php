@@ -21,7 +21,7 @@ class BusinessOwnerActivityTest extends DuskTestCase
     {
     	// Generate business owner
         $owner = factory(BusinessOwner::class)->create();
-        
+
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
                 // Visit activity page
@@ -42,7 +42,7 @@ class BusinessOwnerActivityTest extends DuskTestCase
     public function testAddActivity()
     {
     	// Generate fake activity data
-    	$activity = factory(Activity::class)->make(); 
+    	$activity = factory(Activity::class)->make();
 
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
@@ -57,7 +57,7 @@ class BusinessOwnerActivityTest extends DuskTestCase
                 ->visit('/admin/activity')
                 ->type('name', $activity->name)
                 ->type('description', $activity->description)
-                ->keys('#inputDuration', '02:00')
+                ->keys('#input_duration', '02:00')
                 ->press('Add Activity')
 
                 // Check success message
@@ -77,7 +77,7 @@ class BusinessOwnerActivityTest extends DuskTestCase
     public function testNameInputValidate()
     {
         // Generate fake activity data
-        $activity = factory(Activity::class)->make(); 
+        $activity = factory(Activity::class)->make();
 
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
@@ -117,7 +117,7 @@ class BusinessOwnerActivityTest extends DuskTestCase
     public function testDescriptionInputValidate()
     {
         // Generate fake activity data
-        $activity = factory(Activity::class)->make(); 
+        $activity = factory(Activity::class)->make();
 
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();

@@ -16,12 +16,16 @@ class CustomerBookingsTest extends DuskTestCase
      */
     public function testLoggedCustomerSeesStartTime()
     {
+        // There exists a customer
         $customer = factory(Customer::class)->create();
+
+        // Create 4 bookings
+        $bookings = factory(Booking::class, 4)->create();
 
         $this->browse(function ($browser) use ($customer) {
             $browser->loginAs($customer)
                 ->visit('/bookings')
-                ->assertSee('Start Time');
+                ->assertSee('Start');
         });
     }
 
@@ -32,12 +36,16 @@ class CustomerBookingsTest extends DuskTestCase
      */
     public function testLoggedCustomerSeesEndTime()
     {
+        // There exists a customer
         $customer = factory(Customer::class)->create();
+
+        // Create 4 bookings
+        $bookings = factory(Booking::class, 4)->create();
 
         $this->browse(function ($browser) use ($customer) {
             $browser->loginAs($customer)
                 ->visit('/bookings')
-                ->assertSee('End Time');
+                ->assertSee('End');
         });
     }
 
@@ -48,7 +56,11 @@ class CustomerBookingsTest extends DuskTestCase
      */
     public function testLoggedCustomerSeesDuration()
     {
+        // There exists a customer
         $customer = factory(Customer::class)->create();
+
+        // Create 4 bookings
+        $bookings = factory(Booking::class, 4)->create();
 
         $this->browse(function ($browser) use ($customer) {
             $browser->loginAs($customer)

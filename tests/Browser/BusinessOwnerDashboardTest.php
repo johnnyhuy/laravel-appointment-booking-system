@@ -43,7 +43,7 @@ class BusinessOwnerDashboardTest extends DuskTestCase
         $this->browse(function ($browser) use ($owner) {
             $browser->loginAs($owner, 'web_admin')
             	->visit('/admin/roster')
-            	->assertPathIs('/admin/roster')
+            	->assertPathIs('/admin/roster/' . Carbon::now('Australia/Melbourne')->format('m-Y'))
                 ->assertSee('Roster');
         });
     }

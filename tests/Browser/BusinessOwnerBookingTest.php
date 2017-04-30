@@ -29,8 +29,10 @@ class BusinessOwnerBookingTest extends DuskTestCase
             $browser->loginAs($owner, 'web_admin')
                 // Visit booking page
             	->visit('/admin/booking')
-                // Check if route is /admin
-            	->assertPathIs('/admin/booking')
+
+                // Route should go to booking
+            	->assertPathIs('/admin/booking/' . Carbon::now('Australia/Melbourne')->format('m-Y'))
+
                 // See if business name exists on page (header title)
                 ->assertSee($owner->business_name);
         });
@@ -74,8 +76,8 @@ class BusinessOwnerBookingTest extends DuskTestCase
                 ->select('customer_id', $customer->id)
                 ->select('employee_id', $employee->id)
                 ->select('activity_id', $activity->id)
-                ->keys('#inputStartTime', '11:00')
-                ->keys('#inputDate', $date->format('d/m/Y'))
+                ->keys('#input_start_time', '11:00')
+                ->keys('#input_month_year', $date->format('M Y'))
                 ->press('Add Booking')
 
                 // Check success message
