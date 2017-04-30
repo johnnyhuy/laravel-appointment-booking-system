@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\Activity;
 use App\Booking;
@@ -84,6 +85,8 @@ class BookingController extends Controller
             $date = $request->date;
         }
 
+        Log::info("An attempt to create a booking from the Business Owner Dashboard was made", $request->all());
+
         // Validation error messages
         $messages = [
             'start_time.date_format' => 'The :attribute field must be in the correct time format.',
@@ -134,6 +137,8 @@ class BookingController extends Controller
             'date' => $request->date,
         ]);
 
+        Log::notice("A booking was created from the Business Owner Dashboard", $booking);
+
         // Session flash
         session()->flash('message', 'Booking has successfully been created.');
 
@@ -148,6 +153,8 @@ class BookingController extends Controller
      * @return \Illuminate\Http\Response
      */
 	public function storeCustomerBooking(Request $request) {
+        Log::info("An attempt to create a booking from the Customer Portal was made", $request->all());
+
         // Validation error messages
         $messages = [
             'start_time.date_format' => 'The :attribute field must be in the correct time format.',
@@ -186,6 +193,8 @@ class BookingController extends Controller
             'date' => $request->date,
         ]);
 
+        Log::notice("A booking was created from the Customer Portal", $booking);
+
         // Session flash
         session()->flash('message', 'Booking has successfully been created.');
 
@@ -222,18 +231,17 @@ class BookingController extends Controller
      */
     public function assignEmployee(Request $request)
     {
-        print_r($request['bookings']);
-        //Iterate through each booking being set
-        for($i = 0; $i < count($request['bookings']); $i++)
-        {
-            //Update booking to given employee
+        // Iterate through each booking being set
+        for($i = 0; $i < count($request['bookings']); $i++) {
+            Log::notice("Employee with id " . $request['employee_id'] . " was assigned to booking with id " . $request['bookings'][$i]);
+            // Update booking to given employee
             DB::table('bookings')->where('id', $request['bookings'][$i])->update(['employee_id' => $request['employee_id']]);
         }
 
         // Session flash
         session()->flash('message', 'Booking(s) have been successfully assigned.');
 
-        //Redirect to the business owner admin page
+        // Redirect to the business owner admin page
         return redirect('admin/employees/assign/' . $request['employee_id']);
     }
 
