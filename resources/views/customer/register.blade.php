@@ -1,13 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-	@if (count($errors))
-		<div class="alert alert-danger">
-			@foreach ($errors->all() as $error)
-				{{ $error }}<br>
-			@endforeach
-		</div>
-	@endif
+	@include('shared.error_message')
 	<form method="POST" action="/register">
 		<div class="block request">
 			{{ csrf_field() }}
@@ -25,11 +19,11 @@
 			</div>
 			<div class="form-group">
 				<label for="inputPassword">Password <span class="request__validate">(at least 6 characters)</span></label>
-				<input name="password" type="password" id="inputPassword" class="form-control request__input" placeholder="Password" value="{{ old('password') }}" >
+				<input name="password" type="password" id="inputPassword" class="form-control request__input" placeholder="Password" value="" >
 			</div>
 			<div class="form-group">
 				<label for="inputPasswordConfirmation">Password Confirmation</label>
-				<input name="password_confirmation" type="password" id="inputPasswordConfirmation" class="form-control request__input" value="{{ old('password_confirmation') }}" placeholder="Password">
+				<input name="password_confirmation" type="password" id="inputPasswordConfirmation" class="form-control request__input" value="" placeholder="Password">
 			</div>
 			<div class="form-group">
 				<label for="inputPhone">Phone <span class="request__validate">(at least 10 characters)</span></label>
