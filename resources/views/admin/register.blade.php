@@ -30,11 +30,11 @@
 				</div>
 				<div class="form-group">
 					<label for="inputPassword">Password <span class="request__validate">(at least 6 characters)</span></label>
-					<input name="password" type="password" id="inputPassword" class="form-control request__input" placeholder="Password" value="{{ old('password') }}">
+					<input name="password" type="password" id="inputPassword" class="form-control request__input" placeholder="Password" value="">
 				</div>
 				<div class="form-group">
 					<label for="inputPasswordConfirmation">Password Confirmation</label>
-					<input name="password_confirmation" type="password" id="inputPasswordConfirmation" class="form-control request__input" placeholder="Password" value="{{ old('password_confirmation') }}">
+					<input name="password_confirmation" type="password" id="inputPasswordConfirmation" class="form-control request__input" placeholder="Password" value="">
 				</div>
 				<div class="form-group">
 					<label for="inputPhone">Phone <span class="request__validate">(at least 10 characters)</span></label>
