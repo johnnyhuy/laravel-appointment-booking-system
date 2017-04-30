@@ -13,11 +13,12 @@
 
 <body>
 	<div class="container">
-		<ul class="nav nav-pills pull-left">
-			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}"><a href="/">Home</a></li>
-			<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
-		</ul>
 		@if (Auth::check())
+		<ul class="nav nav-pills pull-left">
+			<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
+			<li role="presentation" class="{{ Request::is('create_booking') ? 'active' : null }}"><a href="/create_booking">Create Booking</a></li>
+		</ul>
+		
 			<div class="pull-right user">
 				Logged in as {{ Auth::user()->username }}
 				<a href="/logout">Logout</a>
@@ -60,6 +61,9 @@
 				}
 				elseif (Request::is('admin')) {
 					$title .= "Admin";
+				}
+				elseif (Request::is('create_booking')) {
+					$title .= "Create a Booking";
 				}
 				else {
 					// Else default
