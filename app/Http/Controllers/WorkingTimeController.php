@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\BusinessOwner;
 use App\WorkingTime;
@@ -57,6 +58,8 @@ class WorkingTimeController extends Controller
     // Create a new working time
 	public function create(Request $request, $monthYear = null)
 	{
+        Log::info("An attempt was made to create a new working time", $request->all());
+
 		// Custom error messages
 		$messages = [
 			'employee_id.exists' => 'The :attribute does not exist.',
@@ -95,6 +98,9 @@ class WorkingTimeController extends Controller
             'end_time' => $request->end_time,
             'date' => $request->date,
         ]);
+
+        Log::notice("A new working time was created for employee with id " . $workingTime->employee_id . " for times: " . 
+            $workingTime->date . " => " . $workingTime->start_time . " - " . $workingTime->end_time);
 
         // Session flash
         session()->flash('message', 'New working time has been added.');

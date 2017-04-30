@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Customer;
 
 class CustomerController extends Controller
@@ -26,6 +27,8 @@ class CustomerController extends Controller
 	// Registers a new customer account
 	public function create() 
 	{
+        Log::info("An attempt was made to register a customer account", request()->all());
+
 		// Validation rules
 		$rules = [
             'firstname' => "required|min:2|max:32|regex:/^[A-z\']+$/",
@@ -48,6 +51,8 @@ class CustomerController extends Controller
             'address' => request('address'),
             'phone' => request('phone'),
         ]);
+
+        Log::notice("A customer account with user_id and username: " . $customer->id . ', '. $customer->username . " was created");
 
         // Session flash
         session()->flash('message', 'Thank you for registering! You can now Login!');

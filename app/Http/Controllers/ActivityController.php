@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Activity;
 use App\BusinessOwner;
@@ -30,6 +31,8 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info("An attempt was made to create a new Activity", $request->all());
+
         // Validation error messages
         $messages = [
             'name.regex' => 'The :attribute is invalid, do not use special characters.',
@@ -57,6 +60,8 @@ class ActivityController extends Controller
             'description' => $request->description,
             'duration' => $request->duration,
         ]);
+
+        Log::notice("A new activity was created", $activity);
 
         // Session flash
         session()->flash('message', 'Activity has successfully been created.');
@@ -134,6 +139,12 @@ class ActivityController extends Controller
     {
         // Find activity
         $activity = Activity::find($id);
+
+        //Check the activity exists
+        if(!isset($activity)) {
+            //If it doesn't exist, log an error
+            Log::error("Activity with id " . $id . ", could not be destroyed as it doesn't exist");
+        }
 
         // Delete activity
         $activity->delete();
