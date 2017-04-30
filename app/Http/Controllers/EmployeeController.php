@@ -52,4 +52,19 @@ class EmployeeController extends Controller
             'employees' => Employee::all()->sortBy('firstname')->sortBy('lastname')
         ]);
     }
+
+    public function assignEmployees($employee_id = null) 
+    {
+        //If no employee is given
+        if(!isset($employee_id)) {
+            //Set the first employee to default
+            $employee_id = Employee::first()->id;
+        }
+
+        //Return the assign employees page
+        return view('admin.assign_employees', [
+            'business' => BusinessOwner::first(),
+            'employee_id' => $employee_id
+        ]);
+    }
 }
