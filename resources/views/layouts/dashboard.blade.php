@@ -35,14 +35,17 @@
 					elseif (Request::is('admin/history')) {
 						$title .= "History";
 					}
-					elseif (Request::is('admin/roster')) {
-						$title .= "Roster";
-					}
 					elseif (Request::is('admin/employees')) {
 						$title .= "Employees";
 					}
 					elseif (Request::is('admin/activity')) {
 						$title .= "Activities";
+					}
+					elseif (Request::is('admin/booking')) {
+						$title .= "Bookings";
+					}
+					elseif (Request::is('admin/roster/*')) {
+						$title .= "Roster";
 					}
 					else {
 						// Else default
