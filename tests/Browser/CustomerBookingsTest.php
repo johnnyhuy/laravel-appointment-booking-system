@@ -26,10 +26,12 @@ class CustomerBookingsTest extends DuskTestCase
         $customer = factory(Customer::class)->create();
 
         // Create 4 bookings
-        $bookings = factory(Booking::class, 4)->create();
+        $bookings = factory(Booking::class, 4)->create([
+            'customer_id' => $customer->id
+        ]);
 
         $this->browse(function ($browser) use ($customer) {
-            $browser->loginAs($customer)
+            $browser->loginAs($customer, 'web_user')
                 ->visit('/bookings')
                 ->assertSee('Start');
         });
@@ -46,10 +48,12 @@ class CustomerBookingsTest extends DuskTestCase
         $customer = factory(Customer::class)->create();
 
         // Create 4 bookings
-        $bookings = factory(Booking::class, 4)->create();
+        $bookings = factory(Booking::class, 4)->create([
+            'customer_id' => $customer->id
+        ]);
 
         $this->browse(function ($browser) use ($customer) {
-            $browser->loginAs($customer)
+            $browser->loginAs($customer, 'web_user')
                 ->visit('/bookings')
                 ->assertSee('End');
         });
@@ -66,10 +70,12 @@ class CustomerBookingsTest extends DuskTestCase
         $customer = factory(Customer::class)->create();
 
         // Create 4 bookings
-        $bookings = factory(Booking::class, 4)->create();
+        $bookings = factory(Booking::class, 4)->create([
+            'customer_id' => $customer->id
+        ]);
 
         $this->browse(function ($browser) use ($customer) {
-            $browser->loginAs($customer)
+            $browser->loginAs($customer, 'web_user')
                 ->visit('/bookings')
                 ->assertSee('Duration');
         });
@@ -86,7 +92,9 @@ class CustomerBookingsTest extends DuskTestCase
         $customer = factory(Customer::class)->create();
 
         // Create 4 bookings
-        $bookings = factory(Booking::class, 4)->create();
+        $bookings = factory(Booking::class, 4)->create([
+            'customer_id' => $customer->id
+        ]);
 
         // Create an activity that is two hours long
         $bookings = factory(Activity::class)->create([
@@ -94,7 +102,7 @@ class CustomerBookingsTest extends DuskTestCase
         ]);
 
         $this->browse(function ($browser) use ($customer) {
-            $browser->loginAs($customer)
+            $browser->loginAs($customer, 'web_user')
                 ->visit('/bookings/new')
                 ->select('activity_id', 1)
                 // Start time is at 08:00 AM
