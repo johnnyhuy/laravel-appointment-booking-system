@@ -43,7 +43,7 @@
             <label for="inputDate">Date <span class="request__validate">(dd/mm/yyyy)</span></label>
             <input name="date" type="date" id="inputDate" class="form-control request__input" value="{{ old('date') ? old('date') : Carbon\Carbon::parse($workingTime->date)->format('Y-m-d') }}" autofocus>
         </div>
-        <button class="btn btn-lg btn-primary btn-block btn--margin-top" href="/admin/employees">Add Working Time</button>
+        <button class="btn btn-lg btn-primary btn-block btn--margin-top" href="/admin/employees">Edit Working Time</button>
     </form>
 </div>
 @endsection
