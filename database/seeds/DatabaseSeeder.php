@@ -40,21 +40,21 @@ class DatabaseSeeder extends Seeder
 
         // Create a working times
         for ($i = 0; $i < count($employees); $i++) {
-            factory(WorkingTime::class)->create([
+            WorkingTime::create([
                 'employee_id' => $employees[0]->id,
                 'start_time' => '09:00',
                 'end_time' => '17:00',
                 'date' => Carbon::now()->addDays($i)->toDateString()
             ]);
 
-            factory(WorkingTime::class)->create([
+            WorkingTime::create([
                 'employee_id' => $employees[0]->id,
                 'start_time' => '09:00',
                 'end_time' => '17:00',
                 'date' => Carbon::now()->addWeeks(2)->addDays($i)->toDateString()
             ]);
 
-            factory(WorkingTime::class)->create([
+            WorkingTime::create([
                 'employee_id' => $employees[$i]->id,
                 'start_time' => '09:00',
                 'end_time' => '17:00',
@@ -74,43 +74,41 @@ class DatabaseSeeder extends Seeder
             'duration' => '02:00'
         ]);
 
-        // Booking tomorrow at 11:00 AM
-        factory(Booking::class)->create([
+        // Create Booking
+        Booking::create([
             'customer_id' => $customers[0]->id,
             'employee_id' => $employees[0]->id,
             'activity_id' => $activityOne->id,
             'start_time' => '11:00',
+            'end_time' => Booking::calcEndTime($activityOne->duration, '11:00'),
             'date' => Carbon::now()->addDay()->toDateString()
         ]);
 
-        factory(Booking::class)->create([
+        Booking::create([
             'customer_id' => $customers[2]->id,
             'employee_id' => null,
             'activity_id' => $activityOne->id,
-            'start_time' => '11:00',
+            'start_time' => '11:30',
+            'end_time' => Booking::calcEndTime($activityOne->duration, '11:30'),
             'date' => Carbon::now()->addDays(2)->toDateString()
         ]);
 
-        factory(Booking::class)->create([
+        Booking::create([
             'customer_id' => $customers[2]->id,
-            'employee_id' => $employees[0]->id,
+            'employee_id' => null,
             'activity_id' => $activityOne->id,
-            'start_time' => '12:00',
+            'start_time' => '10:30',
+            'end_time' => Booking::calcEndTime($activityOne->duration, '10:30'),
             'date' => Carbon::now()->subDays(2)->toDateString()
         ]);
-        factory(Booking::class)->create([
-            'customer_id' => $customers[1]->id,
-            'employee_id' => $employees[1]->id,
-            'activity_id' => $activityOne->id,
-            'start_time' => '13:00',
-            'date' => Carbon::now()->subDays(2)->toDateString()
-        ]);
-        factory(Booking::class)->create([
+
+        Booking::create([
             'customer_id' => $customers[3]->id,
-            'employee_id' => $employees[0]->id,
+            'employee_id' => $employees[1]->id,
             'activity_id' => $activityTwo->id,
-            'start_time' => '12:00',
-            'date' => Carbon::now()->subDays(5)->toDateString()
+            'start_time' => '12:30',
+            'end_time' => Booking::calcEndTime($activityOne->duration, '12:30'),
+            'date' => Carbon::now()->subDays(2)->toDateString()
         ]);
     }
 }
