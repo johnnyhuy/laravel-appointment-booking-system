@@ -65,10 +65,8 @@ $factory->define(Activity::class, function (Generator $faker) {
  *
  */
 $factory->define(WorkingTime::class, function (Generator $faker) {
-    $employee = factory(Employee::class)->create();
-
     return [
-        'employee_id' => $employee->id,
+        'employee_id' => factory(Employee::class)->create()->id,
         'start_time' => $faker->time,
         'end_time' => $faker->time,
         'date' => $faker->date,
@@ -151,22 +149,6 @@ $factory->define(BusinessOwner::class, function (Generator $faker) {
  *
  */
 $factory->define(Booking::class, function (Generator $faker) {
-    // Create factories
-    $customer = factory(Customer::class)->create();
-    $employee = factory(Employee::class)->create();
-    $activity = factory(Activity::class)->create();
-
-    // Activity duration
-    $duration = Carbon::parse($activity->duration);
-
-    // Get start time
-    $startHour = rand(8, 15);
-    $startMinute = rand(0, 1) == 1 ? 0 : 30;
-    $startTime = Carbon::createFromTime($startHour, $startMinute)->format('H:i');
-
-    // Calculate end time
-    $endTime = Booking::calcEndTime($activity->duration, $startTime);
-
      // Get time now
     $now = Carbon::now('Australia/Melbourne');
 
@@ -185,11 +167,11 @@ $factory->define(Booking::class, function (Generator $faker) {
     $date = $now->toDateString();
 
     return [
-        'customer_id' => $customer->id,
-        'employee_id' => $employee->id,
-        'activity_id' => $activity->id,
-        'start_time' => $startTime,
-        'end_time' => $endTime,
+        'customer_id' => factory(Customer::class)->create()->id,
+        'employee_id' => factory(Employee::class)->create()->id,
+        'activity_id' => factory(Activity::class)->create()->id,
+        'start_time' => '10:00',
+        'end_time' => '13:00',
         'date' => $date,
     ];
 });

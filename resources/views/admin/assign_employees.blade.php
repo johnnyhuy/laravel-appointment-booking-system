@@ -49,13 +49,17 @@
 					</tr>
 					@foreach ($bookings as $booking)
 						<tr>
-							<td class="table--id"><input name="bookings[]" id="input_bookings" value="{{ $booking->id }}" type="checkbox"></input></td>
+							<td class="table--id">
+								@if (!$booking->employee)
+									<input name="bookings[]" id="input_bookings" value="{{ $booking->id }}" type="checkbox"></input>
+								@endif
+							</td>
 							<td class="table--left-solid">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
 							<td class="table--time table--left-dotted">{{ Carbon\Carbon::parse($booking->start_time)->format('H:i') }}</td>
 							<td class="table--time table--left-dotted">{{ Carbon\Carbon::parse($booking->end_time)->format('H:i') }}</td>
 							<td class="table--date table--left-dotted">{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
 							<td class="table--time table--left-dotted">{{ gmdate('G:i', $booking->duration()) }}</td>
-							@if (isset($booking->employee))
+							@if ($booking->employee)
 								<td class="table--left-solid">{{ $booking->employee->firstname . ' ' . $booking->employee->lastname }}</td>
 							@else
 								<td class="table--left-solid"> </td>

@@ -72,10 +72,10 @@
 					<li class="{{ Request::is('admin') ? 'active' : null }}"><a title="Show Business Information" href="/admin">Information</a></li>
 					<li class="{{ Request::is('admin/summary') ? 'active' : null }}"><a title="Show a summary of bookings" href="/admin/summary">Summary</a></li>
 					<li class="{{ Request::is('admin/history') ? 'active' : null }}"><a title="Show a history of bookings" href="/admin/history">History</a></li>
-					<li class="{{ Request::is('admin/roster/*') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster">Roster</a></li>
+					<li class="{{ Request::is('admin/roster/*') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster/{{ Carbon\Carbon::now('Australia/Melbourne')->format('m-Y') }}">Roster</a></li>
 					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a title="Show all employees" href="/admin/employees">Employees</a></li>
 					<li class="{{ Request::is('admin/activity') ? 'active' : null }}"><a title="Show activitites" href="/admin/activity">Activities</a></li>
-					<li class="{{ Request::is('admin/booking/*') ? 'active' : null }}"><a title="Show a bookings" href="/admin/booking">Bookings</a></li>
+					<li class="{{ Request::is('admin/booking/*') ? 'active' : null }}"><a title="Show a bookings" href="/admin/booking/{{ Carbon\Carbon::now('Australia/Melbourne')->format('m-Y') }}">Bookings</a></li>
 					<li class="{{ Request::is('admin/employees/assign/*') ? 'active' : null }}"><a title="Assign Employees to Bookings" href="/admin/employees/assign">Assign Employees</a></li>
 				</ul>
 				<footer class="dashboard">LCJJ Development Team</footer>
