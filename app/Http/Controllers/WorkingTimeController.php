@@ -140,8 +140,6 @@ class WorkingTimeController extends Controller
         // Custom error messages
         $messages = [
             'employee_id.exists' => 'The :attribute does not exist.',
-            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'date.unique' => 'The employee can only have one working time per day.',
         ];
 
@@ -151,10 +149,10 @@ class WorkingTimeController extends Controller
             'employee_id' => 'required|exists:employees,id',
 
             // Start time is required
-            'start_time' => 'required|before:end_time|date_format:H:i',
+            'start_time' => 'required|before:end_time',
 
             // End time is required and must be AFTER the start time (they can't be the same either)
-            'end_time' => 'required|after:start_time|date_format:H:i',
+            'end_time' => 'required|after:start_time',
 
             // Date must be unique where employee ID is unique
             'date' => 'required',

@@ -81,7 +81,7 @@ class BookingTest extends TestCase
      *
      * @return void
      */
-    public function testAdminAddBooking()
+    public function testAdminAddBookingSuccessful()
     {
         // Build fake data
         $bo = factory(BusinessOwner::class)->create();
@@ -107,10 +107,10 @@ class BookingTest extends TestCase
             'date' => $date,
         ]);
 
-        // Booking start time is 11:00AM in 24 hour format
-        $startTime = '11:00';
+        // Booking start time is 09:00 AM in 24 hour format
+        $startTime = '09:00';
 
-        // Calculate end time given by activity duration (11:00 + 02:00 = 13:00)
+        // Calculate end time given by activity duration
         $endTime = Booking::calcEndTime($activity->duration, $startTime);
 
         // Add a booking from activity duration
