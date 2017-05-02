@@ -25,7 +25,7 @@
             <label for="inputEmployee">Employee <span class="request__validate">(ID - Title - Full Name)</span></label>
             <select name="employee_id" id="inputEmployee" class="form-control request__input">
                 @foreach (App\Employee::all()->sortBy('title') as $employee)
-                    <option value="{{ $employee->id }}">{{ $employee->id . ' - ' . $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname }}</option>
+                    <option value="{{ $employee->id }}" {{ $workingTime->employee->id == $employee->id ? 'selected' : null }}>{{ $employee->id . ' - ' . $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname }}</option>
                 @endforeach
             </select>
         </div>
