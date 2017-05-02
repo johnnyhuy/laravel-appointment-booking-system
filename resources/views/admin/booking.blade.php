@@ -34,6 +34,15 @@
 	@include('shared.error_message')
 	<form class="request" method="POST" action="/admin/booking">
 		{{ csrf_field() }}
+		<div class="form-group">
+			<label for="input_employee">Employee <span class="request__validate">(Title - Full Name - ID)</span></label>
+			<select name="employee_id" id="input_employee" class="form-control request__input">
+				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $employee)
+					<option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : null }}>{{ $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname . ' - ' . $employee->id }}</option>
+				@endforeach
+				<option value="none" {{ old('employee_id') ? null : 'selected' }}>-- None --</option>
+			</select>
+		</div>
 		<div class="form-group request__flex-container">
 			<div class="request__flex request__flex--left">
 				<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
@@ -47,7 +56,7 @@
 				<label for="inputDay">Day <span class="request__validate"></span></label>
 			    <select name="day" id="inputMonthYear" class="form-control request__input">
 			        @for ($day = 1; $day <= $date->endOfMonth()->day; $day++)
-			            <option value="{{ $day }}">{{ $day }}</option>
+			            <option value="{{ $day }}" {{ old('day') == $day ? 'selected' : null }}>{{ $day }}</option>
 			        @endfor
 			    </select>
 			</div>
@@ -61,19 +70,10 @@
 			</select>
 		</div>
 		<div class="form-group">
-			<label for="input_employee">Employee <span class="request__validate">(Title - Full Name - ID)</span></label>
-			<select name="employee_id" id="input_employee" class="form-control request__input">
-				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $employee)
-					<option value="{{ $employee->id }}">{{ $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname . ' - ' . $employee->id }}</option>
-				@endforeach
-				<option value="none" selected>-- None --</option>
-			</select>
-		</div>
-		<div class="form-group">
 			<label for="input_activity">Activity <span class="request__validate">(Name - Duration)</span></label>
 			<select name="activity_id" id="input_activity" class="form-control request__input">
 				@foreach (App\Activity::all()->sortBy('name') as $activity)
-					<option value="{{ $activity->id }}">{{ $activity->name . ' - ' . $activity->duration }}</option>
+					<option value="{{ $activity->id }}" {{ old('activity_id') == $activity->id ? 'selected' : null }}>{{ $activity->name . ' - ' . $activity->duration }}</option>
 				@endforeach
 			</select>
 		</div>

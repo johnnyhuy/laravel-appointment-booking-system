@@ -16,6 +16,96 @@ use Carbon\Carbon;
 class WorkingTimeTest extends TestCase
 {
     /**
+     * Get available working times of an employee on a date
+     * A booking exists and is during a working time of an employee
+     * The booking time should not be included working time
+     *
+     * @return void
+     */
+    public function testAvailableWorkingTimesForAnEmployeePerDate()
+    {
+        // Date is tomorrow
+        $date = Carbon::now()->addDay()->toDateString();
+
+        // Create employee, customer
+        $employee = factory(Employee::class)->create();
+        $customer = factory(Customer::class)->create();
+
+        // Create an activity for two hours
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Create a working time tomorrow from 09:00 AM to 10:00 PM
+        $workingTime = WorkingTime::create([
+            'employee_id' => $employee->id,
+            'start_time' => '09:00',
+            'end_time' => '22:00',
+            'date' => $date
+        ]);
+
+        // Create Bookings for tomorrow
+
+        // 09:00 AM to 12:00 PM
+        Booking::create([
+            'customer_id' => $customer->id,
+            'activity_id' => $activity->id,
+            'employee_id' => $employee->id,
+            'start_time' => '09:00',
+            'end_time' => '12:00',
+            'date' => $date
+        ]);
+
+        // 01:30 PM to 03:00 PM
+        Booking::create([
+            'customer_id' => $customer->id,
+            'activity_id' => $activity->id,
+            'employee_id' => $employee->id,
+            'start_time' => '13:30',
+            'end_time' => '15:00',
+            'date' => $date
+        ]);
+
+        // 04:00 PM to 05:00 PM
+        Booking::create([
+            'customer_id' => $customer->id,
+            'activity_id' => $activity->id,
+            'employee_id' => $employee->id,
+            'start_time' => '16:00',
+            'end_time' => '17:00',
+            'date' => $date
+        ]);
+
+        // 07:21 PM to 09:00 PM
+        Booking::create([
+            'customer_id' => $customer->id,
+            'activity_id' => $activity->id,
+            'employee_id' => $employee->id,
+            'start_time' => '19:21',
+            'end_time' => '21:00',
+            'date' => $date
+        ]);
+
+        $avaTimes = $employee->availableTimes($date);
+
+        // There should be a available time from 12:00 PM to 01:00 PM
+        $this->assertEquals($avaTimes[0]['start_time'], '12:00');
+        $this->assertEquals($avaTimes[0]['end_time'], '13:30');
+
+        // There should be a available time from 03:00 PM to 04:00 PM
+        $this->assertEquals($avaTimes[1]['start_time'], '15:00');
+        $this->assertEquals($avaTimes[1]['end_time'], '16:00');
+
+        // There should be a available time from 05:00 PM to 07:21 PM
+        $this->assertEquals($avaTimes[2]['start_time'], '17:00');
+        $this->assertEquals($avaTimes[2]['end_time'], '19:21');
+
+        // There should be a available time from 09:00 PN to 10:00 PM
+        $this->assertEquals($avaTimes[3]['start_time'], '21:00');
+        $this->assertEquals($avaTimes[3]['end_time'], '22:00');
+    }
+
+    /**
      * Add working time for employee
      *
      * @return void
