@@ -98,7 +98,7 @@ class BookingController extends Controller
             'customer_id.exists' => 'The :attribute does not exist.',
             'customer_id.is_on_booking' => 'The :attribute is already set on at that time.',
             'employee_id.exists' => 'The :attribute does not exist.',
-            'employee_id.is_employee_working' => 'The :attribute either has a conflict with another booking or :attribute is not working on that time.',
+            'employee_id.is_employee_working' => 'The :attribute is not working on that time.',
             'employee_id.is_on_booking' => 'The :attribute is already working on another booking at that time.',
             'activity_id.exists' => 'The :attribute does not exist.',
             'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',

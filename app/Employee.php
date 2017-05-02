@@ -20,6 +20,8 @@ class Employee extends Model
 	 * @return Array
 	 */
 	public function availableTimes($date) {
+		Log::info("Called availableTimes() on" . $date . " from employee ID " . $this->id);
+
 		// Get working time
 		$workingTime = $this->workingTimes->where('date', $date)->first();
 
