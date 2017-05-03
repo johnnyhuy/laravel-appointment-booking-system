@@ -1,6 +1,10 @@
 // General dashboard classes
 .dashboard {
 	padding-top: $navbar-height;
+
+	hr {
+		border-top: 1px solid $gray-lighter;
+	}
 }
 
 
@@ -74,6 +78,7 @@ footer.dashboard {
 			border-left: 1px solid $gray-lighter;
 			border-top: 1px solid $gray-lighter;
 			height: 150px;
+			min-width: 110px
 		}
 
 		@include m('disabled') {
@@ -99,18 +104,18 @@ footer.dashboard {
 
 		@include e('block') {
 			margin-right: 25px;
-			padding: 5px 24px 5px 5px;
+			padding: 4px 24px 4px 4px;
 			background-color: $brand-primary;
 			border-radius: $border-radius-base;
 			color: $white;
 			margin-bottom: $margin-base;
 			position: relative;
+			min-width: 110px;
 		}
 
 		@include e('name') {
 			font-family: $font-family-base;
 			font-weight: bold;
-			font-size: 12px;
 		}
 
 		@include e('edit') {
@@ -239,7 +244,7 @@ footer.dashboard {
 }
 
 /* Medium devices (desktops, 992px and up) */
-@media (min-width: $screen-md-min) and (max-width: $screen-md-max)  {
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
 
 }
 
@@ -248,6 +253,12 @@ footer.dashboard {
 	.calendar {
 		@include e('day') {
 			min-width: none;
+		}
+	}
+
+	.working-time {
+		@include e('name') {
+			font-size: 14px;
 		}
 	}
 }

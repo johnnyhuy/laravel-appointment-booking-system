@@ -1,7 +1,4 @@
 <h1>{{ $date->format('F Y') }}</h1>
-<button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
-
-</button>
 <div class="table-responsive dash__table-wrapper">
     <table class="table table--no-margin dash__table calender">
         <tr>
@@ -28,9 +25,11 @@
                                     $wDate = Carbon\Carbon::parse($workingTime->date);
                                 @endphp
                                 @if ($workingTime->date == $cDate->startOfMonth()->startOfWeek()->addDays($days)->addWeeks($weeks)->toDateString())
-                                    <section class="working-time__block">
+                                    <section class="working-time__block" data-toggle="tooltip" data-placement="top" title="{{ $workingTime->employee->firstname . ' ' . $workingTime->employee->lastname }}">
                                         <a title="Edit this working time" href="/admin/roster/{{ $workingTime->id }}/edit" class="working-time__edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
-                                        <div class="working-time__name">{{ substr($workingTime->employee->firstname, 0, 1) . '. ' . $workingTime->employee->lastname }}</div>
+                                        <div class="working-time__name">
+                                            {{ substr($workingTime->employee->firstname, 0, 1) . '. ' . $workingTime->employee->lastname }}
+                                        </div>
                                         <div class="working-time__time">{{ Carbon\Carbon::parse($workingTime->start_time)->format('H:i') . ' - ' . Carbon\Carbon::parse($workingTime->end_time)->format('H:i') }}</div>
                                     </section>
                                 @endif
