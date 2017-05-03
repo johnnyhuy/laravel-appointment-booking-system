@@ -25,7 +25,7 @@
                                     $wDate = Carbon\Carbon::parse($workingTime->date);
                                 @endphp
                                 @if ($workingTime->date == $cDate->startOfMonth()->startOfWeek()->addDays($days)->addWeeks($weeks)->toDateString())
-                                    <section class="working-time__block" data-toggle="tooltip" data-placement="top" title="{{ $workingTime->employee->firstname . ' ' . $workingTime->employee->lastname }}">
+                                    <section class="working-time__block" data-toggle="tooltip" data-placement="top" title="{{ $workingTime->employee->firstname }} {{ $workingTime->employee->lastname }} - {{ $workingTime->employee->title }}">
                                         <a title="Edit this working time" href="/admin/roster/{{ $wDate->format('m-Y') . '/' . $workingTime->employee->id . '/' . $workingTime->id }}/edit" class="working-time__edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
                                         <div class="working-time__name">
                                             {{ substr($workingTime->employee->firstname, 0, 1) . '. ' . $workingTime->employee->lastname }}

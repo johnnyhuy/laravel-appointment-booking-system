@@ -73,6 +73,10 @@ footer.dashboard {
 	}
 
 	@include e('day') {
+		@include m-first-child('block') {
+			border-left: none !important;
+		}
+
 		@include m('block') {
 			position: relative;
 			border-left: 1px solid $gray-lighter;
@@ -91,10 +95,6 @@ footer.dashboard {
 		top: 6px;
 		right: 10px;
 		color: $gray-lighter;
-	}
-
-	.calender__day--block:first-child {
-		border-left: none !important;
 	}
 
 	// Working time
@@ -131,11 +131,11 @@ footer.dashboard {
 		}
 
 		@include e('title') {
-			font-size: 12px;
+			font-size: 14px;
 		}
 
 		@include e('time') {
-			font-size: 12px;
+			font-size: 14px;
 		}
 	}
 }
@@ -166,7 +166,6 @@ footer.dashboard {
 	@include e('table-wrapper') {
 		border-radius: $border-radius-large;
 		border: $dash-table-border solid $dash-table-color;
-		overflow: hidden;
 		margin-bottom: 40px;
 	}
 
@@ -240,7 +239,11 @@ footer.dashboard {
 
 /* Small devices (tablets, 768px and up) */
 @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-
+	.dash {
+		@include e('table-wrapper') {
+		    overflow-x: scroll;
+		}
+	}
 }
 
 /* Medium devices (desktops, 992px and up) */
@@ -250,15 +253,9 @@ footer.dashboard {
 
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: $screen-lg-min) {
-	.calendar {
-		@include e('day') {
-			min-width: none;
-		}
-	}
-
-	.working-time {
-		@include e('name') {
-			font-size: 14px;
+	.dash {
+		@include e('table-wrapper') {
+		    overflow-x: hidden;
 		}
 	}
 }
