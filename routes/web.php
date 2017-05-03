@@ -62,7 +62,7 @@ Route::get('/admin/roster', function() {
 });
 Route::get('/admin/roster/{month_year}', 'WorkingTimeController@index');
 Route::get('/admin/roster/{month_year}/{id}', 'WorkingTimeController@show');
-Route::get('/admin/roster/{id}/edit', 'WorkingTimeController@edit');
+Route::get('/admin/roster/{month_year}/{employee_id}/{working_time_id}/edit', 'WorkingTimeController@edit');
 Route::put('/admin/roster/{id}', 'WorkingTimeController@update');
 Route::post('/admin/roster', 'WorkingTimeController@create');
 Route::post('/admin/roster/{month_year}', 'WorkingTimeController@create');

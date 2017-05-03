@@ -35,7 +35,7 @@
 			</select>
 		</div>
 		@if ($bookings)
-			<label>Select which bookings to assign the employee to <span class="request__validate">(only bookings which the employee is available to work are shown)</span></label>
+			<label>Select which bookings to assign the employee to <span class="request__validate">(available bookings the employee is working are shown)</span></label>
 			<div class="table-responsive dash__table-wrapper">
 			    <table class="table table--no-margin dash__table">
 			        <tr>
@@ -54,7 +54,7 @@
 									<input name="bookings[]" id="input_bookings" value="{{ $booking->id }}" type="checkbox"></input>
 								@endif
 							</td>
-							<td class="table--name">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
+							<td class="table--name table--left-solid">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
 							<td class="table--time table--left-dotted">{{ Carbon\Carbon::parse($booking->start_time)->format('H:i') }}</td>
 							<td class="table--time table--left-dotted">{{ Carbon\Carbon::parse($booking->end_time)->format('H:i') }}</td>
 							<td class="table--date table--left-dotted">{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
