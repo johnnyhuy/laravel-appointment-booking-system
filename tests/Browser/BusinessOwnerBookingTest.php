@@ -44,7 +44,7 @@ class BusinessOwnerBookingTest extends DuskTestCase
      *
      * @return void
      */
-    public function testAddBooking()
+    public function testAddBookingSuccessful()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();

@@ -54,7 +54,7 @@
 				@endphp
 				<a title="Redirect back to business information" class="navbar-brand" href="/admin">{{ $business->business_name . $title }}</a>
 			</div>
-			<div id="navbar" class="navbar-collapse collapse">
+			<div id="navbar" class="collapse navbar-collapse">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/admin">Logged in as {{ $business->username }}</a></li>
 					<li><a title="Logout Administrator" href="/logout">Logout</a></li>

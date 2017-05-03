@@ -52,6 +52,25 @@
 	}
 }
 
+/// Block Element first child
+/// @access public
+/// @param {String} $modifier - Modifier's name
+@mixin e-first-child($modifier) {
+	&__#{$modifier}:first-child {
+		@content;
+	}
+}
+
+/// Block Element last child
+/// @access public
+/// @param {String} $modifier - Modifier's name
+@mixin e-last-child($modifier) {
+	&__#{$modifier}:last-child {
+		@content;
+	}
+}
+
+
 /// Block Modifier
 /// @access public
 /// @param {String} $modifier - Modifier's name
@@ -66,6 +85,24 @@
 /// @param {String} $element - Element's name
 @mixin m-hover($element) {
 	&--#{$element}:hover {
+		@content;
+	}
+}
+
+/// Block Modifier first child
+/// @access public
+/// @param {String} $modifier - Modifier's name
+@mixin m-first-child($modifier) {
+	&--#{$modifier}:first-child {
+		@content;
+	}
+}
+
+/// Block Modifier last child
+/// @access public
+/// @param {String} $modifier - Modifier's name
+@mixin m-last-child($modifier) {
+	&--#{$modifier}:last-child {
 		@content;
 	}
 }

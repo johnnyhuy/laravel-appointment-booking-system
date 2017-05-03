@@ -3,7 +3,7 @@
 @section('content')
 <div class="dash__block">
 	<h1 class="dash__header">Add Working Times</h1>
-	<h4 class="dash__description">Add Business Hours for the next month.</h4>
+	<h4 class="dash__description">Add Business Hours for the month.</h4>
 	<form class="request" method="POST" action="/admin/roster/{{ $dateString }}">
 		{{ csrf_field() }}
 		@if ($flash = session('message'))
@@ -29,8 +29,8 @@
 		<div class="form-group">
 			<label for="input_employee">Employee <span class="request__validate">(Title - Full Name - ID)</span></label>
 			<select name="employee_id" id="input_employee" class="form-control request__input" onchange="showRedirect('.loading', '/admin/roster/{{ $dateString }}/' + this.value)">
-				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $employee)
-					<option value="{{ $employee->id }}" {{ old('employee_id') || $employeeID == $employee->id ? 'selected' : null }}>{{ $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname . ' - ' . $employee->id }}</option>
+				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $e)
+					<option value="{{ $e->id }}" {{ old('employee_id') || $employeeID == $e->id ? 'selected' : null }}>{{ $e->title . ' - ' . $e->firstname . ' ' . $e->lastname . ' - ' . $e->id }}</option>
 				@endforeach
 				<option value="" {{ old('employee_id') || $employeeID ? null : 'selected' }}>-- None --</option>
 			</select>
@@ -68,7 +68,7 @@
 </div>
 <hr>
 <div class="dash__block">
-	<h1 class="dash__header dash__header--margin-top">Roster</h1>
+	<h1 class="dash__header dash__header--margin-top">Roster {{ $employee ? ' for ' . $employee->firstname . ' ' . $employee->lastname : null }}</h1>
 	<h4 class="dash__description">Show the roster of a given month.</h4>
 	@include('shared.calender')
 </div>
