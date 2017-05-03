@@ -45,7 +45,7 @@ footer.dashboard {
 	}
 
 	@include e('message') {
-		font-family: $font-secondary;
+		font-family: $font-family-second;
 		color: $gray-dark;
 	}
 
@@ -63,14 +63,12 @@ footer.dashboard {
 
 		@include m('label') {
 			padding-top: 60px !important;
-			font-family: $font-secondary;
+			font-family: $font-family-second;
 			font-weight: bold;
 		}
 	}
 
 	@include e('day') {
-		min-width: 150px;
-
 		@include m('block') {
 			position: relative;
 			border-left: 1px solid $gray-lighter;
@@ -90,6 +88,10 @@ footer.dashboard {
 		color: $gray-lighter;
 	}
 
+	.calender__day--block:first-child {
+		border-left: none !important;
+	}
+
 	// Working time
 
 	.working-time {
@@ -97,25 +99,38 @@ footer.dashboard {
 
 		@include e('block') {
 			margin-right: 25px;
-			padding: 5px 30px 5px 5px;
+			padding: 5px 24px 5px 5px;
 			background-color: $brand-primary;
-			border-radius: $border-radius-large;
+			border-radius: $border-radius-base;
 			color: $white;
 			margin-bottom: $margin-base;
 			position: relative;
 		}
 
 		@include e('name') {
-			font-family: $font-primary;
+			font-family: $font-family-base;
 			font-weight: bold;
-			font-size: 18px;
+			font-size: 12px;
 		}
 
 		@include e('edit') {
 			position: absolute;
-			top: 8px;
-			right: 12px;
+			top: 4px;
+			right: 6px;
+			color: $brand-light;
+			font-size: 12px;
+		}
+
+		@include e-hover('edit') {
 			color: white;
+		}
+
+		@include e('title') {
+			font-size: 12px;
+		}
+
+		@include e('time') {
+			font-size: 12px;
 		}
 	}
 }
@@ -126,7 +141,7 @@ footer.dashboard {
 	padding: 20px;
 
 	@include e('header') {
-		font-family: $font-secondary;
+		font-family: $font-family-second;
 		font-weight: 600;
 		margin-top: 0;
 		margin-bottom: $margin-base;
@@ -154,7 +169,7 @@ footer.dashboard {
 		th {
 			border-top: none !important;
 			border-bottom: $dash-table-border solid $dash-table-color !important;
-			font-family: $font-primary;
+			font-family: $font-family-base;
 			font-size: 16px;
 			background-color: $gray-lightest;
 		}
@@ -170,7 +185,7 @@ footer.dashboard {
 
 .navbar-brand {
 	color: $white;
-	font-family: $font-primary;
+	font-family: $font-family-base;
 	font-weight: 600;
 	font-size: 24px;
 }
@@ -204,7 +219,7 @@ footer.dashboard {
 
 .nav-sidebar a {
 	color: $gray-dark;
-	font-family: $font-secondary;
+	font-family: $font-family-second;
 	font-size: 18px;
 }
 
@@ -216,4 +231,23 @@ footer.dashboard {
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
 	background-color: $gray-dark;
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max)  {
+
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: $screen-lg-min) {
+	.calendar {
+		@include e('day') {
+			min-width: none;
+		}
+	}
 }

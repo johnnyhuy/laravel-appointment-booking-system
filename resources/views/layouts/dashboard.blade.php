@@ -9,6 +9,7 @@
 	<link rel="icon" href="../../favicon.ico">
 	<title>{{ $business->business_name }}: Dashboard</title>
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 </head>
 
 <body class="dashboard">
@@ -85,7 +86,6 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

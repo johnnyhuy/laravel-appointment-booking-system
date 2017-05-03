@@ -32,7 +32,7 @@ footer {
 }
 
 .btn {
-	font-family: $font-secondary;
+	font-family: $font-family-second;
 
 	@include m('margin-top') {
 		margin-top: 20px;
@@ -57,7 +57,7 @@ footer {
 .table {
 	th {
 		border-bottom: 1px solid $border-color;
-		font-family: $font-secondary;
+		font-family: $font-family-second;
 		font-size: 18px;
 		text-align: center;
 		color: $gray-dark;
@@ -191,7 +191,7 @@ footer {
 	text-align: center;
 
 	@include e('title') {
-		font-family: $font-secondary;
+		font-family: $font-family-second;
 	}
 
 	@include e-hover('title') {
@@ -217,12 +217,12 @@ footer {
 /* No media query since this is the default in Bootstrap */
 
 /* Small devices (tablets, 768px and up) */
-@media (min-width: $screen-sm-min) {
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
 
 }
 
 /* Medium devices (desktops, 992px and up) */
-@media (min-width: $screen-md-min) {
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max)  {
 	.container {
 		width: 1100px;
 	}
