@@ -30,7 +30,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
         $this->browse(function ($browser) use ($bo, $nextTwoMonths) {
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->click('#input_month_year')
                 ->click('option[value="' . $nextTwoMonths->format('m-Y') . '"]')
@@ -52,7 +52,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
         $this->browse(function ($browser) use ($bo) {
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->assertPathIs('/admin/roster/' . Carbon::now('Australia/Melbourne')->format('m-Y'))
                 ->assertSee('Roster')
@@ -87,7 +87,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
         $this->browse(function ($browser) use ($bo, $employee, $workingTime, $date) {
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
 
                 // Select this month tomorrow
@@ -115,7 +115,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
         $this->browse(function ($browser) use ($bo, $employee) {
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
 
                 // Look for employee selection string
@@ -142,7 +142,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
 
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
 
                 // Select employee
@@ -187,7 +187,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
         $this->browse(function ($browser) use ($bo, $employee, $date) {
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
 
                 // Select employee
@@ -206,7 +206,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 // Select employee
                 ->select('employee_id', (string) $employee->id)
 
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->keys('#input_start_time', '10:00')
                 ->keys('#input_end_time', '17:00')
 
@@ -240,7 +240,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
 
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
 
                 // Select employee
@@ -250,7 +250,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 ->select('month_year', $firstDate->format('m-Y'))
                 ->select('day', $firstDate->day)
 
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
                 ->keys('#input_start_time', '08:00')
                 ->keys('#input_end_time', '17:00')
@@ -264,7 +264,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 ->select('month_year', $secondDate->format('m-Y'))
                 ->select('day', $secondDate->day)
 
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->keys('#input_start_time', '10:00')
                 ->keys('#input_end_time', '17:00')
 
@@ -294,7 +294,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
 
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
 
                 // Select employee
@@ -352,7 +352,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
 
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
 
                 // Select employee
@@ -393,7 +393,7 @@ class BusinessOwnerRosterTest extends DuskTestCase
 
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
-                // Go to summary page (default directory of /admin)
+                // Go to roster page (default directory of /admin)
                 ->visit('/admin/roster')
 
                 // Select employee
@@ -411,6 +411,45 @@ class BusinessOwnerRosterTest extends DuskTestCase
                 ->assertDontSee('New working time has been added.')
                 ->assertSee('The start time must be a date before end time.')
                 ->assertSee('The end time must be a date after start time.');
+        });
+    }
+
+    /**
+     * Test start time and end time are the same fails
+     *
+     * @return void
+     */
+    public function testEditWorkingTime()
+    {
+        // Creates business owner
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Set date
+        $date = Carbon::now('Australia/Melbourne')->startOfMonth();
+
+        // Creates an employee
+        $employee = factory(Employee::class)->create();
+
+        // Create an existing working time
+        $workingTime = factory(WorkingTime::class)->create([
+            'employee_id' => (string) $employee->id,
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+            'date' => $date->toDateString()
+        ]);
+
+        $this->browse(function ($browser) use ($bo, $employee) {
+            // Login as Business Owner
+            $browser->loginAs($bo, 'web_admin')
+                // Go to roster page (default directory of /admin)
+                ->visit('/admin/roster')
+
+                // Click the edit button on the only working time
+                ->click('.glyphicon-edit')
+
+                ->press('Edit Working Time')
+
+                ->assertSee('Edited working time has been successful.');
         });
     }
 }

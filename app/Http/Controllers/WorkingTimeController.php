@@ -184,10 +184,10 @@ class WorkingTimeController extends Controller
     /**
      * View edit booking page
      */
-    public function edit($id)
+    public function edit($monthYear, $employeeID, $workingTimeID)
     {
         // Find working time by ID
-        $workingTime = WorkingTime::find($id);
+        $workingTime = WorkingTime::find($workingTimeID);
 
         $business = BusinessOwner::first();
 
