@@ -45,7 +45,7 @@
 						<th class="table--time">End</th>
 						<th class="table--date">Date</th>
 						<th class="table--time">Duration</th>
-						<th class="table--right-solid">Employee Assigned</th>
+						<th class="table--name">Employee Assigned</th>
 					</tr>
 					@foreach ($bookings as $booking)
 						<tr>

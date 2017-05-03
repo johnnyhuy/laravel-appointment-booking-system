@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'Hairdresser'
         ]);
 
-        // Create a working times
+        // Create a working timestamps
         for ($i = 0; $i < count($employees); $i++) {
             WorkingTime::create([
                 'employee_id' => $employees[0]->id,
