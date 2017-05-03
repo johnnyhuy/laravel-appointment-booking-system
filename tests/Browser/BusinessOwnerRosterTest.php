@@ -4,10 +4,11 @@ namespace Tests\Browser;
 
 use Tests\DuskTestCase;
 
+use App\Availability;
+use App\Booking;
 use App\BusinessOwner;
 use App\Employee;
-use App\Booking;
-use App\Availability;
+use App\WorkingTime;
 
 use Carbon\Carbon;
 
@@ -60,14 +61,54 @@ class BusinessOwnerRosterTest extends DuskTestCase
     }
 
     /**
+     * Select an employee and show a working time on the calendar
+     *
+     * @return void
+     */
+    public function testSelectEmployeeAndSeeWorkingTime()
+    {
+        // Creates business owner
+        $bo = factory(BusinessOwner::class)->create();
+
+        // Creates an employee
+        $employee = factory(Employee::class)->create();
+
+        // Set date
+        $date = Carbon::now('Australia/Melbourne');
+
+        // Create an existing working time
+        $workingTime = factory(WorkingTime::class)->create([
+            'employee_id' => (string) $employee->id,
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+            'date' => $date->toDateString()
+        ]);
+
+        $this->browse(function ($browser) use ($bo, $employee, $workingTime, $date) {
+            // Login as Business Owner
+            $browser->loginAs($bo, 'web_admin')
+                // Go to summary page (default directory of /admin)
+                ->visit('/admin/roster')
+
+                // Select this month tomorrow
+                ->select('month_year', $date->format('m-Y'))
+
+                ->press('Add Working Time')
+
+                ->assertSee($workingTime->start_time . ' - ' . $workingTime->end_time);
+        });
+    }
+
+    /**
      * Test whether an employee in the system appear in the drop down box
      *
      * @return void
      */
-    public function testEmployeeExistsInDropDown()
+    public function testEmployeeExistsInDropdown()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
+
         // Creates an employee
         $employee = factory(Employee::class)->create();
 
@@ -76,8 +117,9 @@ class BusinessOwnerRosterTest extends DuskTestCase
             $browser->loginAs($bo, 'web_admin')
                 // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
+
                 // Look for employee selection string
-                ->assertSee($employee->id . ' - ' . $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname);
+                ->assertSee($employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname . ' - ' . (string) $employee->id);
         });
     }
 
@@ -86,26 +128,43 @@ class BusinessOwnerRosterTest extends DuskTestCase
      *
      * @return void
      */
-    public function testAddWorkingTime()
+    public function testAddWorkingTimeSuccussful()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
+
         // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
+            // Set date to tomorrow
+            $date = Carbon::now('Australia/Melbourne')->addDay();
+
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
                 // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
+
+                // Select employee
+                ->select('employee_id', (string) $employee->id)
+
+                // Select this month tomorrow
+                ->select('month_year', $date->format('m-Y'))
+                ->select('day', $date->day)
+
+                // Set working times
                 ->keys('#input_start_time', '08:00')
                 ->keys('#input_end_time', '17:00')
-                ->keys('#input_date', Carbon::now('Australia/Melbourne')->format('d-m-Y'))
+
                 ->press('Add Working Time')
 
                 // Check if working time is added
                 ->assertSee('New working time has been added.')
-                ->assertSee('08:00 AM - 05:00 PM');
+
+                // Select month year in case date goes to next month
+                ->select('month_year', $date->format('m-Y'))
+
+                ->assertSee('08:00 - 17:00');
         });
     }
 
@@ -114,16 +173,15 @@ class BusinessOwnerRosterTest extends DuskTestCase
      *
      * @return void
      */
-    public function testAddWorkingTimesOnSameDaya()
+    public function testAddWorkingTimesOnSameDayShowError()
     {
-
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
 
         // Creates an employee
         $employee = factory(Employee::class)->create();
 
-        // Set time
+        // Set date
         $date = Carbon::now('Australia/Melbourne')->startOfMonth();
 
         $this->browse(function ($browser) use ($bo, $employee, $date) {
@@ -131,19 +189,31 @@ class BusinessOwnerRosterTest extends DuskTestCase
             $browser->loginAs($bo, 'web_admin')
                 // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
+
+                // Select employee
+                ->select('employee_id', (string) $employee->id)
+
+                // Type in times
                 ->keys('#input_start_time', '08:00')
                 ->keys('#input_end_time', '09:00')
-                ->keys('#input_date', $date->format('d-m-Y'))
+
+                // Select date
+                ->select('month_year', $date->format('m-Y'))
+                ->select('day', $date->day)
+
                 ->press('Add Working Time')
 
-                // Check if working time is added
-                ->assertSee('New working time has been added.')
-                ->assertSee('08:00 AM - 09:00 AM')
+                // Select employee
+                ->select('employee_id', (string) $employee->id)
 
                 // Go to summary page (default directory of /admin)
                 ->keys('#input_start_time', '10:00')
                 ->keys('#input_end_time', '17:00')
-                ->keys('#input_date', $date->format('d-m-Y'))
+
+                // Select date
+                ->select('month_year', $date->format('m-Y'))
+                ->select('day', $date->day)
+
                 ->press('Add Working Time')
 
                 ->assertSee('The employee can only have one working time per day.')
@@ -160,31 +230,47 @@ class BusinessOwnerRosterTest extends DuskTestCase
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
+
         // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
+            $firstDate = Carbon::now('Australia/Melbourne')->addDay();
+            $secondDate = Carbon::now('Australia/Melbourne')->addDay()->addWeek();
+
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
                 // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
+
+                // Select employee
+                ->select('employee_id', (string) $employee->id)
+
+                // Select this month and day
+                ->select('month_year', $firstDate->format('m-Y'))
+                ->select('day', $firstDate->day)
+
+                // Go to summary page (default directory of /admin)
+                ->visit('/admin/roster')
                 ->keys('#input_start_time', '08:00')
                 ->keys('#input_end_time', '17:00')
-                ->keys('#input_date', Carbon::now('Australia/Melbourne')->startOfMonth()->format('d-m-Y'))
+
                 ->press('Add Working Time')
 
-                ->assertSee('New working time has been added.')
-                ->assertSee('08:00 AM - 05:00 PM')
+                // Select employee
+                ->select('employee_id', (string) $employee->id)
+
+                // Select this month and day
+                ->select('month_year', $secondDate->format('m-Y'))
+                ->select('day', $secondDate->day)
 
                 // Go to summary page (default directory of /admin)
                 ->keys('#input_start_time', '10:00')
                 ->keys('#input_end_time', '17:00')
-                ->keys('#input_date', Carbon::now('Australia/Melbourne')->startOfMonth()->addWeek()->format('d-m-Y'))
+
                 ->press('Add Working Time')
 
-                ->assertSee('New working time has been added.')
-                ->assertSee('08:00 AM - 05:00 PM')
-                ->assertSee('10:00 AM - 05:00 PM');
+                ->assertSee('New working time has been added.');
         });
     }
 
@@ -197,31 +283,51 @@ class BusinessOwnerRosterTest extends DuskTestCase
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
+
         // Creates 2 employees
         $employee1 = factory(Employee::class)->create();
         $employee2 = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee1, $employee2) {
+            // Set the date to tomorrow
+            $date = Carbon::now('Australia/Melbourne')->addDay();
+
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
                 // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
-                ->select('employee_id', (string)$employee1->id)
+
+                // Select employee
+                ->select('employee_id', (string) $employee1->id)
+
+                // Select this month and day
+                ->select('month_year', $date->format('m-Y'))
+                ->select('day', $date->day)
+
+                // Set working times
                 ->keys('#input_start_time', '08:00')
                 ->keys('#input_end_time', '17:00')
-                ->keys('#input_date', Carbon::now('Australia/Melbourne')->format('d-m-Y'))
+
+                ->press('Add Working Time')
+
+                // Select employee
+                ->select('employee_id', (string) $employee2->id)
+
+                // Select this month and day
+                ->select('month_year', $date->format('m-Y'))
+                ->select('day', $date->day)
+
+                // Set working times
+                ->keys('#input_start_time', '08:00')
+                ->keys('#input_end_time', '17:00')
+
                 ->press('Add Working Time')
 
                 ->assertSee('New working time has been added.')
-                ->assertSee($employee1->firstname . ' ' . $employee1->lastname)
 
-                ->select('employee_id', (string)$employee2->id)
-                ->keys('#input_start_time', '08:00')
-                ->keys('#input_end_time', '17:00')
-                ->keys('#input_date', Carbon::now('Australia/Melbourne')->format('d-m-Y'))
-                ->press('Add Working Time')
+                // Select month year in case date goes to next month
+                ->select('month_year', $date->format('m-Y'))
 
-                ->assertSee('New working time has been added.')
                 ->assertSee($employee1->firstname . ' ' . $employee1->lastname)
                 ->assertSee($employee2->firstname . ' ' . $employee2->lastname);
         });
@@ -236,18 +342,30 @@ class BusinessOwnerRosterTest extends DuskTestCase
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
+
         // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
+            // Set the date to tomorrow
+            $date = Carbon::now('Australia/Melbourne')->addDay();
+
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
                 // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
-                ->select('employee_id', (string)$employee->id)
+
+                // Select employee
+                ->select('employee_id', (string)(string) $employee->id)
+
+                // Select this month and day
+                ->select('month_year', $date->format('m-Y'))
+                ->select('day', $date->day)
+
+                // Set working times
                 ->keys('#input_start_time', '09:00')
                 ->keys('#input_end_time', '07:00')
-                ->keys('#input_date', Carbon::now('Australia/Melbourne')->format('d-m-Y'))
+
                 ->press('Add Working Time')
 
                 ->assertDontSee('New working time has been added.')
@@ -265,18 +383,29 @@ class BusinessOwnerRosterTest extends DuskTestCase
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();
+
         // Creates an employee
         $employee = factory(Employee::class)->create();
 
         $this->browse(function ($browser) use ($bo, $employee) {
+            // Set the date to tomorrow
+            $date = Carbon::now('Australia/Melbourne')->addDay();
+
             // Login as Business Owner
             $browser->loginAs($bo, 'web_admin')
                 // Go to summary page (default directory of /admin)
                 ->visit('/admin/roster')
-                ->select('employee_id', (string)$employee->id)
+
+                // Select employee
+                ->select('employee_id', (string) $employee->id)
+
+                // Select this month and day
+                ->select('month_year', $date->format('m-Y'))
+                ->select('day', $date->day)
+
                 ->keys('#input_start_time', '09:00')
                 ->keys('#input_end_time', '09:00')
-                ->keys('#input_date', Carbon::now('Australia/Melbourne')->format('d-m-Y'))
+
                 ->press('Add Working Time')
 
                 ->assertDontSee('New working time has been added.')

@@ -39,6 +39,47 @@ footer {
 	}
 }
 
+.btn-lg, .btn-group-lg > .btn {
+	border-radius: $border-radius-base;
+}
+
+.loading {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+
+	@include e('message') {
+		color: $gray-dark;
+		text-align: center;
+		position: absolute;
+		z-index: 200;
+		opacity: 1.0;
+		left: 0;
+		right: 0;
+		margin: 50px auto;
+		font-family: $font-family-second;
+		font-weight: 800;
+	}
+
+	@include e('icon') {
+		font-size: 70px;
+	}
+
+	@include e('bg') {
+		background-color: $body-bg;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 100;
+		opacity: 0.6;
+	}
+}
+
 .block {
 	background: white;
 	padding: $padding-base $padding-base 0 $padding-base;
@@ -55,18 +96,18 @@ footer {
 }
 
 .table {
-	th {
-		border-bottom: 1px solid $border-color;
-		font-family: $font-family-second;
-		font-size: 18px;
-		text-align: center;
-		color: $gray-dark;
-	}
+		th {
+			border-bottom: 1px solid $border-color;
+			font-family: $font-family-second;
+			font-size: 18px;
+			text-align: center;
+			color: $gray-dark;
+		}
 
-	td {
-		text-align: center;
-		font-size: 16px;
-	}
+		td {
+			text-align: center;
+			font-size: 16px;
+		}
 
 	// General modifiers
 
@@ -151,6 +192,7 @@ footer {
 
 .request {
 	margin-bottom: $margin-large;
+	position: relative;
 
 	@include e('input') {
 		margin-bottom: 0;
@@ -222,7 +264,7 @@ footer {
 }
 
 /* Medium devices (desktops, 992px and up) */
-@media (min-width: $screen-md-min) and (max-width: $screen-md-max)  {
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
 	.container {
 		width: 1100px;
 	}

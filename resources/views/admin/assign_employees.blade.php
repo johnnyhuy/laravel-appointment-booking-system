@@ -54,7 +54,7 @@
 									<input name="bookings[]" id="input_bookings" value="{{ $booking->id }}" type="checkbox"></input>
 								@endif
 							</td>
-							<td class="table--left-solid">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
+							<td class="table--name">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
 							<td class="table--time table--left-dotted">{{ Carbon\Carbon::parse($booking->start_time)->format('H:i') }}</td>
 							<td class="table--time table--left-dotted">{{ Carbon\Carbon::parse($booking->end_time)->format('H:i') }}</td>
 							<td class="table--date table--left-dotted">{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
@@ -97,7 +97,7 @@
 				</tr>
 				@foreach ($unassignBookings as $booking)
 					<tr>
-						<td class="table--left-solid">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
+						<td class="table--name">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
 						<td class="table--time table--left-dotted">{{ $booking->activity->name }}</td>
 						<td class="table--time table--left-dotted">{{ $booking->start_time }}</td>
 						<td class="table--time table--left-dotted">{{ $booking->end_time }}</td>

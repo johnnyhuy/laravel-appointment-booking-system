@@ -32,6 +32,55 @@ class WorkingTimeController extends Controller
         ]);
     }
 
+    /**
+     * Roster index
+     *
+     * @param  String $monthYear    month year string from URL (mm-yyyy)
+     * @param  String $employeeID   employee ID
+     * @return view
+     */
+    public function show($monthYear, $employeeID)
+    {
+        // List of months
+        // 6 months ahead and behind
+        $monthList = [];
+
+        // Get months previous
+        for ($months = 6; $months > 0; $months--) {
+            $monthList[] = WorkingTime::getDate($monthYear)->subMonths($months);
+        }
+
+        // Get months now and ahead
+        for ($months = 0; $months < 6; $months++) {
+            $monthList[] = WorkingTime::getDate($monthYear)->addMonths($months);
+        }
+
+        // Set date string
+        $date = WorkingTime::getDate($monthYear);
+
+        // Find employee
+        $employee = Employee::find($employeeID);
+
+        // Find working time by employee ID
+        $workingTimes = WorkingTime::where('employee_id', $employeeID)->get();
+
+        return view('admin.roster', [
+            'business'      => BusinessOwner::first(),
+            'employeeID'    => $employeeID,
+            'employee'      => $employee,
+            'roster'        => $workingTimes,
+            'date'          => $date,
+            'dateString'    => $date->format('m-Y'),
+            'months'        => $monthList
+        ]);
+    }
+
+    /**
+     * Roster index
+     *
+     * @param  String $monthYear    month year string from URL (mm-yyyy)
+     * @return view
+     */
     public function index($monthYear)
     {
         // List of months
@@ -48,11 +97,16 @@ class WorkingTimeController extends Controller
             $monthList[] = WorkingTime::getDate($monthYear)->addMonths($months);
         }
 
+        $date = WorkingTime::getDate($monthYear);
+
         return view('admin.roster', [
-            'business' => BusinessOwner::first(),
-            'roster' => WorkingTime::all(),
-            'date' => WorkingTime::getDate($monthYear),
-            'months' => $monthList,
+            'business'      => BusinessOwner::first(),
+            'roster'        => WorkingTime::all(),
+            'employeeID'    => null,
+            'employee'      => null,
+            'date'          => $date,
+            'dateString'    => $date->format('m-Y'),
+            'months'        => $monthList
         ]);
     }
 
@@ -67,6 +121,15 @@ class WorkingTimeController extends Controller
     // Create a new working time
 	public function create(Request $request, $monthYear = null)
 	{
+        if ($request->month_year) {
+            $temp = explode('-', $request->month_year);
+            $date = Carbon::createFromDate($temp[1], $temp[0], $request->day)->toDateString();
+            $request->merge(['date' => $date]);
+        }
+        else {
+            $date = $request->date;
+        }
+
         Log::info("An attempt was made to create a new working time", $request->all());
 
 		// Custom error messages
@@ -105,7 +168,7 @@ class WorkingTimeController extends Controller
             'employee_id' => $request->employee_id,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
-            'date' => $request->date,
+            'date' => $date,
         ]);
 
         Log::notice("A new working time was created for employee with id " . $workingTime->employee_id . " for times: " .
