@@ -55,7 +55,7 @@ class DateTimeHelperTest extends TestCase
         $this->assertEquals('01/01/2017', toDate('2017-01-01', true));
 
         // Use dashes
-        $this->assertEquals('01/01/2017', toDate('2017-01-01', false));
+        $this->assertEquals('01-01-2017', toDate('2017-01-01', false));
     }
 
     /**

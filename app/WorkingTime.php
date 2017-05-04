@@ -32,7 +32,7 @@ class WorkingTime extends Model
     	return WorkingTime::whereBetween('date', [$startDate, $endDate])
     		// Get eloquent model
     		->get()
-    		// Sort by start time of working time
+            ->sortBy('end_time')
     		->sortBy('start_time');
     }
 

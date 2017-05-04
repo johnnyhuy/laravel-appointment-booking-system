@@ -354,10 +354,10 @@ class WorkingTimeTest extends TestCase
     public function testGetRosterIsSortedByStartTime()
     {
         // Create a working time at the start of the month
-        // and add two hours
+        // and add two minutes
         $laterWorkingTime = factory(WorkingTime::class)->create([
             'start_time' => Carbon::now('Australia/Melbourne')
-                ->addHours(2)
+                ->addMinutes(2)
                 ->toTimeString(),
             'date' => Carbon::now('Australia/Melbourne')
                 ->addMonth()
@@ -366,10 +366,10 @@ class WorkingTimeTest extends TestCase
         ]);
 
         // Create a working time at the start of the month
-        // and add one hour
+        // and add one minute
         $earlierWorkingTime = factory(WorkingTime::class)->create([
             'start_time' => Carbon::now('Australia/Melbourne')
-                ->addHour()
+                ->addMinute()
                 ->toTimeString(),
             'date' => Carbon::now('Australia/Melbourne')
                 ->addMonth()
