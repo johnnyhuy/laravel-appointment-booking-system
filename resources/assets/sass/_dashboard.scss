@@ -167,6 +167,10 @@ footer.dashboard {
 		border-radius: $border-radius-large;
 		border: $dash-table-border solid $dash-table-color;
 		margin-bottom: 40px;
+
+		@include m('margin-top') {
+			margin-top: 20px;
+		}
 	}
 
 	@include e('table') {

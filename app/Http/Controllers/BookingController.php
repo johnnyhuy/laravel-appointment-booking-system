@@ -39,6 +39,54 @@ class BookingController extends Controller
         ]);
     }
 
+    /**
+     * Show booking by employee ID
+     *
+     * @param  String $monthYear    month year string from URL (mm-yyyy)
+     * @param  String $employeeID   employee ID
+     * @return view
+     */
+    public function show($monthYear, $employeeID = null)
+    {
+        // List of months
+        $monthList = getMonthList($monthYear);
+
+        // Set date string
+        $date = WorkingTime::getDate($monthYear);
+
+        // Get bookings of the month
+        $bookings = Booking::where('date', '<=', $date->endOfMonth()->toDateString())
+            ->where('date', '>=', $date->startOfMonth()->toDateString())
+            ->get();
+
+        // Find employee
+        $employee = Employee::findOrFail($employeeID);
+
+        if ($employeeID) {
+            // Find working time by employee ID
+            $workingTimes = WorkingTime::where('employee_id', $employeeID);
+        }
+        else {
+            // Else get all working times
+            $workingTimes = WorkingTime::all();
+        }
+
+        $workingTimes = $workingTimes->where('date', '<=', $date->endOfMonth()->toDateString())
+            ->where('date', '>=', $date->startOfMonth()->toDateString())
+            ->get();
+
+        return view('admin.booking', [
+            'bookings'      => $bookings,
+            'business'      => BusinessOwner::first(),
+            'employeeID'    => $employeeID,
+            'employee'      => $employee,
+            'roster'        => $workingTimes,
+            'date'          => $date,
+            'dateString'    => $date->format('m-Y'),
+            'months'        => $monthList
+        ]);
+    }
+
     public function indexAdmin($monthYear)
     {
         // List of months
@@ -64,11 +112,14 @@ class BookingController extends Controller
             ->get();
 
         return view('admin.booking', [
-            'business' => BusinessOwner::first(),
-            'bookings' => $bookings,
-            'roster' => WorkingTime::all(),
-            'date' => $date,
-            'months' => $monthList,
+            'business'      => BusinessOwner::first(),
+            'bookings'      => $bookings,
+            'employeeID'    => null,
+            'employee'      => null,
+            'date'          => $date,
+            'dateString'    => $date->format('m-Y'),
+            'months'        => $monthList,
+            'roster'        => WorkingTime::all(),
         ]);
     }
 

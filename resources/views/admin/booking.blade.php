@@ -33,20 +33,21 @@
 	@endif
 	@include('shared.error_message')
 	<form class="request" method="POST" action="/admin/booking">
+		@include('shared.loading_message')
 		{{ csrf_field() }}
 		<div class="form-group">
 			<label for="input_employee">Employee <span class="request__validate">(Title - Full Name - ID)</span></label>
-			<select name="employee_id" id="input_employee" class="form-control request__input">
-				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $employee)
-					<option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : null }}>{{ $employee->title . ' - ' . $employee->firstname . ' ' . $employee->lastname . ' - ' . $employee->id }}</option>
+			<select name="employee_id" id="input_employee" class="form-control request__input" onchange="showRedirect('.loading', '/admin/booking/{{ $dateString }}/' + this.value)">
+				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $e)
+					<option value="{{ $e->id }}" {{ old('employee_id') || $employeeID == $e->id ? 'selected' : null }}>{{ $e->title . ' - ' . $e->firstname . ' ' . $e->lastname . ' - ' . $e->id }}</option>
 				@endforeach
-				<option value="none" {{ old('employee_id') ? null : 'selected' }}>-- None --</option>
+				<option value="none" {{ old('employee_id') || $employeeID ? null : 'selected' }}>-- None --</option>
 			</select>
 		</div>
 		<div class="form-group request__flex-container">
 			<div class="request__flex request__flex--left">
 				<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
-			    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/booking/' + this.value">
+			    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="showRedirect('.loading', '/admin/booking/' + this.value + '{{ $employeeID ? '/' . $employeeID : null }}')">
 			        @foreach ($months as $month)
 			            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
 			        @endforeach
@@ -97,7 +98,7 @@
 	    </select>
     </div>
     @if ($bookings->count())
-		<div class="table-responsive dash__table-wrapper">
+		<div class="table-responsive dash__table-wrapper dash__table-wrapper--margin-top">
 		    <table class="table table--no-margin dash__table">
 		        <tr>
 					<th class="table--id table--right-solid">ID</th>
@@ -140,7 +141,7 @@
 </div>
 <hr>
 <div class="dash__block" id="roster">
-	<h1 class="dash__header dash__header--margin-top">Roster</h1>
+	<h1 class="dash__header dash__header--margin-top">Roster {{ $employee ? ' for ' . $employee->firstname . ' ' . $employee->lastname : null }}</h1>
 	<h4 class="dash__description">Show the roster of a given month.</h4>
 	<div class="form-group">
 			<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>

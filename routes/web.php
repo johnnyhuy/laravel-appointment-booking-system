@@ -59,7 +59,7 @@ Route::post('/admin/employees/assign', 'BookingController@assignEmployee');
 // Roster
 Route::get('/admin/roster', function() { return redirect('/admin/roster/' . toMonthYear(getDateNow())); });
 Route::get('/admin/roster/{month_year}', 'WorkingTimeController@index');
-Route::get('/admin/roster/{month_year}/{id}', 'WorkingTimeController@show');
+Route::get('/admin/roster/{month_year}/{employee_id}', 'WorkingTimeController@show');
 Route::get('/admin/roster/{month_year}/{employee_id}/{working_time_id}/edit', 'WorkingTimeController@edit');
 Route::put('/admin/roster/{id}', 'WorkingTimeController@update');
 Route::post('/admin/roster', 'WorkingTimeController@create');
@@ -68,6 +68,7 @@ Route::post('/admin/roster/{month_year}', 'WorkingTimeController@create');
 // Booking
 Route::get('/admin/booking', function() { return redirect('/admin/booking/' . toMonthYear(getDateNow())); });
 Route::get('/admin/booking/{month_year}', 'BookingController@indexAdmin');
+Route::get('/admin/booking/{month_year}/{employee_id}', 'BookingController@show');
 Route::post('/admin/booking/{month_year}', 'BookingController@storeAdminBooking');
 Route::post('/admin/booking', 'BookingController@storeAdminBooking');
 

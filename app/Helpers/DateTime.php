@@ -73,13 +73,13 @@ function toTime($stringDateTime, $hourMinute = null)
  * @param  string $stringDateTime
  * @return string
  */
-function toDate($stringDateTime, $brackets = null)
+function toDate($stringDateTime, $slash = null)
 {
     $time = Carbon::parse($stringDateTime);
 
     // If the last param is set
-    if (isset($brackets)) {
-        if ($brackets) {
+    if (isset($slash)) {
+        if ($slash) {
             // Short 12 hour format
             return $time->format('d/m/Y');
         }
@@ -120,4 +120,50 @@ function getDateNow()
 function getDateTimeNow()
 {
     return Carbon::now('AEST')->toDateTimeString();
+}
+
+/**
+ * Convert month year to carbon
+ *
+ * @param  string $string
+ * @return Carbon
+ */
+function monthYearToDate($string)
+{
+    // Get the month and year from url
+    $date = explode('-', $string);
+    $month = $date[0];
+    $year = $date[1];
+
+    // If input is invalid
+    if (!is_numeric($month) or !is_numeric($year)) {
+        throw new NotFoundHttpException;
+    }
+
+    return Carbon::createFromDate($year, $month);
+}
+
+/**
+ * Return a list of Carbon dates
+ *
+ * @param  string $string
+ * @return Carbon[]
+ */
+function getMonthList($string)
+{
+    // List of months
+    // 6 months ahead and behind
+    $monthList = [];
+
+    // Get months previous
+    for ($months = 6; $months > 0; $months--) {
+        $monthList[] = monthYearToDate($string)->subMonths($months);
+    }
+
+    // Get months now and ahead
+    for ($months = 0; $months < 6; $months++) {
+        $monthList[] = monthYearToDate($string)->addMonths($months);
+    }
+
+    return $monthList;
 }

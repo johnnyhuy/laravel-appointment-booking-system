@@ -111,6 +111,10 @@ footer {
 
 	// General modifiers
 
+	@include m('margin-top') {
+		margin-top: $margin-base;
+	}
+
 	@include m('no-margin') {
 		margin: 0 !important;
 	}
