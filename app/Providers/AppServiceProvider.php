@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
             $activity = Activity::find($request['activity_id']);
 
             // Set time
-            $pStartTime = $request['start_time'];
+            $pStartTime = toTime($request['start_time']);
             $pEndTime = Booking::calcEndTime($activity->duration, $pStartTime);
 
             // Get bookings of the date
@@ -82,7 +82,7 @@ class AppServiceProvider extends ServiceProvider
             $activity = Activity::find($request['activity_id']);
 
             // Set time
-            $pStartTime = $request['start_time'];
+            $pStartTime = toTime($request['start_time']);
             $pEndTime = Booking::calcEndTime($activity->duration, $pStartTime);
 
             // Get bookings of the date

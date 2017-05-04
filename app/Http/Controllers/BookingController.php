@@ -137,7 +137,7 @@ class BookingController extends Controller
             'customer_id' => $request->customer_id,
             'employee_id' => $request->employee_id,
             'activity_id' => $request->activity_id,
-            'start_time' => $request->start_time,
+            'start_time' => toTime($request->start_time),
             'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time),
             'date' => $request->date,
         ]);
@@ -194,7 +194,7 @@ class BookingController extends Controller
         $booking = Booking::create([
             'customer_id' => $request->customer_id,
             'activity_id' => $request->activity_id,
-            'start_time' => $request->start_time,
+            'start_time' => toTime($request->start_time),
             'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time),
             'date' => $request->date,
         ]);

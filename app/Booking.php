@@ -29,7 +29,7 @@ class Booking extends Model
 	    return Carbon::createFromTime($startTime->hour, $startTime->minute)
 	    	->addHours($duration->hour)
 	    	->addMinutes($duration->minute)
-	    	->format('H:i');
+	    	->toTimeString();
 	}
 
 	/**

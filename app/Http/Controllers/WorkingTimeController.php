@@ -127,7 +127,7 @@ class WorkingTimeController extends Controller
             $request->merge(['date' => $date]);
         }
         else {
-            $date = $request->date;
+            $date = toDate($request->date);
         }
 
         Log::info("An attempt was made to create a new working time", $request->all());
@@ -136,8 +136,9 @@ class WorkingTimeController extends Controller
 		$messages = [
 			'employee_id.exists' => 'The :attribute does not exist.',
 			'start_time.date_format' => 'The :attribute field must be in the correct time format.',
-			'end_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'date.unique' => 'The employee can only have one working time per day.',
+			'date.date_format' => 'The :attribute field must be in the correct date format.',
 		];
 
 		// Validation rules
@@ -152,7 +153,7 @@ class WorkingTimeController extends Controller
             'end_time' => 'required|after:start_time|date_format:H:i',
 
         	// Date must be unique where employee ID is unique
-            'date' => 'required|unique:working_times,date,NULL,id,employee_id,' . $request->employee_id,
+            'date' => 'required|date_format:Y-m-d|unique:working_times,date,NULL,id,employee_id,' . $request->employee_id,
         ];
 
         // Attributes replace the field name with a more readable name
@@ -166,8 +167,8 @@ class WorkingTimeController extends Controller
         // Create a working time
         $workingTime = WorkingTime::create([
             'employee_id' => $request->employee_id,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'start_time' => toTime($request->start_time),
+            'end_time' => toTime($request->end_time),
             'date' => $date,
         ]);
 
@@ -204,6 +205,7 @@ class WorkingTimeController extends Controller
         $messages = [
             'employee_id.exists' => 'The :attribute does not exist.',
             'date.unique' => 'The employee can only have one working time per day.',
+            'date.date_format' => 'The :attribute field must be in the correct date format.',
         ];
 
         // Validation rules
@@ -218,7 +220,7 @@ class WorkingTimeController extends Controller
             'end_time' => 'required|after:start_time',
 
             // Date must be unique where employee ID is unique
-            'date' => 'required',
+            'date' => 'required|date_format:Y-m-d',
         ];
 
         // Attributes replace the field name with a more readable name
@@ -241,9 +243,9 @@ class WorkingTimeController extends Controller
 
         // Save data
         $workingTime->employee_id = $request->employee_id;
-        $workingTime->start_time = $request->start_time;
-        $workingTime->end_time = $request->end_time;
-        $workingTime->date = $request->date;
+        $workingTime->start_time = toTime($request->start_time);
+        $workingTime->end_time = toTime($request->end_time);
+        $workingTime->date = toDate($request->date);
         $workingTime->save();
 
         // Session flash
