@@ -30,6 +30,9 @@ class BookingTest extends TestCase
             'duration' => '02:00'
         ]);
 
+        // Set date
+        $date = Carbon::now('Australia/Melbourne')->addDay()->toDateString();
+
         // Build booking data
         // Booking is set to tomorrow at 09:00 AM
         $bookingData = [
@@ -51,9 +54,9 @@ class BookingTest extends TestCase
             'customer_id' => $customer->id,
             'employee_id' => null,
             'activity_id' => $activity->id,
-            'start_time' => $bookingData['start_time'],
-            'end_time' => Booking::calcEndTime($activity->duration, $bookingData['start_time']),
-            'date' => $bookingData['date'],
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $date,
         ]);
     }
 
@@ -134,12 +137,12 @@ class BookingTest extends TestCase
         // Check the database if booking exists
         $this->assertDatabaseHas('bookings', [
             'id' => 1,
-            'customer_id' => $bookingData['customer_id'],
-            'employee_id' => $bookingData['employee_id'],
-            'activity_id' => $bookingData['activity_id'],
-            'start_time' => $bookingData['start_time'],
-            'end_time' => $bookingData['end_time'],
-            'date' => $bookingData['date'],
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $date,
         ]);
     }
 
@@ -278,13 +281,13 @@ class BookingTest extends TestCase
         // Employee starts at 6:00 AM to 5:00 PM
         $workingTime = factory(WorkingTime::class)->create([
             'employee_id' => $employee->id,
-            'start_time' => '06:00',
-            'end_time' => '17:00',
+            'start_time' => '06:00:00',
+            'end_time' => '17:00:00',
             'date' => $date,
         ]);
 
         // Start time is 10:00AM
-        $startTime = '10:00';
+        $startTime = '10:00:00';
 
         // Calculate the end time depending on the activity duration
         $endTime = Booking::calcEndTime($activity->duration, $startTime);

@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
             'customer_id' => $customers[0]->id,
             'employee_id' => $employees[0]->id,
             'activity_id' => $activityOne->id,
-            'start_time' => '11:00',
+            'start_time' => toTime('11:00'),
             'end_time' => Booking::calcEndTime($activityOne->duration, '11:00'),
             'date' => Carbon::now()->addDay()->toDateString()
         ]);
@@ -88,7 +88,7 @@ class DatabaseSeeder extends Seeder
             'customer_id' => $customers[2]->id,
             'employee_id' => null,
             'activity_id' => $activityOne->id,
-            'start_time' => '11:30',
+            'start_time' => toTime('11:30'),
             'end_time' => Booking::calcEndTime($activityOne->duration, '11:30'),
             'date' => Carbon::now()->addDays(2)->toDateString()
         ]);
@@ -97,7 +97,7 @@ class DatabaseSeeder extends Seeder
             'customer_id' => $customers[2]->id,
             'employee_id' => null,
             'activity_id' => $activityOne->id,
-            'start_time' => '10:30',
+            'start_time' => toTime('10:30'),
             'end_time' => Booking::calcEndTime($activityOne->duration, '10:30'),
             'date' => Carbon::now()->subDays(2)->toDateString()
         ]);
@@ -106,7 +106,7 @@ class DatabaseSeeder extends Seeder
             'customer_id' => $customers[3]->id,
             'employee_id' => $employees[1]->id,
             'activity_id' => $activityTwo->id,
-            'start_time' => '12:30',
+            'start_time' => toTime('12:30'),
             'end_time' => Booking::calcEndTime($activityOne->duration, '12:30'),
             'date' => Carbon::now()->subDays(2)->toDateString()
         ]);
