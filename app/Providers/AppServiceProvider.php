@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Dusk\DuskServiceProvider;
 
 use App\Activity;
@@ -35,37 +36,39 @@ class AppServiceProvider extends ServiceProvider
                 return false;
             }
 
-            // Find activity
-            $activity = Activity::find($request['activity_id']);
+            // Find activity or return false
+            try {
+                $activity = Activity::findOrFail($request['activity_id']);
+            }
+            catch (ModelNotFoundException $e) {
+                return false;
+            }
 
             // Set time
-            $pStartTime = toTime($request['start_time']);
-            $pEndTime = Booking::calcEndTime($activity->duration, $pStartTime);
+            $reqStartTime = $request['start_time'];
+            $reqEndTime = Booking::calcEndTime($activity->duration, $reqStartTime);
 
             // Get bookings of the date
             $bookings = Booking::where($attribute, $value)
                 ->where('date', $request['date'])
                 ->get();
 
-            // Is employee free
-            $free = true;
-
             // Loop through booking results
             foreach ($bookings as $booking) {
                 // Booking start and end time
-                $bStartTime = $booking->start_time;
-                $bEndTime = $booking->end_time;
+                $bookStartTime = $booking->start_time;
+                $bookEndTime = $booking->end_time;
 
                 // If times are conflicting with any exiting booking
                 // Then break and return false
-                if (!($pStartTime < $bStartTime and $pEndTime <= $bStartTime or $pStartTime >= $bEndTime and $pEndTime > $bEndTime)) {
-                    $free = false;
-                    break;
+                if ($reqStartTime >= $bookStartTime && $reqEndTime <= $bookEndTime ||
+                    $reqStartTime < $bookStartTime && $reqEndTime > $bookStartTime ||
+                    $reqStartTime < $bookEndTime && $reqEndTime > $bookEndTime) {
+                    return false;
                 }
             }
 
-            // Return condition
-            return $free;
+            return true;
         });
 
         // Create a validator to check if an employee is free when adding a booking
@@ -78,8 +81,13 @@ class AppServiceProvider extends ServiceProvider
                 return false;
             }
 
-            // Find activity
-            $activity = Activity::find($request['activity_id']);
+            // Find activity or return false
+            try {
+                $activity = Activity::findOrFail($request['activity_id']);
+            }
+            catch (ModelNotFoundException $e) {
+                return false;
+            }
 
             // Set time
             $pStartTime = toTime($request['start_time']);
@@ -120,8 +128,15 @@ class AppServiceProvider extends ServiceProvider
             }
 
             // Alias
-            $activity = Activity::find($value);
             $startTime = $request['start_time'];
+
+            // Find activity or return false
+            try {
+                $activity = Activity::findOrFail($value);
+            }
+            catch (ModelNotFoundException $e) {
+                return false;
+            }
 
             // If end time is before start time
             // Then return false

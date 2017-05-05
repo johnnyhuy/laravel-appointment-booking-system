@@ -26,16 +26,49 @@ class BookingController extends Controller
         $this->middleware('auth:web_user', [
             'only' => [
                 'indexCustomer',
-                'storeCustomerBooking'
             ]
         ]);
         $this->middleware('auth:web_admin', [
             'only' => [
                 'indexAdmin',
-                'storeAdminBooking',
+                'summary',
                 'history',
                 'assignEmployee',
             ]
+        ]);
+
+        $this->middleware('auth:web_user,web_admin',[
+            'only' => [
+                'store',
+            ]
+        ]);
+    }
+
+    /**
+     * Show summary of bookings
+     *
+     * @return Response
+     */
+    public function summary()
+    {
+        return view('admin.summary', [
+            'bookings' => Booking::allLatest('7'),
+            'business' => BusinessOwner::first(),
+            'latest' => Booking::allLatest('+7 days')
+        ]);
+    }
+
+    /**
+     * Show history of bookings
+     *
+     * @return Response
+     */
+    public function history()
+    {
+        return view('admin.history', [
+            'bookings' => Booking::allLatest('7'),
+            'business' => BusinessOwner::first(),
+            'history' => Booking::allHistory()
         ]);
     }
 
@@ -76,7 +109,7 @@ class BookingController extends Controller
             ->where('date', '>=', $date->startOfMonth()->toDateString())
             ->get();
 
-        return view('admin.booking', [
+        return view('admin.bookings', [
             'bookings'      => $bookings,
             'business'      => BusinessOwner::first(),
             'employeeID'    => $employeeID,
@@ -112,7 +145,7 @@ class BookingController extends Controller
             ->where('date', '>=', $date->startOfMonth()->toDateString())
             ->get();
 
-        return view('admin.booking', [
+        return view('admin.bookings', [
             'business'      => BusinessOwner::first(),
             'bookings'      => $bookings,
             'employeeID'    => null,
@@ -130,8 +163,11 @@ class BookingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeAdminBooking(Request $request)
+    public function store(Request $request)
     {
+        Log::info("An attempt to create a booking from the Business Owner Dashboard was made", $request->all());
+
+        // If month year format requested
         if ($request->month_year) {
             $monthYear = explode('-', $request->month_year);
             $date = Carbon::createFromDate($monthYear[1], $monthYear[0], $request->day)->toDateString();
@@ -141,7 +177,18 @@ class BookingController extends Controller
             $date = $request->date;
         }
 
-        Log::info("An attempt to create a booking from the Business Owner Dashboard was made", $request->all());
+        // If none is selected
+        if ($request->employee_id == 'none') {
+            // Clear rules for employee ID
+            $rules['employee_id'] = '';
+            $request->merge(['employee_id' => null]);
+        }
+
+        // Convert start time to proper time format
+        $request->merge([
+            'start_time' => toTime($request->start_time)
+        ]);
+
 
         // Validation error messages
         $messages = [
@@ -158,10 +205,10 @@ class BookingController extends Controller
 
         // Validation rules
         $rules = [
-            'customer_id' => 'required|exists:customers,id|is_on_booking',
-            'employee_id' => 'exists:employees,id|is_employee_working|is_on_booking',
             'activity_id' => 'required|exists:activities,id|is_end_time_valid',
-            'start_time' => 'required|date_format:H:i',
+            'customer_id' => 'required|exists:customers,id|is_on_booking',
+            'employee_id' => 'required|exists:employees,id|is_employee_working|is_on_booking',
+            'start_time' => 'required|date_format:H:i:s',
             'date' => 'required|date',
         ];
 
@@ -174,23 +221,28 @@ class BookingController extends Controller
             'end_time' => 'end time',
         ];
 
-        // If none is selected
-        if ($request->employee_id == 'none') {
-            // Clear rules for employee ID
-            $rules['employee_id'] = '';
-            $request->merge(['employee_id' => null]);
-        }
-
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
+
+        // If end time is requested then do not calculate
+        if ($request->end_time) {
+            $request->merge([
+                'end_time' => toTime($request->end_time)
+            ]);
+        }
+        else {
+            $request->merge([
+                'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time)
+            ]);
+        }
 
         // Create customer
         $booking = Booking::create([
             'customer_id' => $request->customer_id,
             'employee_id' => $request->employee_id,
             'activity_id' => $request->activity_id,
-            'start_time' => toTime($request->start_time),
-            'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time),
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
             'date' => $request->date,
         ]);
 
@@ -200,7 +252,7 @@ class BookingController extends Controller
         session()->flash('message', 'Booking has successfully been created.');
 
         //Redirect to the business owner admin page
-        return redirect('/admin/booking/' . Carbon::now('Australia/Melbourne')->format('m-Y'));
+        return redirect('/admin/bookings/' . toMonthYear(getNow()));
     }
 
     /**
@@ -216,16 +268,20 @@ class BookingController extends Controller
 
         // Validation error messages
         $messages = [
-            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'customer_id.is_on_booking' => 'You already have an existing booking at that time.',
             'activity_id.exists' => 'The :attribute does not exist.',
             'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
+            'employee_id.exists' => 'The :attribute does not exist.',
+            'employee_id.is_employee_working' => 'The :attribute is not working on that time.',
+            'employee_id.is_on_booking' => 'The :attribute is already working on another booking at that time.',
+            'customer_id.is_on_booking' => 'You already have an existing booking at that time.',
+            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
         ];
 
         // Validation rules
         $rules = [
             'activity_id' => 'required|exists:activities,id|is_end_time_valid',
+            'employee_id' => 'required|exists:employees,id|is_employee_working|is_on_booking',
             'customer_id' => 'is_on_booking',
             'start_time' => 'required|date_format:H:i',
             'date' => 'required|date',
@@ -234,6 +290,7 @@ class BookingController extends Controller
         // Attributes replace the field name with a more readable name
         $attributes = [
             'customer_id' => 'customer',
+            'employee_id' => 'employee',
             'activity_id' => 'activity',
             'start_time' => 'start time',
             'end_time' => 'end time',
@@ -279,38 +336,5 @@ class BookingController extends Controller
     public function newCustomerBooking()
     {
         return view('customer.create_bookings');
-    }
-
-    /**
-     * Assign an employee to an existing booking
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function assignEmployee(Request $request)
-    {
-        // Iterate through each booking being set
-        for($i = 0; $i < count($request['bookings']); $i++) {
-            Log::notice("Employee with id " . $request['employee_id'] . " was assigned to booking with id " . $request['bookings'][$i]);
-            // Update booking to given employee
-            DB::table('bookings')->where('id', $request['bookings'][$i])->update(['employee_id' => $request['employee_id']]);
-        }
-
-        // Session flash
-        session()->flash('message', 'Booking(s) have been successfully assigned.');
-
-        // Redirect to the business owner admin page
-        return redirect('admin/employees/assign/' . $request['employee_id']);
-    }
-
-    /**
-     * View index of customer bookings
-     */
-    public function history()
-    {
-        return view('admin.history', [
-            'business' => BusinessOwner::first(),
-            'history' => Booking::allHistory(),
-        ]);
     }
 }

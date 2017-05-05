@@ -32,12 +32,12 @@
 		])
 	@endif
 	@include('shared.error_message')
-	<form class="request" method="POST" action="/admin/booking">
+	<form class="request" method="POST" action="/admin/bookings">
 		@include('shared.loading_message')
 		{{ csrf_field() }}
 		<div class="form-group">
 			<label for="input_employee">Employee <span class="request__validate">(Title - Full Name - ID)</span></label>
-			<select name="employee_id" id="input_employee" class="form-control request__input" onchange="showRedirect('.loading', '/admin/booking/{{ $dateString }}/' + this.value)">
+			<select name="employee_id" id="input_employee" class="form-control request__input" onchange="showRedirect('.loading', '/admin/bookings/{{ $dateString }}/' + this.value)">
 				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $e)
 					<option value="{{ $e->id }}" {{ old('employee_id') || $employeeID == $e->id ? 'selected' : null }}>{{ $e->title . ' - ' . $e->firstname . ' ' . $e->lastname . ' - ' . $e->id }}</option>
 				@endforeach
@@ -47,7 +47,7 @@
 		<div class="form-group request__flex-container">
 			<div class="request__flex request__flex--left">
 				<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
-			    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="showRedirect('.loading', '/admin/booking/' + this.value + '{{ $employeeID ? '/' . $employeeID : null }}')">
+			    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="showRedirect('.loading', '/admin/bookings/' + this.value + '{{ $employeeID ? '/' . $employeeID : null }}')">
 			        @foreach ($months as $month)
 			            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
 			        @endforeach
@@ -91,7 +91,7 @@
 	<h4 class="main_description">A table of all bookings on {{ $date->format('F Y') }}</h4>
 	<div class="form-group">
 		<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
-	    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/booking/' + this.value + '#bookings'">
+	    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/bookings/' + this.value + '#bookings'">
 	        @foreach ($months as $month)
 	            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
 	        @endforeach
@@ -145,7 +145,7 @@
 	<h4 class="dash__description">Show the roster of a given month.</h4>
 	<div class="form-group">
 			<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
-		    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/booking/' + this.value + '#roster'">
+		    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/bookings/' + this.value + '#roster'">
 		        @foreach ($months as $month)
 		            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
 		        @endforeach

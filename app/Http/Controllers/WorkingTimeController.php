@@ -237,9 +237,7 @@ class WorkingTimeController extends Controller
         // Unassign employee that was previously working on a booking
         Booking::where('start_time', '>=', $workingTime->start_time)
             ->where('end_time', '<=', $workingTime->end_time)
-            ->update([
-                'employee_id' => null
-            ]);
+            ->delete();
 
         // Save data
         $workingTime->employee_id = $request->employee_id;

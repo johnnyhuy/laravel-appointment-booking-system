@@ -72,8 +72,7 @@
 					<li class="{{ Request::is('admin/roster/*') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster/{{ Carbon\Carbon::now('Australia/Melbourne')->format('m-Y') }}">Roster</a></li>
 					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a title="Show all employees" href="/admin/employees">Employees</a></li>
 					<li class="{{ Request::is('admin/activity') ? 'active' : null }}"><a title="Show activitites" href="/admin/activity">Activities</a></li>
-					<li class="{{ Request::is('admin/booking/*') ? 'active' : null }}"><a title="Show a bookings" href="/admin/booking/{{ Carbon\Carbon::now('Australia/Melbourne')->format('m-Y') }}">Bookings</a></li>
-					<li class="{{ Request::is('admin/employees/assign/*') ? 'active' : null }}"><a title="Assign Employees to Bookings" href="/admin/employees/assign">Assign Employees</a></li>
+					<li class="{{ Request::is('admin/bookings/*') ? 'active' : null }}"><a title="Show a bookings" href="/admin/bookings/{{ Carbon\Carbon::now('Australia/Melbourne')->format('m-Y') }}">Bookings</a></li>
 				</ul>
 				<footer class="dashboard">LCJJ Development Team</footer>
 			</div>

@@ -14,7 +14,13 @@ use Carbon\Carbon;
  */
 function parseDateTime($string)
 {
-    return Carbon::parse($string);
+    // Avoid thrown exception
+    try {
+        return Carbon::parse($string);
+    }
+    catch (Exception $e) {
+        return $string;
+    }
 }
 
 /**
@@ -26,7 +32,13 @@ function parseDateTime($string)
  */
 function toMonthYear($stringDateTime)
 {
-    return Carbon::parse($stringDateTime)->format('m-Y');
+    // Avoid thrown exception
+    try {
+        return Carbon::parse($stringDateTime)->format('m-Y');
+    }
+    catch (Exception $e) {
+        return $stringDateTime;
+    }
 }
 
 
@@ -38,7 +50,13 @@ function toMonthYear($stringDateTime)
  */
 function toDateTime($stringDateTime)
 {
-    return Carbon::parse($stringDateTime)->toDateTimeString();
+    // Avoid thrown exception
+    try {
+        return Carbon::parse($stringDateTime)->toDateTimeString();
+    }
+    catch (Exception $e) {
+        return $stringDateTime;
+    }
 }
 
 /**
@@ -49,7 +67,13 @@ function toDateTime($stringDateTime)
  */
 function toTime($stringDateTime, $hourMinute = null)
 {
-    $time = Carbon::parse($stringDateTime);
+    // Avoid thrown exception
+    try {
+        $time = Carbon::parse($stringDateTime);
+    }
+    catch (Exception $e) {
+        return $stringDateTime;
+    }
 
     // If the last param is set
     if (isset($hourMinute)) {
@@ -75,7 +99,14 @@ function toTime($stringDateTime, $hourMinute = null)
  */
 function toDate($stringDateTime, $slash = null)
 {
-    $time = Carbon::parse($stringDateTime);
+    // Avoid thrown exception
+    try {
+        $time = Carbon::parse($stringDateTime);
+    }
+    catch (Exception $e) {
+        return $stringDateTime;
+    }
+
 
     // If the last param is set
     if (isset($slash)) {
@@ -123,6 +154,16 @@ function getDateTimeNow()
 }
 
 /**
+ * Get current date time alias
+ *
+ * @return string
+ */
+function getNow()
+{
+    return getDateTimeNow();
+}
+
+/**
  * Convert month year to carbon
  *
  * @param  string $string
@@ -137,7 +178,7 @@ function monthYearToDate($string)
 
     // If input is invalid
     if (!is_numeric($month) or !is_numeric($year)) {
-        throw new NotFoundHttpException;
+        return $string;
     }
 
     return Carbon::createFromDate($year, $month);

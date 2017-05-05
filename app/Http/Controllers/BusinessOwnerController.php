@@ -27,7 +27,6 @@ class BusinessOwnerController extends Controller
         $this->middleware('auth:web_admin', [
             'only' => [
                 'index',
-                'summary',
             ]
         ]);
 
@@ -47,19 +46,6 @@ class BusinessOwnerController extends Controller
      */
     public function index() {
         return view('admin.index', ['business' => BusinessOwner::first()]);
-    }
-
-    /**
-     * Show summary of bookings
-     * and employee availability
-     */
-    public function summary()
-    {
-        return view('admin.summary', [
-            'bookings' => Booking::allLatest('7'),
-            'business' => BusinessOwner::first(),
-            'latest' => Booking::allLatest('+7 days')
-        ]);
     }
 
      /**

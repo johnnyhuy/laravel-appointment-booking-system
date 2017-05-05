@@ -20,7 +20,7 @@
                 @endforeach
             </div>
         @endif
-        <div class="alert alert-warning"><strong>Warning!</strong> Once you have edited the working time of an employee, all working time bookings will be unassigned.</div>
+        <div class="alert alert-warning"><strong>Warning!</strong> Once you have edited the working time of an employee, all bookings related to working time will be deleted.</div>
         <div class="form-group">
             <label for="inputEmployee">Employee <span class="request__validate">(ID - Title - Full Name)</span></label>
             <select name="employee_id" id="inputEmployee" class="form-control request__input">
