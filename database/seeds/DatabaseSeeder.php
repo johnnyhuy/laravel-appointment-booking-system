@@ -121,7 +121,7 @@ class DatabaseSeeder extends Seeder
 
         Booking::create([
             'customer_id' => $customers[2]->id,
-            'employee_id' => null,
+            'employee_id' => $employees[1]->id,
             'activity_id' => $activityOne->id,
             'start_time' => toTime('11:30'),
             'end_time' => Booking::calcEndTime($activityOne->duration, '11:30'),
@@ -130,7 +130,7 @@ class DatabaseSeeder extends Seeder
 
         Booking::create([
             'customer_id' => $customers[2]->id,
-            'employee_id' => null,
+            'employee_id' => $employees[3]->id,
             'activity_id' => $activityOne->id,
             'start_time' => toTime('10:30'),
             'end_time' => Booking::calcEndTime($activityOne->duration, '10:30'),
