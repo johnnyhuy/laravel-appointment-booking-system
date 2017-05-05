@@ -247,5 +247,19 @@ class ActivityTest extends TestCase
         $response->assertJsonFragment([
             'The duration field must be in the correct time format (e.g. 4:00 or 16:30).'
         ]);
+
+        // User inputs an invalid time format in duration
+        // Rebuild activity data
+        $activityData = [
+            'duration' => '00:00'
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The duration field cannot be zero.'
+        ]);
     }
 }
