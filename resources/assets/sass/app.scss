@@ -91,23 +91,59 @@ footer {
 	}
 }
 
+.item {
+	text-align: left;
+	padding: 8px;
+	background-color: $brand-primary;
+	border-radius: $border-radius-base;
+	color: $white;
+	margin-bottom: $margin-base;
+	position: relative;
+
+	@include e('title') {
+		margin-top: 0;
+		margin-bottom: 8px;
+		font-family: $font-family-second;
+		text-align: center;
+	}
+
+	@include e('text') {
+		margin-bottom: 0;
+	}
+
+	@include e('time') {
+		margin-bottom: 0;
+		margin-top: 8px;
+		font-family: $font-family-second;
+		text-align: center;
+	}
+}
+
+.item:last-child {
+	margin: 0;
+}
+
 .form-group {
 	margin-bottom: $margin-base;
 }
 
-.table {
-		th {
-			border-bottom: 1px solid $border-color;
-			font-family: $font-family-second;
-			font-size: 18px;
-			text-align: center;
-			color: $gray-dark;
-		}
+.no-margin {
+	margin: 0;
+}
 
-		td {
-			text-align: center;
-			font-size: 16px;
-		}
+.table {
+	th {
+		border-bottom: 1px solid $border-color;
+		font-family: $font-family-second;
+		font-size: 18px;
+		text-align: center;
+		color: $gray-dark;
+	}
+
+	td {
+		text-align: center;
+		font-size: 16px;
+	}
 
 	// General modifiers
 
@@ -115,57 +151,73 @@ footer {
 		margin-top: $margin-base;
 	}
 
-	@include m('no-margin') {
-		margin: 0 !important;
-	}
-
-	@include m('red') {
-		color: red;
-	}
-
-	@include m('right-solid') {
+	@include e('right-solid') {
 		border-right: $dash-table-border solid $dash-table-color;
 	}
 
-	@include m('right-dotted') {
+	@include e('right-dotted') {
 		border-right: $dash-table-border dotted $gray-lighter;
 	}
 
-	@include m('right-dashed') {
+	@include e('right-dashed') {
 		border-right: $dash-table-border dashed $gray-lighter;
 	}
 
-	@include m('left-solid') {
+	@include e('left-solid') {
 		border-left: $dash-table-border solid $dash-table-color;
 	}
 
-	@include m('left-dotted') {
+	@include e('left-dotted') {
 		border-left: $dash-table-border dotted $gray-lighter;
 	}
 
-	@include m('left-dashed') {
+	@include e('left-dashed') {
 		border-left: $dash-table-border dashed $gray-lighter;
+	}
+
+	@include e-last-child('right-solid') {
+		border-right: none;
+	}
+
+	@include e-last-child('right-dotted') {
+		border-right: none;
+	}
+
+	@include e-last-child('right-dashed') {
+		border-right: none;
+	}
+
+	@include e-first-child('left-solid') {
+		border-left: none;
+	}
+
+	@include e-first-child('left-dotted') {
+		border-left: none;
+	}
+
+	@include e-first-child('left-dashed') {
+		border-left: none;
 	}
 
 	// Field specific modifiers
 
-	@include m('id') {
+	@include e('id') {
 		width: 80px;
 	}
 
-	@include m('description') {
+	@include e('description') {
+		min-width: 120px;
+	}
+
+	@include e('time') {
+		max-width: 80px;
+	}
+
+	@include e('name') {
 		min-width: 100px;
 	}
 
-	@include m('time') {
-		max-width: 40px;
-	}
-
-	@include m('name') {
-		min-width: 100px;
-	}
-
-	@include m('date') {
+	@include e('date') {
 		min-width: 60px;
 		max-width: 120px;
 	}

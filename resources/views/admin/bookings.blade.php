@@ -39,7 +39,7 @@
 			<label for="input_employee">Employee <span class="request__validate">(Title - Full Name - ID)</span></label>
 			<select name="employee_id" id="input_employee" class="form-control request__input" onchange="showRedirect('.loading', '/admin/bookings/{{ $dateString }}/' + this.value)">
 				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $e)
-					<option value="{{ $e->id }}" {{ old('employee_id') || $employeeID == $e->id ? 'selected' : null }}>{{ $e->title . ' - ' . $e->firstname . ' ' . $e->lastname . ' - ' . $e->id }}</option>
+					<option value="{{ $e->id }}" {{ old('employee_id') == $e->id || $employeeID == $e->id ? 'selected' : null }}>{{ $e->title . ' - ' . $e->firstname . ' ' . $e->lastname . ' - ' . $e->id }}</option>
 				@endforeach
 				<option value="none" {{ old('employee_id') || $employeeID ? null : 'selected' }}>-- None --</option>
 			</select>
@@ -99,35 +99,27 @@
     </div>
     @if ($bookings->count())
 		<div class="table-responsive dash__table-wrapper dash__table-wrapper--margin-top">
-		    <table class="table table--no-margin dash__table">
+		    <table class="table no-margin dash__table">
 		        <tr>
-					<th class="table--id table--right-solid">ID</th>
-					<th class="table--name">Customer</th>
-					<th class="table--name">Employee</th>
-					<th class="table--name">Activity</th>
-					<th class="table--time">Start</th>
-					<th class="table--time">End</th>
-					<th class="table--time">Duration</th>
-					<th class="table--date">Date</th>
+					<th class="table__id table__right-solid">ID</th>
+					<th class="table__name">Customer</th>
+					<th class="table__name">Employee</th>
+					<th class="table__name">Activity</th>
+					<th class="table__time">Start</th>
+					<th class="table__time">End</th>
+					<th class="table__time">Duration</th>
+					<th class="table__date">Date</th>
 				</tr>
 				@foreach ($bookings as $booking)
 					<tr>
-						<td class="table--id table--right-solid">{{ $booking->id }}</td>
-						<td class="table--name table--right-dotted">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
-						@if ($booking->employee)
-							<td class="table--name table--right-dotted">
-								{{ $booking->employee->firstname . ' ' . $booking->employee->lastname }}
-							</td>
-						@else
-							<td class="table--name table--right-dotted table--red">
-								Unassigned
-							</td>
-						@endif
-						<td class="table--name table--right-dotted">{{ $booking->activity->name }}</td>
-						<td class="table--time table--right-dotted">{{ toTime($booking->start_time, false) }}</td>
-						<td class="table--time table--right-dotted">{{ toTime($booking->end_time, false) }}</td>
-						<td class="table--time table--right-dotted">{{ $booking->activity->duration }}</td>
-						<td class="table--date">{{ toDate($booking->date, true) }}</td>
+						<td class="table__id table__right-solid">{{ $booking->id }}</td>
+						<td class="table__name table__right-dotted">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
+						<td class="table__name table__right-dotted">{{ $booking->employee->firstname . ' ' . $booking->employee->lastname }}</td>
+						<td class="table__name table__right-dotted">{{ $booking->activity->name }}</td>
+						<td class="table__time table__right-dotted">{{ toTime($booking->start_time, false) }}</td>
+						<td class="table__time table__right-dotted">{{ toTime($booking->end_time, false) }}</td>
+						<td class="table__time table__right-dotted">{{ $booking->activity->duration }}</td>
+						<td class="table__date">{{ toDate($booking->date, true) }}</td>
 					</tr>
 				@endforeach
 		    </table>

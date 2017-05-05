@@ -30,7 +30,7 @@
 			<label for="input_employee">Employee <span class="request__validate">(Title - Full Name - ID)</span></label>
 			<select name="employee_id" id="input_employee" class="form-control request__input" onchange="showRedirect('.loading', '/admin/roster/{{ $dateString }}/' + this.value)">
 				@foreach (App\Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title') as $e)
-					<option value="{{ $e->id }}" {{ old('employee_id') || $employeeID == $e->id ? 'selected' : null }}>{{ $e->title . ' - ' . $e->firstname . ' ' . $e->lastname . ' - ' . $e->id }}</option>
+					<option value="{{ $e->id }}" {{ old('employee_id') == $e->id || $employeeID == $e->id ? 'selected' : null }}>{{ $e->title . ' - ' . $e->firstname . ' ' . $e->lastname . ' - ' . $e->id }}</option>
 				@endforeach
 				<option value="" {{ old('employee_id') || $employeeID ? null : 'selected' }}>-- None --</option>
 			</select>

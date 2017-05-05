@@ -1,14 +1,14 @@
 <h1>{{ $date->format('F Y') }}</h1>
-<div class="table-responsive dash__table-wrapper">
-    <table class="table table--no-margin dash__table calender">
+<div class="table-responsive dash__table-wrapper calendar">
+    <table class="table no-margin dash__table">
         <tr>
-            <th class="calender__day">Monday</th>
-            <th class="calender__day">Tuesday</th>
-            <th class="calender__day">Wednesday</th>
-            <th class="calender__day">Thursday</th>
-            <th class="calender__day">Friday</th>
-            <th class="calender__day">Saturday</th>
-            <th class="calender__day">Sunday</th>
+            <th class="calendar__day">Monday</th>
+            <th class="calendar__day">Tuesday</th>
+            <th class="calendar__day">Wednesday</th>
+            <th class="calendar__day">Thursday</th>
+            <th class="calendar__day">Friday</th>
+            <th class="calendar__day">Saturday</th>
+            <th class="calendar__day">Sunday</th>
         </tr>
         @for ($weeks = 0; $weeks < 5; $weeks++)
             <tr>
@@ -16,9 +16,9 @@
                     @php
                         $cDate = Carbon\Carbon::parse($date->toDateString())->startOfMonth()->startOfWeek()->addDays($days)->addWeeks($weeks);
                     @endphp
-                    <td class="calender__day calender__day--block {{ $cDate->month != $date->month ? 'calender__day--disabled' : null }}">
+                    <td class="calendar__day calendar__day--block {{ $cDate->month != $date->month ? 'calendar__day--disabled' : null }}">
                         @if ($cDate->month == $date->month)
-                        <div class="calender__day-label">{{ $cDate->format('d') }}</div>
+                        <div class="calendar__day-label">{{ $cDate->format('d') }}</div>
                         <div class="working-time">
                             @foreach ($roster as $workingTime)
                                 @php

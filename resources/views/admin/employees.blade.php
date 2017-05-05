@@ -43,21 +43,21 @@
 	@if ($employees->count())
 		<h4 class="main_description">A table of all employees within the business.</h4>
 		<div class="table-responsive dash__table-wrapper">
-		    <table class="table table--no-margin dash__table">
+		    <table class="table no-margin dash__table">
 		        <tr>
-					<th class="table--id">ID</th>
-					<th class="table--name table--left-solid">First Name</th>
-					<th class="table--name">Last Name</th>
-					<th class="table--name">Title</th>
-					<th class="table--date">Date Created</th>
+					<th class="table__id">ID</th>
+					<th class="table__name table__left-solid">First Name</th>
+					<th class="table__name">Last Name</th>
+					<th class="table__name">Title</th>
+					<th class="table__date">Date Created</th>
 				</tr>
 				@foreach ($employees as $employee)
 					<tr>
-						<td class="table--id">{{ $employee->id }}</td>
-						<td class="table--name table--left-solid">{{ $employee->firstname }}</td>
-						<td class="table--name table--left-dotted">{{ $employee->lastname }}</td>
-						<td class="table--name table--left-dotted">{{ $employee->title }}</td>
-						<td class="table--date table--left-dotted">{{ Carbon\Carbon::parse($employee->created_at)->format('d/m/y') }}</td>
+						<td class="table__id">{{ $employee->id }}</td>
+						<td class="table__name table__left-solid">{{ $employee->firstname }}</td>
+						<td class="table__name table__left-dotted">{{ $employee->lastname }}</td>
+						<td class="table__name table__left-dotted">{{ $employee->title }}</td>
+						<td class="table__date table__left-dotted">{{ Carbon\Carbon::parse($employee->created_at)->format('d/m/y') }}</td>
 					</tr>
 				@endforeach
 		    </table>

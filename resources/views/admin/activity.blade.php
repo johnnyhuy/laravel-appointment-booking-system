@@ -39,19 +39,19 @@
 		<h4 class="dash__description">A table of all activities within the business.</h4>
 		@if ($activities->count())
 			<div class="table-responsive dash__table-wrapper">
-				<table class="table table--no-margin dash__table calender">
+				<table class="table no-margin dash__table calender">
 			        <tr>
-			        	<th class="table--id table--right-solid">ID</th>
-						<th class="table--name">Name</th>
-						<th class="table--text">Description</th>
-						<th class="table--time">Duration</th>
+			        	<th class="table__id table__right-solid">ID</th>
+						<th class="table__name">Name</th>
+						<th class="table__text">Description</th>
+						<th class="table__time">Duration</th>
 					</tr>
 					@foreach ($activities as $activity)
 						<tr>
-							<td class="table--id table--right-solid">{{ $activity->id }}</td>
-							<td class="table--name table--right-dotted">{{ $activity->name }}</td>
-							<td class="table--text table--right-dotted">{{ $activity->description }}</td>
-							<td class="table--time">{{ $activity->duration }}</td>
+							<td class="table__id table__right-solid">{{ $activity->id }}</td>
+							<td class="table__name table__right-dotted">{{ $activity->name }}</td>
+							<td class="table__text table__right-dotted">{{ $activity->description }}</td>
+							<td class="table__time">{{ $activity->duration }}</td>
 						</tr>
 					@endforeach
 			    </table>
