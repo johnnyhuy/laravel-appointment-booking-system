@@ -57,7 +57,8 @@ class BookingController extends Controller
         // Get bookings of the month
         $bookings = Booking::where('date', '<=', $date->endOfMonth()->toDateString())
             ->where('date', '>=', $date->startOfMonth()->toDateString())
-            ->get();
+            ->get()
+            ->sortBy('date');
 
         // Find employee
         $employee = Employee::findOrFail($employeeID);

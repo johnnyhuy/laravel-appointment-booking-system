@@ -66,7 +66,7 @@
 			<label for="input_customer">Customer <span class="request__validate">(Full Name - ID)</span></label>
 			<select name="customer_id" id="input_customer" class="form-control request__input">
 				@foreach (App\Customer::all()->sortBy('lastname')->sortBy('firstname') as $customer)
-					<option value="{{ $customer->id }}">{{ $customer->firstname . ' ' . $customer->lastname . ' - ' . $customer->id }}</option>
+					<option value="{{ $customer->id }}">{{ $customer->firstname }} - {{$customer->lastname }} - {{ $customer->id }}</option>
 				@endforeach
 			</select>
 		</div>
@@ -124,10 +124,10 @@
 							</td>
 						@endif
 						<td class="table--name table--right-dotted">{{ $booking->activity->name }}</td>
-						<td class="table--time table--right-dotted">{{ $booking->start_time }}</td>
-						<td class="table--time table--right-dotted">{{ $booking->end_time }}</td>
+						<td class="table--time table--right-dotted">{{ toTime($booking->start_time, false) }}</td>
+						<td class="table--time table--right-dotted">{{ toTime($booking->end_time, false) }}</td>
 						<td class="table--time table--right-dotted">{{ $booking->activity->duration }}</td>
-						<td class="table--date">{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
+						<td class="table--date">{{ toDate($booking->date, true) }}</td>
 					</tr>
 				@endforeach
 		    </table>
