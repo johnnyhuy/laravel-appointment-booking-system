@@ -3,7 +3,7 @@
 @section('content')
 	<div class="block block--no-padding">
 		@if ($bookings->count())
-			<table class="table table--no-margin cus_table">
+			<table class="table no-margin cus_table">
 				<tr>
 					<th class="cus_table--id cus_table--right-solid">ID</th>
 					<th class="cus_table--name">Employee</th>
@@ -35,7 +35,7 @@
 			</table>
 		@else
 			@include('shared.error_message_thumbs_down', [
-				'message' => 'No customer bookings found.',
+				'message' => 'No Bookings Found.',
 				'subMessage' => 'Create a new booking <a href="/bookings/new">here</a>'
 			])
 		@endif

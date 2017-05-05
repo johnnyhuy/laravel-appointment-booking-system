@@ -30,6 +30,11 @@ class DatabaseSeeder extends Seeder
             'phone' => '8382032932'
         ]);
 
+        factory(Customer::class)->create([
+            'username' => 'john1233',
+            'password' => bcrypt('Password123'),
+        ]);
+
         // 4 customers
         $customers = factory(Customer::class, 4)->create();
 

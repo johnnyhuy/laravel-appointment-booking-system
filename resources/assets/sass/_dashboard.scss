@@ -58,9 +58,12 @@ footer.dashboard {
 	}
 }
 
-// Calender
+// Calendar
 
-.calender {
+.calendar {
+	overflow-y: hidden;
+	overflow-x: scroll;
+
 	@include e('week') {
 		border-right: 1px solid $gray-light;
 		min-width: 60px;
@@ -167,6 +170,7 @@ footer.dashboard {
 		border-radius: $border-radius-large;
 		border: $dash-table-border solid $dash-table-color;
 		margin-bottom: 40px;
+		overflow: hidden;
 
 		@include m('margin-top') {
 			margin-top: 20px;
@@ -243,11 +247,7 @@ footer.dashboard {
 
 /* Small devices (tablets, 768px and up) */
 @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-	.dash {
-		@include e('table-wrapper') {
-		    overflow-x: scroll;
-		}
-	}
+
 }
 
 /* Medium devices (desktops, 992px and up) */
@@ -257,9 +257,5 @@ footer.dashboard {
 
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: $screen-lg-min) {
-	.dash {
-		@include e('table-wrapper') {
-		    overflow-x: hidden;
-		}
-	}
+
 }
