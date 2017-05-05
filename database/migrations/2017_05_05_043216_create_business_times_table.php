@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAvailabilitiesTable extends Migration
+class CreateBusinessTimesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateAvailabilitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('availabilities', function (Blueprint $table) {
+        Schema::create('business_times', function (Blueprint $table) {
             $table->increments('id');
-			$table->integer('employee_id');
             $table->time('start_time');
             $table->time('end_time');
-			$table->enum('day', [
+            $table->enum('day', [
                 'MONDAY',
                 'TUESDAY',
                 'WEDNESDAY',
@@ -28,7 +27,7 @@ class CreateAvailabilitiesTable extends Migration
                 'SUNDAY',
             ]);
             $table->timestamps();
-            $table->unique(['employee_id', 'day']);
+            $table->unique('day');
         });
     }
 
@@ -39,6 +38,6 @@ class CreateAvailabilitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('availabilities');
+        Schema::dropIfExists('business_times');
     }
 }
