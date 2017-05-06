@@ -9,7 +9,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class DatabaseSeeder extends Seeder
 {
@@ -57,42 +57,42 @@ class DatabaseSeeder extends Seeder
                 'employee_id' => $employees[2]->id,
                 'start_time' => '09:00:00',
                 'end_time' => '17:00:00',
-                'date' => Carbon::now()->endOfMonth()->subDays($i)->toDateString()
+                'date' => Time::now()->endOfMonth()->subDays($i)->toDateString()
             ]);
 
             WorkingTime::create([
                 'employee_id' => $employees[1]->id,
                 'start_time' => '09:00:00',
                 'end_time' => '17:00:00',
-                'date' => Carbon::now()->startOfMonth()->addDays($i)->toDateString()
+                'date' => Time::now()->startOfMonth()->addDays($i)->toDateString()
             ]);
 
             WorkingTime::create([
                 'employee_id' => $employees[2]->id,
                 'start_time' => '10:00:00',
                 'end_time' => '17:00:00',
-                'date' => Carbon::now()->startOfMonth()->addDays($i)->toDateString()
+                'date' => Time::now()->startOfMonth()->addDays($i)->toDateString()
             ]);
 
             WorkingTime::create([
                 'employee_id' => $employees[0]->id,
                 'start_time' => '13:00:00',
                 'end_time' => '17:00:00',
-                'date' => Carbon::now()->startOfMonth()->addDays($i)->toDateString()
+                'date' => Time::now()->startOfMonth()->addDays($i)->toDateString()
             ]);
 
             WorkingTime::create([
                 'employee_id' => $employees[0]->id,
                 'start_time' => '09:00:00',
                 'end_time' => '17:00:00',
-                'date' => Carbon::now()->startOfMonth()->addWeeks(2)->addDays($i)->toDateString()
+                'date' => Time::now()->startOfMonth()->addWeeks(2)->addDays($i)->toDateString()
             ]);
 
             WorkingTime::create([
                 'employee_id' => $employees[2]->id,
                 'start_time' => '09:00:00',
                 'end_time' => '17:00:00',
-                'date' => Carbon::now()->startOfMonth()->addWeek(3)->addDays($i)->toDateString()
+                'date' => Time::now()->startOfMonth()->addWeek(3)->addDays($i)->toDateString()
             ]);
         }
 
@@ -119,54 +119,54 @@ class DatabaseSeeder extends Seeder
             'customer_id' => $customers[0]->id,
             'employee_id' => $employees[0]->id,
             'activity_id' => $activityOne->id,
-            'start_time' => toTime('11:00'),
+            'start_time' => Time::parse('11:00')->toTimeString(),
             'end_time' => Booking::calcEndTime($activityOne->duration, '11:00'),
-            'date' => Carbon::now()->addDay()->toDateString()
+            'date' => Time::now()->addDay()->toDateString()
         ]);
 
         Booking::create([
             'customer_id' => $customers[2]->id,
             'employee_id' => $employees[1]->id,
             'activity_id' => $activityOne->id,
-            'start_time' => toTime('11:30'),
+            'start_time' => Time::parse('11:30')->toTimeString(),
             'end_time' => Booking::calcEndTime($activityOne->duration, '11:30'),
-            'date' => Carbon::now()->addDays(2)->toDateString()
+            'date' => Time::now()->addDays(2)->toDateString()
         ]);
 
         Booking::create([
             'customer_id' => $customers[2]->id,
             'employee_id' => $employees[3]->id,
             'activity_id' => $activityOne->id,
-            'start_time' => toTime('10:30'),
+            'start_time' => Time::parse('10:30')->toTimeString(),
             'end_time' => Booking::calcEndTime($activityOne->duration, '10:30'),
-            'date' => Carbon::now()->subDays(2)->toDateString()
+            'date' => Time::now()->subDays(2)->toDateString()
         ]);
 
         Booking::create([
             'customer_id' => $customers[3]->id,
             'employee_id' => $employees[1]->id,
             'activity_id' => $activityTwo->id,
-            'start_time' => toTime('12:30'),
+            'start_time' => Time::parse('12:30')->toTimeString(),
             'end_time' => Booking::calcEndTime($activityTwo->duration, '12:30'),
-            'date' => Carbon::now()->subDays(2)->toDateString()
+            'date' => Time::now()->subDays(2)->toDateString()
         ]);
 
         Booking::create([
             'customer_id' => $customers[3]->id,
             'employee_id' => $employees[0]->id,
             'activity_id' => $activityTwo->id,
-            'start_time' => toTime('09:30'),
+            'start_time' => Time::parse('09:30')->toTimeString(),
             'end_time' => Booking::calcEndTime($activityTwo->duration, '09:30'),
-            'date' => Carbon::now()->startOfMonth()->toDateString()
+            'date' => Time::now()->startOfMonth()->toDateString()
         ]);
 
         Booking::create([
             'customer_id' => $customers[3]->id,
             'employee_id' => $employees[3]->id,
             'activity_id' => $activityTwo->id,
-            'start_time' => toTime('12:30'),
+            'start_time' => Time::parse('12:30')->toTimeString(),
             'end_time' => Booking::calcEndTime($activityTwo->duration, '12:30'),
-            'date' => Carbon::now()->endOfMonth()->toDateString()
+            'date' => Time::now()->endOfMonth()->toDateString()
         ]);
     }
 }

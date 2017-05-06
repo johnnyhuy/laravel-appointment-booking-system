@@ -146,7 +146,7 @@ class WorkingTimeController extends Controller
         ]);
 
         Log::notice("A new working time was created for employee with id " . $workingTime->employee_id . " for times: " .
-            $workingTime->date . " => " . $workingTime->start_time . " - " . $workingTime->end_time);
+            $workingTime->date . " => " . $workingTime->start_time . " - " . $workingTime->end_time, $workingTime->toArray());
 
         // Session flash
         session()->flash('message', 'New working time has been added.');

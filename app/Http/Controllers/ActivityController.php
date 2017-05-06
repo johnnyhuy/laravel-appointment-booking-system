@@ -63,6 +63,8 @@ class ActivityController extends Controller
             'name' => 'activity name',
         ];
 
+        Log::debug("Validating Activity input");
+
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
 
@@ -73,7 +75,7 @@ class ActivityController extends Controller
             'duration' => $request->duration,
         ]);
 
-        Log::notice("A new activity was created");
+        Log::notice("A new activity was created", $activity->toArray());
 
         // Session flash
         session()->flash('message', 'Activity has successfully been created.');
@@ -123,6 +125,8 @@ class ActivityController extends Controller
             'name' => 'activity name',
         ];
 
+        Log::debug("Validating Activity input");
+
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
 
@@ -133,6 +137,8 @@ class ActivityController extends Controller
 
         // Save activity
         $activity->save();
+
+        Log::notice("Activity ID " . $activity->id . " was updated", $activity->toArray());
 
         // Session flash
         session()->flash('message', 'Activity has successfully been edited.');
@@ -160,6 +166,8 @@ class ActivityController extends Controller
 
         // Delete activity
         $activity->delete();
+
+        Log::notice("Activity ID " . $activity->id . " was deleted", $activity->toArray());
 
         // Session flash
         session()->flash('message', 'Activity has successfully been removed.');

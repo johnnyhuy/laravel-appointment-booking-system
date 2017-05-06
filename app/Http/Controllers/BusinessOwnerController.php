@@ -117,7 +117,7 @@ class BusinessOwnerController extends Controller
         ]);
 
         // Log business owner creation
-        Log::notice("A Business Owner was registered with username " . $businessOwner->username);
+        Log::notice("Business Owner was registered with username " . $businessOwner->username, $businessOwner->toArray());
 
         // Session flash
         session()->flash('message', 'Business Owner registration success.');
