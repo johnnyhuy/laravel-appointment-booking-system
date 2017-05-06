@@ -17,7 +17,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class BookingController extends Controller
 {
@@ -26,11 +26,13 @@ class BookingController extends Controller
         $this->middleware('auth:web_user', [
             'only' => [
                 'indexCustomer',
+                'showCustomer',
             ]
         ]);
         $this->middleware('auth:web_admin', [
             'only' => [
                 'indexAdmin',
+                'showAdmin',
                 'summary',
                 'history',
                 'assignEmployee',
@@ -79,13 +81,13 @@ class BookingController extends Controller
      * @param  String $employeeID   employee ID
      * @return view
      */
-    public function show($monthYear, $employeeID = null)
+    public function showAdmin($monthYear, $employeeID = null)
     {
         // List of months
         $monthList = getMonthList($monthYear);
 
         // Set date string
-        $date = WorkingTime::getDate($monthYear);
+        $date = monthYearToDate($monthYear);
 
         // Get bookings of the month
         $bookings = Booking::where('date', '<=', $date->endOfMonth()->toDateString())
@@ -94,7 +96,7 @@ class BookingController extends Controller
             ->sortBy('date');
 
         // Find employee
-        $employee = Employee::findOrFail($employeeID);
+        $employee = Employee::find($employeeID);
 
         if ($employeeID) {
             // Find working time by employee ID
@@ -121,24 +123,78 @@ class BookingController extends Controller
         ]);
     }
 
+    /**
+     * Show booking by employee ID
+     *
+     * @param  String $monthYear    month year string from URL (mm-yyyy)
+     * @param  String $employeeID   employee ID
+     * @return view
+     */
+    public function showCustomer($monthYear, $employeeID)
+    {
+        // Set date string
+        $date = monthYearToDate($monthYear);
+
+        // Get bookings of the month
+        $bookings = Booking::where('date', '<=', $date->endOfMonth()->toDateString())
+            ->where('date', '>=', $date->startOfMonth()->toDateString())
+            ->get()
+            ->sortBy('date');
+
+        // Find working time by employee ID
+        $workingTimes = WorkingTime::where('employee_id', $employeeID);
+
+        // Get working times within the month
+        $workingTimes = $workingTimes
+            ->where('date', '<=', $date->endOfMonth()->toDateString())
+            ->where('date', '>=', $date->startOfMonth()->toDateString())
+            ->get();
+
+        return view('customer.create_bookings', [
+            'business'      => BusinessOwner::first(),
+            'employeeID'    => $employeeID,
+            'employee'      => Employee::find($employeeID),
+            'roster'        => $workingTimes,
+            'date'          => $date,
+            'dateString'    => $date->format('m-Y'),
+            'months'        => getMonthList($monthYear)
+        ]);
+    }
+
+    /**
+     * Show booking by employee ID
+     *
+     * @param  String $monthYear    month year string from URL (mm-yyyy)
+     * @return view
+     */
+    public function newCustomer($monthYear)
+    {
+        // Set date string
+        $date = monthYearToDate($monthYear);
+
+        // Else get all working times
+        $workingTimes = WorkingTime::all();
+
+        // Get working times within the month
+        $workingTimes = $workingTimes
+            ->where('date', '<=', $date->endOfMonth()->toDateString())
+            ->where('date', '>=', $date->startOfMonth()->toDateString());
+
+        return view('customer.create_bookings', [
+            'business'      => BusinessOwner::first(),
+            'employeeID'    => null,
+            'employee'      => null,
+            'roster'        => $workingTimes,
+            'date'          => $date,
+            'dateString'    => $date->format('m-Y'),
+            'months'        => getMonthList($monthYear)
+        ]);
+    }
+
     public function indexAdmin($monthYear)
     {
-        // List of months
-        // 6 months ahead and behind
-        $monthList = [];
-
-        // Get months previous
-        for ($months = 6; $months > 0; $months--) {
-            $monthList[] = WorkingTime::getDate($monthYear)->subMonths($months);
-        }
-
-        // Get months now and ahead
-        for ($months = 0; $months < 6; $months++) {
-            $monthList[] = WorkingTime::getDate($monthYear)->addMonths($months);
-        }
-
         // Get the date from URL
-        $date = WorkingTime::getDate($monthYear);
+        $date = monthYearToDate($monthYear);
 
         // Get bookings of the month
         $bookings = Booking::where('date', '<=', $date->endOfMonth()->toDateString())
@@ -153,7 +209,7 @@ class BookingController extends Controller
             'employee'      => null,
             'date'          => $date,
             'dateString'    => $date->format('m-Y'),
-            'months'        => $monthList,
+            'months'        => getMonthList($monthYear),
             'roster'        => WorkingTime::all(),
         ]);
     }
@@ -171,25 +227,22 @@ class BookingController extends Controller
         // If month year format requested
         if ($request->month_year) {
             $monthYear = explode('-', $request->month_year);
-            $date = Carbon::createFromDate($monthYear[1], $monthYear[0], $request->day)->toDateString();
+            $date = Time::createFromDate($monthYear[1], $monthYear[0], $request->day)->toDateString();
             $request->merge(['date' => $date]);
         }
         else {
             $date = $request->date;
         }
 
-        // If none is selected
-        if ($request->employee_id == 'none') {
-            // Clear rules for employee ID
-            $rules['employee_id'] = '';
-            $request->merge(['employee_id' => null]);
+        // If customer is logged in, user their customer ID
+        if (isUser()) {
+            $request->merge(['customer_id' => Auth::id()]);
         }
 
         // Convert start time to proper time format
         $request->merge([
             'start_time' => toTime($request->start_time)
         ]);
-
 
         // Validation error messages
         $messages = [
@@ -202,6 +255,7 @@ class BookingController extends Controller
             'employee_id.is_on_booking' => 'The :attribute is already working on another booking at that time.',
             'activity_id.exists' => 'The :attribute does not exist.',
             'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
+            'date.after' => 'The :attribute must be before today ' . toDate(getNow(), true) . '.',
         ];
 
         // Validation rules
@@ -210,7 +264,7 @@ class BookingController extends Controller
             'customer_id' => 'required|exists:customers,id|is_on_booking',
             'employee_id' => 'required|exists:employees,id|is_employee_working|is_on_booking',
             'start_time' => 'required|date_format:H:i:s',
-            'date' => 'required|date',
+            'date' => 'required|date|after:' . getDateNow(),
         ];
 
         // Attributes replace the field name with a more readable name
@@ -252,70 +306,15 @@ class BookingController extends Controller
         // Session flash
         session()->flash('message', 'Booking has successfully been created.');
 
-        //Redirect to the business owner admin page
-        return redirect('/admin/bookings/' . toMonthYear(getNow()));
-    }
+        if (isAdmin()) {
+            // Redirect to the business owner admin page
+            $url = '/admin/bookings/' . toMonthYear(getNow());
+        }
+        else {
+            $url = '/bookings/' . toMonthYear(getNow());
+        }
 
-    /**
-     *  Create a booking from the customer form
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-	public function storeCustomerBooking(Request $request) {
-        Log::info("An attempt to create a booking from the Customer Portal was made", $request->all());
-
-        $request->merge(['customer_id' => Auth::id()]);
-
-        // Validation error messages
-        $messages = [
-            'activity_id.exists' => 'The :attribute does not exist.',
-            'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
-            'employee_id.exists' => 'The :attribute does not exist.',
-            'employee_id.is_employee_working' => 'The :attribute is not working on that time.',
-            'employee_id.is_on_booking' => 'The :attribute is already working on another booking at that time.',
-            'customer_id.is_on_booking' => 'You already have an existing booking at that time.',
-            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
-        ];
-
-        // Validation rules
-        $rules = [
-            'activity_id' => 'required|exists:activities,id|is_end_time_valid',
-            'employee_id' => 'required|exists:employees,id|is_employee_working|is_on_booking',
-            'customer_id' => 'is_on_booking',
-            'start_time' => 'required|date_format:H:i',
-            'date' => 'required|date',
-        ];
-
-        // Attributes replace the field name with a more readable name
-        $attributes = [
-            'customer_id' => 'customer',
-            'employee_id' => 'employee',
-            'activity_id' => 'activity',
-            'start_time' => 'start time',
-            'end_time' => 'end time',
-        ];
-
-        // Validate form
-        $this->validate($request, $rules, $messages, $attributes);
-
-        // Create customer
-        $booking = Booking::create([
-            'customer_id' => $request->customer_id,
-            'activity_id' => $request->activity_id,
-            'start_time' => toTime($request->start_time),
-            'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time),
-            'date' => $request->date,
-        ]);
-
-        Log::notice("A booking was created from the Customer Portal", $booking->toArray());
-
-        // Session flash
-        session()->flash('message', 'Booking has successfully been created. No employee is assigned to your booking, please come back soon when an adminstrator verifies your booking.');
-
-        //Redirect to the business owner admin page
-        return redirect('/bookings');
+        return redirect($url);
     }
 
     /**
@@ -326,6 +325,7 @@ class BookingController extends Controller
         // Find customer bookings by customer ID on booking
         $bookings = Booking::all()
             ->where('customer_id', Auth::id())
+            ->where('date', '>=', getDateNow())
             ->sortBy('date');
 
         return view('customer.bookings', compact('bookings'));

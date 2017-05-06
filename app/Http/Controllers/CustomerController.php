@@ -17,7 +17,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class CustomerController extends Controller
 {
@@ -53,8 +53,8 @@ class CustomerController extends Controller
 
         // Create customer
         $customer = Customer::create([
-            'firstname' => request('firstname'),
-            'lastname' => request('lastname'),
+            'firstname' => ucfirst(request('firstname')),
+            'lastname' => ucfirst(request('lastname')),
             'username' => request('username'),
             'password' => bcrypt(request('password')),
             'address' => request('address'),

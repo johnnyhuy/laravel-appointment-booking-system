@@ -12,10 +12,9 @@
 	<div class="container">
 		@if (Auth::check())
 		<ul class="nav nav-pills pull-left">
-			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}"><a href="/">Home</a></li>
 			@if (Auth::check())
 				<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
-				<li role="presentation" class="{{ Request::is('bookings/new') ? 'active' : null }}"><a href="/bookings/new">Create Booking</a></li>
+				<li role="presentation" class="{{ Request::is('bookings/*') ? 'active' : null }}"><a href="/bookings/{{ toMonthYear(getNow()) }}/new">Create Booking</a></li>
 			@endif
 		</ul>
 

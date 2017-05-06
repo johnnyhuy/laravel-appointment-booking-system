@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class Activity extends Model
 {
@@ -18,13 +18,13 @@ class Activity extends Model
 		parent::__construct($attributes);
 
 		// Set public accessors
-		$this->hour = Carbon::parse($this->duration)->hour;
-		$this->minute = Carbon::parse($this->duration)->minute;
+		$this->hour = Time::parse($this->duration)->hour;
+		$this->minute = Time::parse($this->duration)->minute;
 	}
 
     /**
 	 * Get bookings from activity
-	 * 
+	 *
 	 * @return \App\Booking
 	 */
 	public function bookings()

@@ -38,30 +38,29 @@
 		<button class="btn btn-lg btn-primary btn-block btn--margin-top">Add Employee</button>
 	</form>
 </div>
+<hr>
 <div class="dash__block">
-	<h1 class="dash__header">Employees</h1>
+	<h1 class="dash__header dash__header--margin-top">Employees</h1>
 	@if ($employees->count())
 		<h4 class="main_description">A table of all employees within the business.</h4>
-		<div class="table-responsive dash__table-wrapper">
-		    <table class="table no-margin dash__table">
-		        <tr>
-					<th class="table__id">ID</th>
-					<th class="table__name table__left-solid">First Name</th>
-					<th class="table__name">Last Name</th>
-					<th class="table__name">Title</th>
-					<th class="table__date">Date Created</th>
+	    <table class="table no-margin">
+	        <tr>
+				<th class="table__id">ID</th>
+				<th class="table__name table__left-solid">First Name</th>
+				<th class="table__name">Last Name</th>
+				<th class="table__name">Title</th>
+				<th class="table__date">Date Created</th>
+			</tr>
+			@foreach ($employees as $employee)
+				<tr>
+					<td class="table__id">{{ $employee->id }}</td>
+					<td class="table__name table__left-solid">{{ $employee->firstname }}</td>
+					<td class="table__name table__left-dotted">{{ $employee->lastname }}</td>
+					<td class="table__name table__left-dotted">{{ $employee->title }}</td>
+					<td class="table__date table__left-dotted">{{ Time::parse($employee->created_at)->format('d/m/y') }}</td>
 				</tr>
-				@foreach ($employees as $employee)
-					<tr>
-						<td class="table__id">{{ $employee->id }}</td>
-						<td class="table__name table__left-solid">{{ $employee->firstname }}</td>
-						<td class="table__name table__left-dotted">{{ $employee->lastname }}</td>
-						<td class="table__name table__left-dotted">{{ $employee->title }}</td>
-						<td class="table__date table__left-dotted">{{ Carbon\Carbon::parse($employee->created_at)->format('d/m/y') }}</td>
-					</tr>
-				@endforeach
-		    </table>
-		</div>
+			@endforeach
+	    </table>
 	@else
 		@include('shared.error_message_thumbs_down', [
 			'message' => 'No employees found.',

@@ -225,6 +225,12 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Time' => Carbon\Carbon::class,
+        'Activity' => App\Activity::class,
+        'Booking' => App\Booking::class,
+        'BusinessOwner' => App\BusinessOwner::class,
+        'Customer' => App\Customer::class,
+        'Employee' => App\Employee::class,
+        'WorkingTime' => App\WorkingTime::class,
     ],
 
 ];

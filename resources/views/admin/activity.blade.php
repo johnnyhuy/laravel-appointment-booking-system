@@ -38,24 +38,22 @@
 		<h1 class="dash__header dash__header--margin-top">Activities</h1>
 		<h4 class="dash__description">A table of all activities within the business.</h4>
 		@if ($activities->count())
-			<div class="table-responsive dash__table-wrapper">
-				<table class="table no-margin dash__table calender">
-			        <tr>
-			        	<th class="table__id table__right-solid">ID</th>
-						<th class="table__name">Name</th>
-						<th class="table__text">Description</th>
-						<th class="table__time">Duration</th>
+			<table class="table no-margin calender">
+		        <tr>
+		        	<th class="table__id table__right-solid">ID</th>
+					<th class="table__name">Name</th>
+					<th class="table__text">Description</th>
+					<th class="table__time">Duration</th>
+				</tr>
+				@foreach ($activities as $activity)
+					<tr>
+						<td class="table__id table__right-solid">{{ $activity->id }}</td>
+						<td class="table__name table__right-dotted">{{ $activity->name }}</td>
+						<td class="table__text table__right-dotted">{{ $activity->description }}</td>
+						<td class="table__time">{{ $activity->duration }}</td>
 					</tr>
-					@foreach ($activities as $activity)
-						<tr>
-							<td class="table__id table__right-solid">{{ $activity->id }}</td>
-							<td class="table__name table__right-dotted">{{ $activity->name }}</td>
-							<td class="table__text table__right-dotted">{{ $activity->description }}</td>
-							<td class="table__time">{{ $activity->duration }}</td>
-						</tr>
-					@endforeach
-			    </table>
-		    </div>
+				@endforeach
+		    </table>
 	    @else
 			@include('shared.error_message_thumbs_down', [
 				'message' => 'No activities found.',

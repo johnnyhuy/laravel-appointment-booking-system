@@ -58,14 +58,11 @@ class ActivityTest extends TestCase
      */
     public function testAdminCreateActivity()
     {
-        // Create fake data
-        $activity = factory(Activity::class)->make();
-
         // Build activity data
         $activityData = [
-            'name' => $activity->name,
-            'description' => $activity->description,
-            'duration' => $activity->duration,
+            'name' => 'Activity Name',
+            'description' => 'Description',
+            'duration' => '02:00',
         ];
 
         // Send a POST request to admin/activity
@@ -76,7 +73,6 @@ class ActivityTest extends TestCase
 
         // Check if activity exists in the database
         $this->assertDatabaseHas('activities', [
-            'id' => $this->activity->id + 1,
             'name' => $activityData['name'],
             'description' => $activityData['description'],
             'duration' => $activityData['duration'],
@@ -103,9 +99,6 @@ class ActivityTest extends TestCase
 
         // Send PUT/PATCH request to admin/activity/{activity}
         $response = $this->actingAs($this->bo, 'web_admin')->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
-
-        // Check if redirected after request
-        $response->assertRedirect('admin/activity');
 
         // Check edit activity success message
         $response->assertSessionHas('message', 'Activity has successfully been edited.');

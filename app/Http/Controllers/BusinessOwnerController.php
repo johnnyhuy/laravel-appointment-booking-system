@@ -18,7 +18,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class BusinessOwnerController extends Controller
 {
@@ -70,7 +70,7 @@ class BusinessOwnerController extends Controller
     public function create(Request $request)
     {
         //Check a business owner doesn't already exist
-        if(count(BusinessOwner::all()) > 1) {
+        if (count(BusinessOwner::all()) > 1) {
             //Log a critical failure if an attempt is made to register more than 1 business
             Log::critical("More than one business was attempted to be registered", $request->all());
             return 0;
@@ -108,8 +108,8 @@ class BusinessOwnerController extends Controller
     	// Create customer
         $businessOwner = BusinessOwner::create([
             'business_name' => $request->businessname,
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
+            'firstname' => ucfirst($request->firstname),
+            'lastname' => ucfirst($request->lastname),
             'username' => $request->username,
             'password' => bcrypt($request->password),
             'address' => $request->address,

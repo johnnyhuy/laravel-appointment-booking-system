@@ -17,7 +17,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class ActivityController extends Controller
 {

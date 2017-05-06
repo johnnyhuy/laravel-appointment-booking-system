@@ -17,7 +17,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class WorkingTimeController extends Controller
 {
@@ -41,22 +41,8 @@ class WorkingTimeController extends Controller
      */
     public function show($monthYear, $employeeID)
     {
-        // List of months
-        // 6 months ahead and behind
-        $monthList = [];
-
-        // Get months previous
-        for ($months = 6; $months > 0; $months--) {
-            $monthList[] = WorkingTime::getDate($monthYear)->subMonths($months);
-        }
-
-        // Get months now and ahead
-        for ($months = 0; $months < 6; $months++) {
-            $monthList[] = WorkingTime::getDate($monthYear)->addMonths($months);
-        }
-
-        // Set date string
-        $date = WorkingTime::getDate($monthYear);
+        // Current time
+        $date = monthYearToDate($monthYear);
 
         // Find employee
         $employee = Employee::find($employeeID);
@@ -71,7 +57,7 @@ class WorkingTimeController extends Controller
             'roster'        => $workingTimes,
             'date'          => $date,
             'dateString'    => $date->format('m-Y'),
-            'months'        => $monthList
+            'months'        => getMonthList($monthYear)
         ]);
     }
 
@@ -83,21 +69,8 @@ class WorkingTimeController extends Controller
      */
     public function index($monthYear)
     {
-        // List of months
-        // 6 months ahead and behind
-        $monthList = [];
-
-        // Get months previous
-        for ($months = 6; $months > 0; $months--) {
-            $monthList[] = WorkingTime::getDate($monthYear)->subMonths($months);
-        }
-
-        // Get months now and ahead
-        for ($months = 0; $months < 6; $months++) {
-            $monthList[] = WorkingTime::getDate($monthYear)->addMonths($months);
-        }
-
-        $date = WorkingTime::getDate($monthYear);
+        // Current time
+        $date = monthYearToDate($monthYear);
 
         return view('admin.roster', [
             'business'      => BusinessOwner::first(),
@@ -106,7 +79,7 @@ class WorkingTimeController extends Controller
             'employee'      => null,
             'date'          => $date,
             'dateString'    => $date->format('m-Y'),
-            'months'        => $monthList
+            'months'        => getMonthList($monthYear)
         ]);
     }
 
@@ -121,16 +94,16 @@ class WorkingTimeController extends Controller
     // Create a new working time
 	public function create(Request $request, $monthYear = null)
 	{
+        Log::info("An attempt was made to create a new working time", $request->all());
+
         if ($request->month_year) {
             $temp = explode('-', $request->month_year);
-            $date = Carbon::createFromDate($temp[1], $temp[0], $request->day)->toDateString();
+            $date = Time::createFromDate($temp[1], $temp[0], $request->day)->toDateString();
             $request->merge(['date' => $date]);
         }
         else {
             $date = toDate($request->date);
         }
-
-        Log::info("An attempt was made to create a new working time", $request->all());
 
 		// Custom error messages
 		$messages = [
@@ -250,6 +223,6 @@ class WorkingTimeController extends Controller
         session()->flash('message', 'Edited working time has been successful.');
 
         // Redirect to the business owner employee page
-        return redirect('/admin/roster/' . Carbon::parse($request->date)->format('m-Y'));
+        return redirect('/admin/roster/' . Time::parse($request->date)->format('m-Y'));
     }
 }

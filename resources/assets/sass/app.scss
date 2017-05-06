@@ -11,7 +11,6 @@
 @import 'node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
 @import 'dashboard';
-@import 'customer_bookings';
 
 body {
 	background-color: $body-bg;
@@ -82,45 +81,13 @@ footer {
 
 .block {
 	background: white;
-	padding: $padding-base $padding-base 0 $padding-base;
+	padding: 15px;
 	border: 1px solid $border-color;
-	border-radius: 5px;
+	box-shadow: 0 2px 4px #d2d2d2;
 
 	@include m('no-padding') {
 		padding: 0px !important;
 	}
-}
-
-.item {
-	text-align: left;
-	padding: 8px;
-	background-color: $brand-primary;
-	border-radius: $border-radius-base;
-	color: $white;
-	margin-bottom: $margin-base;
-	position: relative;
-
-	@include e('title') {
-		margin-top: 0;
-		margin-bottom: 8px;
-		font-family: $font-family-second;
-		text-align: center;
-	}
-
-	@include e('text') {
-		margin-bottom: 0;
-	}
-
-	@include e('time') {
-		margin-bottom: 0;
-		margin-top: 8px;
-		font-family: $font-family-second;
-		text-align: center;
-	}
-}
-
-.item:last-child {
-	margin: 0;
 }
 
 .form-group {
@@ -131,18 +98,117 @@ footer {
 	margin: 0;
 }
 
+// Calendar
+
+.calendar {
+	border: 1px solid $border-color;
+
+	@include e('week') {
+		border-right: 1px solid $gray-light;
+		min-width: 60px;
+
+		@include m('label') {
+			padding-top: 60px !important;
+			font-family: $font-family-second;
+			font-weight: bold;
+		}
+	}
+
+	@include e('day') {
+		color: $gray;
+
+		@include m('block') {
+			background: white;
+			position: relative;
+			height: 150px;
+			min-width: 110px;
+			border: 1px solid $border-color;
+		}
+
+		@include m('disabled') {
+			background-color: $gray-lightest;
+		}
+	}
+
+	@include e('day-label') {
+		position: absolute;
+		top: 6px;
+		right: 10px;
+		color: $gray-lighter;
+	}
+
+	// Working time
+
+	.item {
+		text-align: left;
+
+		@include e('block') {
+			margin-right: 25px;
+			padding: 4px;
+			background-color: $brand-primary;
+			border-radius: $border-radius-base;
+			color: $white;
+			margin-bottom: $margin-base;
+			position: relative;
+			min-width: 110px;
+
+			@include m('padding') {
+				padding: 4px 24px 4px 4px;
+			}
+		}
+
+		@include e('text') {
+			margin-bottom: 0;
+		}
+
+		@include e('time') {
+			margin-bottom: 0;
+			font-family: $font-family-second;
+		}
+
+		@include e('name') {
+			font-family: $font-family-base;
+		}
+
+		@include e('edit') {
+			position: absolute;
+			top: 6px;
+			right: 8px;
+			color: $brand-light;
+			font-size: 14px;
+		}
+
+		@include e-hover('edit') {
+			color: white;
+		}
+	}
+
+	.item:last-child {
+		margin: 0;
+	}
+}
+
 .table {
+	border: 1px solid $border-color;
+	box-shadow: 0 2px 4px #d2d2d2;
+
 	th {
-		border-bottom: 1px solid $border-color;
 		font-family: $font-family-second;
 		font-size: 18px;
 		text-align: center;
-		color: $gray-dark;
+		border-bottom: 1px solid $border-color;
+		background: white;
 	}
 
 	td {
 		text-align: center;
 		font-size: 16px;
+		border-bottom: 1px solid $border-color;
+		background: white;
+	}
+
+	thead > tr > th, thead > tr > td, tbody > tr > th, tbody > tr > td, tfoot > tr > th, tfoot > tr > td {
+		border-top: none;
 	}
 
 	// General modifiers
@@ -152,27 +218,27 @@ footer {
 	}
 
 	@include e('right-solid') {
-		border-right: $dash-table-border solid $dash-table-color;
+		border-right: $dash-table-border solid $border-color;
 	}
 
 	@include e('right-dotted') {
-		border-right: $dash-table-border dotted $gray-lighter;
+		border-right: $dash-table-border dotted $border-color;
 	}
 
 	@include e('right-dashed') {
-		border-right: $dash-table-border dashed $gray-lighter;
+		border-right: $dash-table-border dashed $border-color;
 	}
 
 	@include e('left-solid') {
-		border-left: $dash-table-border solid $dash-table-color;
+		border-left: $dash-table-border solid $border-color;
 	}
 
 	@include e('left-dotted') {
-		border-left: $dash-table-border dotted $gray-lighter;
+		border-left: $dash-table-border dotted $border-color;
 	}
 
 	@include e('left-dashed') {
-		border-left: $dash-table-border dashed $gray-lighter;
+		border-left: $dash-table-border dashed $border-color;
 	}
 
 	@include e-last-child('right-solid') {
@@ -210,7 +276,8 @@ footer {
 	}
 
 	@include e('time') {
-		max-width: 80px;
+		min-width: 80px;
+		max-width: 150px;
 	}
 
 	@include e('name') {
@@ -247,7 +314,6 @@ footer {
 }
 
 .request {
-	margin-bottom: $margin-large;
 	position: relative;
 
 	@include e('input') {
