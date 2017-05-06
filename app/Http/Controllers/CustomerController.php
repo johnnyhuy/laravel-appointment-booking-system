@@ -61,7 +61,7 @@ class CustomerController extends Controller
             'phone' => request('phone'),
         ]);
 
-        Log::notice("A customer account with user_id and username: " . $customer->id . ', '. $customer->username . " was created");
+        Log::notice("A customer account with user_id and username: " . $customer->id . ', '. $customer->username . " was created", $customer->toArray());
 
         // Session flash
         session()->flash('message', 'Thank you for registering! You can now Login!');
