@@ -17,7 +17,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class EmployeeController extends Controller
 {
@@ -68,36 +68,5 @@ class EmployeeController extends Controller
             'business' => BusinessOwner::first(),
             'employees' => Employee::all()->sortBy('firstname')->sortBy('lastname')
         ]);
-    }
-
-    public function assign($employee_id = null)
-    {
-        if ($employee_id) {
-            // Return the assign employees page
-            return view('admin.assign_employees', [
-                'business' => BusinessOwner::first(),
-                'employees' => Employee::all()->sortBy('lastname')->sortBy('firstname')->sortBy('title'),
-                'selectedEmployee' => Employee::find($employee_id),
-                'bookings' => Booking::getWorkableBookingsForEmployee($employee_id,30),
-                'unassignBookings' => Booking::all()
-                    ->where('employee_id', null)
-                    ->where('date', '<=', Carbon::now('Australia/Melbourne')->endOfMonth()->toDateString())
-                    ->where('date', '>=', Carbon::now('Australia/Melbourne')->startOfMonth()->toDateString())
-            ]);
-        }
-        else {
-            $employee = Employee::first();
-
-            if ($employee) {
-                return redirect('/admin/employees/assign/' . $employee->id);
-            }
-            else {
-                return view('shared.error_page', [
-                    'business' => BusinessOwner::first(),
-                    'message' => 'No employees found',
-                    'subMessage' => 'There seems to be no employees on the business. Create one <a href="/admin/employees">here</a>'
-                ]);
-            }
-        }
     }
 }

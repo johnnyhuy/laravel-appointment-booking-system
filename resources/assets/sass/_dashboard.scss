@@ -1,6 +1,10 @@
 // General dashboard classes
 .dashboard {
 	padding-top: $navbar-height;
+
+	hr {
+		border-top: 1px solid $gray-lighter;
+	}
 }
 
 
@@ -28,7 +32,7 @@ footer.dashboard {
 		padding: $sidebar-padding;
 		overflow-x: hidden;
 		overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-		background-color: $gray-lightest;
+		background-color: $gray-dark;
 		border-right: 1px solid $gray-lighter;
 	}
 }
@@ -45,78 +49,12 @@ footer.dashboard {
 	}
 
 	@include e('message') {
-		font-family: $font-secondary;
+		font-family: $font-family-second;
 		color: $gray-dark;
 	}
 
 	@include e('description') {
 		margin-top: 20px;
-	}
-}
-
-// Calender
-
-.calender {
-	@include e('week') {
-		border-right: 1px solid $gray-light;
-		min-width: 60px;
-
-		@include m('label') {
-			padding-top: 60px !important;
-			font-family: $font-secondary;
-			font-weight: bold;
-		}
-	}
-
-	@include e('day') {
-		min-width: 150px;
-
-		@include m('block') {
-			position: relative;
-			border-left: 1px solid $gray-lighter;
-			border-top: 1px solid $gray-lighter;
-			height: 150px;
-		}
-
-		@include m('disabled') {
-			background-color: $gray-lightest;
-		}
-	}
-
-	@include e('day-label') {
-		position: absolute;
-		top: 6px;
-		right: 10px;
-		color: $gray-lighter;
-	}
-
-	// Working time
-
-	.working-time {
-		text-align: left;
-
-		@include e('block') {
-			margin-right: 25px;
-			padding: 5px 30px 5px 5px;
-			background-color: $brand-primary;
-			border-radius: $border-radius-large;
-			color: $white;
-			margin-bottom: $margin-base;
-			position: relative;
-		}
-
-		@include e('name') {
-			font-family: $font-primary;
-			font-weight: bold;
-			font-size: 18px;
-		}
-
-		@include e('edit') {
-			position: absolute;
-			top: 8px;
-			right: 12px;
-			color: white;
-		}
 	}
 }
 
@@ -126,7 +64,7 @@ footer.dashboard {
 	padding: 20px;
 
 	@include e('header') {
-		font-family: $font-secondary;
+		font-family: $font-family-second;
 		font-weight: 600;
 		margin-top: 0;
 		margin-bottom: $margin-base;
@@ -146,15 +84,19 @@ footer.dashboard {
 	@include e('table-wrapper') {
 		border-radius: $border-radius-large;
 		border: $dash-table-border solid $dash-table-color;
-		overflow: hidden;
 		margin-bottom: 40px;
+		overflow: hidden;
+
+		@include m('margin-top') {
+			margin-top: 20px;
+		}
 	}
 
 	@include e('table') {
 		th {
 			border-top: none !important;
 			border-bottom: $dash-table-border solid $dash-table-color !important;
-			font-family: $font-primary;
+			font-family: $font-family-base;
 			font-size: 16px;
 			background-color: $gray-lightest;
 		}
@@ -170,7 +112,7 @@ footer.dashboard {
 
 .navbar-brand {
 	color: $white;
-	font-family: $font-primary;
+	font-family: $font-family-base;
 	font-weight: 600;
 	font-size: 24px;
 }
@@ -203,17 +145,17 @@ footer.dashboard {
 }
 
 .nav-sidebar a {
-	color: $gray-dark;
-	font-family: $font-secondary;
+	color: $white;
+	font-family: $font-family-second;
 	font-size: 18px;
 }
 
 .nav-sidebar > li > a:hover, .nav-sidebar > li > a:focus {
-	background-color: $gray-lighter;
+	background-color: $gray;
 }
 
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
-	background-color: $gray-dark;
+	background-color: $gray-light;
 }

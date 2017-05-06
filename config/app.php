@@ -176,7 +176,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\HelperServiceProvider::class,
     ],
 
     /*
@@ -191,7 +191,6 @@ return [
     */
 
     'aliases' => [
-
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
@@ -225,7 +224,13 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Time' => Carbon\Carbon::class,
+        'Activity' => App\Activity::class,
+        'Booking' => App\Booking::class,
+        'BusinessOwner' => App\BusinessOwner::class,
+        'Customer' => App\Customer::class,
+        'Employee' => App\Employee::class,
+        'WorkingTime' => App\WorkingTime::class,
     ],
 
 ];

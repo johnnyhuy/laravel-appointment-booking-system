@@ -16,18 +16,35 @@ use Carbon\Carbon;
 class ActivityTest extends TestCase
 {
     /**
+     * Calls functions before executing tests
+     */
+    public function setUp()
+    {
+        // Continue to run the rest of the test
+        parent::setUp();
+
+        // Create models
+        $this->bo = factory(BusinessOwner::class)->create();
+        $this->customer = factory(Customer::class)->create();
+        $this->employee = factory(Employee::class)->create();
+        $this->activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Date is tomorrow
+        $this->date = Carbon::now()->addDay()->toDateString();
+    }
+
+    /**
      * Activity has many bookings, make 4 bookings and assign it to an activity
      *
      * @return void
      */
     public function testActivityHasManyBookings()
     {
-    	// Given activity created
-        $activity = factory(Activity::class)->create();
-
         // When activity has 4 bookings
         factory(Booking::class, 4)->create([
-            'activity_id' => $activity->id,
+            'activity_id' => $this->activity->id,
         ]);
 
         // Then there exists 4 bookings from activity
@@ -41,34 +58,24 @@ class ActivityTest extends TestCase
      */
     public function testAdminCreateActivity()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
-        // Create fake data
-        $activity = factory(Activity::class)->make();
-
         // Build activity data
         $activityData = [
-            'name' => $activity->name,
-            'description' => $activity->description,
-            'duration' => $activity->duration,
+            'name' => 'Activity Name',
+            'description' => 'Description',
+            'duration' => '02:00',
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
-
-        // Check if redirected after request
-        $response->assertRedirect('admin/activity');
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check create activity success message
         $response->assertSessionHas('message', 'Activity has successfully been created.');
 
         // Check if activity exists in the database
         $this->assertDatabaseHas('activities', [
-            'id' => 1,
-            'name' => $activity->name,
-            'description' => $activity->description,
-            'duration' => $activity->duration,
+            'name' => $activityData['name'],
+            'description' => $activityData['description'],
+            'duration' => $activityData['duration'],
         ]);
     }
 
@@ -79,9 +86,6 @@ class ActivityTest extends TestCase
      */
     public function testAdminEditActivity()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Create an activity
         $initActivity = factory(Activity::class)->create();
         $editedActivity = factory(Activity::class)->make();
@@ -94,17 +98,14 @@ class ActivityTest extends TestCase
         ];
 
         // Send PUT/PATCH request to admin/activity/{activity}
-        $response = $this->actingAs($bo, 'web_admin')->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
-
-        // Check if redirected after request
-        $response->assertRedirect('admin/activity');
+        $response = $this->actingAs($this->bo, 'web_admin')->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
 
         // Check edit activity success message
         $response->assertSessionHas('message', 'Activity has successfully been edited.');
 
         // Check if activity has been edited in the database
         $this->assertDatabaseHas('activities', [
-            'id' => 1,
+            'id' => $initActivity->id,
             'name' => $editedActivity->name,
             'description' => $editedActivity->description,
             'duration' => $editedActivity->duration,
@@ -118,14 +119,11 @@ class ActivityTest extends TestCase
      */
     public function testAdminRemoveActivity()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Create an activity
         $activity = factory(Activity::class)->create();
 
         // Send DELETE request to admin/activity/{activity}
-        $response = $this->actingAs($bo, 'web_admin')->json('DELETE', 'admin/activity/' . $activity->id);
+        $response = $this->actingAs($this->bo, 'web_admin')->json('DELETE', 'admin/activity/' . $activity->id);
 
         // Check if redirected after request
         $response->assertRedirect('admin/activity');
@@ -144,9 +142,6 @@ class ActivityTest extends TestCase
      */
     public function testActivityValidation()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Create fake data
         $activity = factory(Activity::class)->make();
 
@@ -165,7 +160,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -180,7 +175,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -197,7 +192,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -212,7 +207,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -227,7 +222,7 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
@@ -241,11 +236,25 @@ class ActivityTest extends TestCase
         ];
 
         // Send a POST request to admin/activity
-        $response = $this->actingAs($bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
 
         // Check response for an error message
         $response->assertJsonFragment([
             'The duration field must be in the correct time format (e.g. 4:00 or 16:30).'
+        ]);
+
+        // User inputs an invalid time format in duration
+        // Rebuild activity data
+        $activityData = [
+            'duration' => '00:00'
+        ];
+
+        // Send a POST request to admin/activity
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', 'admin/activity', $activityData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The duration field cannot be zero.'
         ]);
     }
 }

@@ -4,10 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
-use App\Availability;
-
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class Employee extends Model
 {
@@ -25,8 +24,13 @@ class Employee extends Model
 		// Get working time
 		$workingTime = $this->workingTimes->where('date', $date)->first();
 
-		// Get employee bookings
+
+        // Get employee bookings
         $bookings = $this->bookings->where('date', $date)->sortBy('start_time');
+
+        if (!$workingTime || !$bookings) {
+            return null;
+        }
 
         // Index the available time array
         $i = 0;
@@ -42,22 +46,18 @@ class Employee extends Model
 
                 // If avail and booking start time are the same, go back
                 if ($avaTimes[$i]['start_time'] == $booking->start_time) {
-                    $i--;
+                    array_pop($avaTimes);
                 }
-
-                // Go to next index
-                $i++;
 
                 // IF booking and working end time is the same, go back
                 if ($booking->end_time != $workingTime->end_time) {
+                    $i++;
+
                     // Switch times
                     $avaTimes[$i]['start_time'] = $booking->end_time;
 
                     // Default set end time as working time end time
                     $avaTimes[$i]['end_time'] = $workingTime->end_time;
-                }
-                else {
-                    $i--;
                 }
             }
         }

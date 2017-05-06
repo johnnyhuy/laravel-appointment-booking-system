@@ -67,8 +67,8 @@ $factory->define(Activity::class, function (Generator $faker) {
 $factory->define(WorkingTime::class, function (Generator $faker) {
     return [
         'employee_id' => factory(Employee::class)->create()->id,
-        'start_time' => $faker->time,
-        'end_time' => $faker->time,
+        'start_time' => '09:00:00',
+        'end_time' => '17:00:00',
         'date' => $faker->date,
     ];
 });
@@ -170,8 +170,8 @@ $factory->define(Booking::class, function (Generator $faker) {
         'customer_id' => factory(Customer::class)->create()->id,
         'employee_id' => factory(Employee::class)->create()->id,
         'activity_id' => factory(Activity::class)->create()->id,
-        'start_time' => '10:00',
-        'end_time' => '13:00',
+        'start_time' => '10:00:00',
+        'end_time' => '13:00:00',
         'date' => $date,
     ];
 });

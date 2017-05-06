@@ -31,7 +31,7 @@ class BusinessOwnerBookingTest extends DuskTestCase
             	->visit('/admin/booking')
 
                 // Route should go to booking
-            	->assertPathIs('/admin/booking/' . Carbon::now('Australia/Melbourne')->format('m-Y'))
+            	->assertPathIs('/admin/bookings/' . Carbon::now('Australia/Melbourne')->format('m-Y'))
 
                 // See if business name exists on page (header title)
                 ->assertSee($owner->business_name);
@@ -44,7 +44,7 @@ class BusinessOwnerBookingTest extends DuskTestCase
      *
      * @return void
      */
-    public function testAddBooking()
+    public function testAddBookingSuccessful()
     {
         // Creates business owner
         $bo = factory(BusinessOwner::class)->create();

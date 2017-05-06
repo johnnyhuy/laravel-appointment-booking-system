@@ -5,8 +5,6 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-window.$ = window.jQuery = require('jquery');
-
 window.Laravel = { csrfToken: $('meta[name=csrf-token]').attr("content") };
 
 require('./bootstrap');
@@ -17,8 +15,12 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+// Vue.component('example', require('./components/Example.vue'));
 
 // const app = new Vue({
 //     el: '#app'
 // });
+
+$(document).ready(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+});
