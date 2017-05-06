@@ -1,43 +1,33 @@
 @extends('layouts.master')
 
 @section('content')
-	<div class="block block--no-padding">
-		@if ($bookings->count())
-			<table class="table no-margin cus_table">
+	@if ($bookings->count())
+		<table class="table no-margin">
+			<tr>
+				<th class="table__id table__right-solid">ID</th>
+				<th class="table__name">Employee</th>
+				<th class="table__name">Activity</th>
+				<th class="table__time">Start</th>
+				<th class="table__time">End</th>
+				<th class="table__time">Duration</th>
+				<th class="table__date">Date</th>
+			</tr>
+			@foreach ($bookings as $booking)
 				<tr>
-					<th class="cus_table--id cus_table--right-solid">ID</th>
-					<th class="cus_table--name">Employee</th>
-					<th class="cus_table--name">Activity</th>
-					<th class="cus_table--time">Start</th>
-					<th class="cus_table--time">End</th>
-					<th class="cus_table--time">Duration</th>
-					<th class="cus_table--date">Date</th>
+					<td class="table__id table__right-solid">{{ $booking->id }}</td>
+					<td class="table__name table__right-dotted">{{ $booking->employee->firstname . ' ' . $booking->employee->lastname }}</td>
+					<td class="table__name table__right-dotted">{{ $booking->activity->name }}</td>
+					<td class="table__time table__right-dotted">{{ toTime($booking->start_time, true) }}</td>
+					<td class="table__time table__right-dotted">{{ toTime($booking->end_time, true) }}</td>
+					<td class="table__time table__right-dotted">{{ $booking->activity->duration }}</td>
+					<td class="table__date">{{ toDate($booking->date, true) }}</td>
 				</tr>
-				@foreach ($bookings as $booking)
-					<tr>
-						<td class="cus_table--id cus_table--right-solid">{{ $booking->id }}</td>
-						@if ($booking->employee)
-							<td class="cus_table--name cus_table--right-dotted">
-								{{ $booking->employee->firstname . ' ' . $booking->employee->lastname }}
-							</td>
-						@else
-							<td class="cus_table--name cus_table--right-dotted cus_table--yellow">
-								Pending
-							</td>
-						@endif
-						<td class="cus_table--name cus_table--right-dotted">{{ $booking->activity->name }}</td>
-						<td class="cus_table--time cus_table--right-dotted">{{ Carbon\Carbon::parse($booking->start_time)->format('h:i A') }}</td>
-						<td class="cus_table--time cus_table--right-dotted">{{ Carbon\Carbon::parse($booking->end_time)->format('h:i A') }}</td>
-						<td class="cus_table--time cus_table--right-dotted">{{ $booking->activity->duration }}</td>
-						<td class="cus_table--date">{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
-					</tr>
-				@endforeach
-			</table>
-		@else
-			@include('shared.error_message_thumbs_down', [
-				'message' => 'No Bookings Found.',
-				'subMessage' => 'Create a new booking <a href="/bookings/new">here</a>'
-			])
-		@endif
-	</div>
+			@endforeach
+		</table>
+	@else
+		@include('shared.error_message_thumbs_down', [
+			'message' => 'No Bookings Found.',
+			'subMessage' => 'Create a new booking <a href="/bookings/new">here</a>'
+		])
+	@endif
 @endsection

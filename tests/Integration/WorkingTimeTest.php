@@ -11,7 +11,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class WorkingTimeTest extends TestCase
 {
@@ -32,7 +32,7 @@ class WorkingTimeTest extends TestCase
         ]);
 
         // Date is tomorrow
-        $this->date = Carbon::now()->addDay()->toDateString();
+        $this->date = Time::now()->addDay()->toDateString();
     }
 
     /**
@@ -97,20 +97,20 @@ class WorkingTimeTest extends TestCase
         $avaTimes = $this->employee->availableTimes($this->date);
 
         // There should be a available time from 12:00 PM to 01:00 PM
-        $this->assertEquals($avaTimes[0]['start_time'], '12:00');
-        $this->assertEquals($avaTimes[0]['end_time'], '13:30');
+        $this->assertEquals($avaTimes[1]['start_time'], '12:00');
+        $this->assertEquals($avaTimes[1]['end_time'], '13:30');
 
         // There should be a available time from 03:00 PM to 04:00 PM
-        $this->assertEquals($avaTimes[1]['start_time'], '15:00');
-        $this->assertEquals($avaTimes[1]['end_time'], '16:00');
+        $this->assertEquals($avaTimes[2]['start_time'], '15:00');
+        $this->assertEquals($avaTimes[2]['end_time'], '16:00');
 
         // There should be a available time from 05:00 PM to 07:21 PM
-        $this->assertEquals($avaTimes[2]['start_time'], '17:00');
-        $this->assertEquals($avaTimes[2]['end_time'], '19:21');
+        $this->assertEquals($avaTimes[3]['start_time'], '17:00');
+        $this->assertEquals($avaTimes[3]['end_time'], '19:21');
 
         // There should be a available time from 09:00 PN to 10:00 PM
-        $this->assertEquals($avaTimes[3]['start_time'], '21:00');
-        $this->assertEquals($avaTimes[3]['end_time'], '22:00');
+        $this->assertEquals($avaTimes[4]['start_time'], '21:00');
+        $this->assertEquals($avaTimes[4]['end_time'], '22:00');
     }
 
     /**
@@ -134,16 +134,16 @@ class WorkingTimeTest extends TestCase
      */
     public function testEmployeeHasManyWorkingTimes()
     {
-        // Given there is aan employee
+        // Given there is an employee
         $employee = factory(Employee::class)->create();
 
-        // and there are 20 working times from the employee
-        $workingTimes = factory(WorkingTime::class, 20)->create([
+        // and there are 4 working times from the employee
+        $workingTimes = factory(WorkingTime::class, 4)->create([
             'employee_id' => $this->employee->id,
         ]);
 
         // Working time must have only one employee
-        $this->assertEquals(20, count($this->employee->workingTimes));
+        $this->assertEquals(4, count($this->employee->workingTimes));
     }
 
     /**
@@ -160,17 +160,17 @@ class WorkingTimeTest extends TestCase
     	// and add a two hour shift next week
     	$workingTimeData = [
     		'employee_id' => $this->employee->id,
-    		'start_time' => Carbon::now('Australia/Melbourne')
+    		'start_time' => Time::now('Australia/Melbourne')
     			->startOfDay()
     			->addHours(13)
     			// Format time to 24 hour HH:MM
     			->format('H:i'),
-    		'end_time' => Carbon::now('Australia/Melbourne')
+    		'end_time' => Time::now('Australia/Melbourne')
     			->startOfDay()
     			->addHours(15)
     			// Format time to 24 hour HH:MM
     			->format('H:i'),
-    		'date' => Carbon::now('Australia/Melbourne')
+    		'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
     			->addWeek()
     			->startOfWeek()
@@ -203,7 +203,7 @@ class WorkingTimeTest extends TestCase
             'employee_id' => $this->employee->id,
             'start_time' => '09:00:00',
             'end_time' => '17:00:00',
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->toDateString(),
         ]);
 
@@ -212,7 +212,7 @@ class WorkingTimeTest extends TestCase
             'employee_id' => $wTime->employee_id,
             'start_time' => '11:00:00',
             'end_time' => '14:00:00',
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->toDateString(),
         ]);
 
@@ -293,11 +293,11 @@ class WorkingTimeTest extends TestCase
     	// Create working time data
     	// and add a one hour shift
     	$workingTimeData = [
-    		'start_time' => Carbon::now('Australia/Melbourne')
+    		'start_time' => Time::now('Australia/Melbourne')
     			->startOfDay()
     			->addHours(16)
     			->format('H:i'),
-    		'end_time' => Carbon::now('Australia/Melbourne')
+    		'end_time' => Time::now('Australia/Melbourne')
     			->startOfDay()
     			->addHours(15)
     			->format('H:i'),
@@ -341,10 +341,10 @@ class WorkingTimeTest extends TestCase
         // Create a working time at the start of the month
         // and add two minutes
         $laterWorkingTime = factory(WorkingTime::class)->create([
-            'start_time' => Carbon::now('Australia/Melbourne')
+            'start_time' => Time::now('Australia/Melbourne')
                 ->addMinutes(2)
                 ->toTimeString(),
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->startOfMonth()
                 ->toDateString(),
@@ -353,10 +353,10 @@ class WorkingTimeTest extends TestCase
         // Create a working time at the start of the month
         // and add one minute
         $earlierWorkingTime = factory(WorkingTime::class)->create([
-            'start_time' => Carbon::now('Australia/Melbourne')
+            'start_time' => Time::now('Australia/Melbourne')
                 ->addMinute()
                 ->toTimeString(),
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->startOfMonth()
                 ->toDateString(),
@@ -375,7 +375,7 @@ class WorkingTimeTest extends TestCase
     {
         // Create a working time at the start of next month
         factory(WorkingTime::class)->create([
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->startOfMonth()
                 ->toDateString(),
@@ -383,7 +383,7 @@ class WorkingTimeTest extends TestCase
 
         // Create a working time at the end of the month
         factory(WorkingTime::class)->create([
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->endOfMonth()
                 ->toDateString(),
@@ -404,17 +404,17 @@ class WorkingTimeTest extends TestCase
         // Two hour shift 1:00PM - 3:00PM
         // Date is within next month from today
         $workingTime = factory(WorkingTime::class)->create([
-            'start_time' => Carbon::now('Australia/Melbourne')
+            'start_time' => Time::now('Australia/Melbourne')
                 ->startOfDay()
                 ->addHours(13)
                 // Format time to 24 hour HH:MM
                 ->format('H:i'),
-            'end_time' => Carbon::now('Australia/Melbourne')
+            'end_time' => Time::now('Australia/Melbourne')
                 ->startOfDay()
                 ->addHours(15)
                 // Format time to 24 hour HH:MM
                 ->format('H:i'),
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->toDateString(),
         ]);
@@ -425,12 +425,12 @@ class WorkingTimeTest extends TestCase
         // Use the same working time date as the factory
         $response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', [
             'employee_id' => $workingTime->employee->id,
-            'start_time' => Carbon::now('Australia/Melbourne')
+            'start_time' => Time::now('Australia/Melbourne')
                 ->startOfDay()
                 ->addHours(13)
                 // Format time to 24 hour HH:MM
                 ->format('H:i'),
-            'end_time' => Carbon::now('Australia/Melbourne')
+            'end_time' => Time::now('Australia/Melbourne')
                 ->startOfDay()
                 ->addHours(15)
                 // Format time to 24 hour HH:MM

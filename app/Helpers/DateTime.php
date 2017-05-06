@@ -1,6 +1,6 @@
 <?php
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 /**
  * Date/Time helper functions
@@ -16,7 +16,7 @@ function parseDateTime($string)
 {
     // Avoid thrown exception
     try {
-        return Carbon::parse($string);
+        return Time::parse($string);
     }
     catch (Exception $e) {
         return $string;
@@ -34,7 +34,7 @@ function toMonthYear($stringDateTime)
 {
     // Avoid thrown exception
     try {
-        return Carbon::parse($stringDateTime)->format('m-Y');
+        return Time::parse($stringDateTime)->format('m-Y');
     }
     catch (Exception $e) {
         return $stringDateTime;
@@ -52,7 +52,7 @@ function toDateTime($stringDateTime)
 {
     // Avoid thrown exception
     try {
-        return Carbon::parse($stringDateTime)->toDateTimeString();
+        return Time::parse($stringDateTime)->toDateTimeString();
     }
     catch (Exception $e) {
         return $stringDateTime;
@@ -69,7 +69,7 @@ function toTime($stringDateTime, $hourMinute = null)
 {
     // Avoid thrown exception
     try {
-        $time = Carbon::parse($stringDateTime);
+        $time = Time::parse($stringDateTime);
     }
     catch (Exception $e) {
         return $stringDateTime;
@@ -101,7 +101,7 @@ function toDate($stringDateTime, $slash = null)
 {
     // Avoid thrown exception
     try {
-        $time = Carbon::parse($stringDateTime);
+        $time = Time::parse($stringDateTime);
     }
     catch (Exception $e) {
         return $stringDateTime;
@@ -130,7 +130,7 @@ function toDate($stringDateTime, $slash = null)
  */
 function getTimeNow()
 {
-    return Carbon::now('AEST')->toTimeString();
+    return Time::now('AEST')->toTimeString();
 }
 
 /**
@@ -140,7 +140,7 @@ function getTimeNow()
  */
 function getDateNow()
 {
-    return Carbon::now('AEST')->toDateString();
+    return Time::now('AEST')->toDateString();
 }
 
 /**
@@ -150,7 +150,7 @@ function getDateNow()
  */
 function getDateTimeNow()
 {
-    return Carbon::now('AEST')->toDateTimeString();
+    return Time::now('AEST')->toDateTimeString();
 }
 
 /**
@@ -181,7 +181,7 @@ function monthYearToDate($string)
         return $string;
     }
 
-    return Carbon::createFromDate($year, $month);
+    return Time::createFromDate($year, $month);
 }
 
 /**

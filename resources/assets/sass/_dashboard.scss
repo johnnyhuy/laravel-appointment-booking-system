@@ -32,7 +32,7 @@ footer.dashboard {
 		padding: $sidebar-padding;
 		overflow-x: hidden;
 		overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-		background-color: $gray-lightest;
+		background-color: $gray-dark;
 		border-right: 1px solid $gray-lighter;
 	}
 }
@@ -55,91 +55,6 @@ footer.dashboard {
 
 	@include e('description') {
 		margin-top: 20px;
-	}
-}
-
-// Calendar
-
-.calendar {
-	overflow-y: hidden;
-	overflow-x: scroll;
-
-	@include e('week') {
-		border-right: 1px solid $gray-light;
-		min-width: 60px;
-
-		@include m('label') {
-			padding-top: 60px !important;
-			font-family: $font-family-second;
-			font-weight: bold;
-		}
-	}
-
-	@include e('day') {
-		@include m-first-child('block') {
-			border-left: none !important;
-		}
-
-		@include m('block') {
-			position: relative;
-			border-left: 1px solid $gray-lighter;
-			border-top: 1px solid $gray-lighter;
-			height: 150px;
-			min-width: 110px
-		}
-
-		@include m('disabled') {
-			background-color: $gray-lightest;
-		}
-	}
-
-	@include e('day-label') {
-		position: absolute;
-		top: 6px;
-		right: 10px;
-		color: $gray-lighter;
-	}
-
-	// Working time
-
-	.working-time {
-		text-align: left;
-
-		@include e('block') {
-			margin-right: 25px;
-			padding: 4px 24px 4px 4px;
-			background-color: $brand-primary;
-			border-radius: $border-radius-base;
-			color: $white;
-			margin-bottom: $margin-base;
-			position: relative;
-			min-width: 110px;
-		}
-
-		@include e('name') {
-			font-family: $font-family-base;
-			font-weight: bold;
-		}
-
-		@include e('edit') {
-			position: absolute;
-			top: 4px;
-			right: 6px;
-			color: $brand-light;
-			font-size: 12px;
-		}
-
-		@include e-hover('edit') {
-			color: white;
-		}
-
-		@include e('title') {
-			font-size: 14px;
-		}
-
-		@include e('time') {
-			font-size: 14px;
-		}
 	}
 }
 
@@ -230,32 +145,17 @@ footer.dashboard {
 }
 
 .nav-sidebar a {
-	color: $gray-dark;
+	color: $white;
 	font-family: $font-family-second;
 	font-size: 18px;
 }
 
 .nav-sidebar > li > a:hover, .nav-sidebar > li > a:focus {
-	background-color: $gray-lighter;
+	background-color: $gray;
 }
 
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
-	background-color: $gray-dark;
-}
-
-/* Small devices (tablets, 768px and up) */
-@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-
-}
-
-/* Medium devices (desktops, 992px and up) */
-@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
-
-}
-
-/* Large devices (large desktops, 1200px and up) */
-@media (min-width: $screen-lg-min) {
-
+	background-color: $gray-light;
 }
