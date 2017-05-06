@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Activity;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class Booking extends Model
 {
@@ -20,16 +20,16 @@ class Booking extends Model
 	 */
 	public static function calcEndTime($pDuration, $pStartTime) {
 		// Set duration
-		$duration = Carbon::parse($pDuration);
+		$duration = Time::parse($pDuration);
 
 		// Set start time
-		$startTime = Carbon::parse($pStartTime);
+		$startTime = Time::parse($pStartTime);
 
 	    // Calculate end time
-	    return Carbon::createFromTime($startTime->hour, $startTime->minute)
+	    return Time::createFromTime($startTime->hour, $startTime->minute)
 	    	->addHours($duration->hour)
 	    	->addMinutes($duration->minute)
-	    	->format('H:i');
+	    	->toTimeString();
 	}
 
 	/**
@@ -40,8 +40,8 @@ class Booking extends Model
 	public function duration($toTimeString = false)
 	{
 		// Set start and end time
-		$startTime = Carbon::parse($this->attributes['start_time']);
-		$endTime = Carbon::parse($this->attributes['end_time']);
+		$startTime = Time::parse($this->attributes['start_time']);
+		$endTime = Time::parse($this->attributes['end_time']);
 
 		// Get difference in time
 		$duration = $startTime->diffInSeconds($endTime);
@@ -62,7 +62,7 @@ class Booking extends Model
 	 */
 	public static function allHistory() {
 		// Return past bookings eloquent model
-		return Booking::where('date', '<', Carbon::now('Australia/Melbourne')->toDateString())
+		return Booking::where('date', '<', Time::now('Australia/Melbourne')->toDateString())
 			->get()
 			// Sort by start time using an eloquent collection function
 			->sortByDESC('date');
@@ -74,10 +74,10 @@ class Booking extends Model
 	 * @return App\Booking
 	 */
 	public static function allLatest($max = null) {
-		$booking = Booking::where('date', '>=', Carbon::now('Australia/Melbourne')->toDateString());
+		$booking = Booking::where('date', '>=', Time::now('Australia/Melbourne')->toDateString());
 
 		if (isset($max)) {
-			$max = Carbon::now('Australia/Melbourne')->addDays($max);
+			$max = Time::now('Australia/Melbourne')->addDays($max);
 			$booking->where('date', '<=', $max);
 		}
 

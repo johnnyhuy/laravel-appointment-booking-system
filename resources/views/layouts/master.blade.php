@@ -1,24 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+@include('head.html')
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<link rel="icon" href="../../favicon.ico">
 	<title>Appointment Booking System</title>
-	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	@include('head.meta')
+	@include('head.css')
+	@include('head.js')
+	@include('head.other')
 </head>
 
 <body>
 	<div class="container">
 		@if (Auth::check())
 		<ul class="nav nav-pills pull-left">
-			<li role="presentation" class="{{ Request::is('/') ? 'active' : null }}"><a href="/">Home</a></li>
 			@if (Auth::check())
 				<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
-				<li role="presentation" class="{{ Request::is('bookings/new') ? 'active' : null }}"><a href="/bookings/new">Create Booking</a></li>
+				<li role="presentation" class="{{ Request::is('bookings/*') ? 'active' : null }}"><a href="/bookings/{{ toMonthYear(getNow()) }}/new">Create Booking</a></li>
 			@endif
 		</ul>
 

@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+@include('head.html')
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<link rel="icon" href="../../favicon.ico">
 	<title>{{ $business->business_name }}: Dashboard</title>
-	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	@include('head.meta')
+	@include('head.css')
+	@include('head.js')
+	@include('head.other')
 </head>
 
 <body class="dashboard">
@@ -57,7 +54,7 @@
 				@endphp
 				<a title="Redirect back to business information" class="navbar-brand" href="/admin">{{ $business->business_name . $title }}</a>
 			</div>
-			<div id="navbar" class="navbar-collapse collapse">
+			<div id="navbar" class="collapse navbar-collapse">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/admin">Logged in as {{ $business->username }}</a></li>
 					<li><a title="Logout Administrator" href="/logout">Logout</a></li>
@@ -72,11 +69,10 @@
 					<li class="{{ Request::is('admin') ? 'active' : null }}"><a title="Show Business Information" href="/admin">Information</a></li>
 					<li class="{{ Request::is('admin/summary') ? 'active' : null }}"><a title="Show a summary of bookings" href="/admin/summary">Summary</a></li>
 					<li class="{{ Request::is('admin/history') ? 'active' : null }}"><a title="Show a history of bookings" href="/admin/history">History</a></li>
-					<li class="{{ Request::is('admin/roster/*') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster/{{ Carbon\Carbon::now('Australia/Melbourne')->format('m-Y') }}">Roster</a></li>
+					<li class="{{ Request::is('admin/roster/*') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster/{{ Time::now('Australia/Melbourne')->format('m-Y') }}">Roster</a></li>
 					<li class="{{ Request::is('admin/employees') ? 'active' : null }}"><a title="Show all employees" href="/admin/employees">Employees</a></li>
 					<li class="{{ Request::is('admin/activity') ? 'active' : null }}"><a title="Show activitites" href="/admin/activity">Activities</a></li>
-					<li class="{{ Request::is('admin/booking/*') ? 'active' : null }}"><a title="Show a bookings" href="/admin/booking/{{ Carbon\Carbon::now('Australia/Melbourne')->format('m-Y') }}">Bookings</a></li>
-					<li class="{{ Request::is('admin/employees/assign/*') ? 'active' : null }}"><a title="Assign Employees to Bookings" href="/admin/employees/assign">Assign Employees</a></li>
+					<li class="{{ Request::is('admin/bookings/*') ? 'active' : null }}"><a title="Show a bookings" href="/admin/bookings/{{ Time::now('Australia/Melbourne')->format('m-Y') }}">Bookings</a></li>
 				</ul>
 				<footer class="dashboard">LCJJ Development Team</footer>
 			</div>
@@ -85,7 +81,6 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

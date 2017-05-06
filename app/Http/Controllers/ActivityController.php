@@ -17,7 +17,7 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class ActivityController extends Controller
 {
@@ -48,13 +48,14 @@ class ActivityController extends Controller
         $messages = [
             'name.regex' => 'The :attribute is invalid, do not use special characters.',
             'duration.date_format' => 'The :attribute field must be in the correct time format (e.g. 4:00 or 16:30).',
+            'duration.after' => 'The :attribute field cannot be zero.',
         ];
 
         // Validation rules
         $rules = [
             'name' => 'required|unique:activities,name|min:2|max:32|regex:/^[A-z0-9\s]+$/',
             'description' => 'max:64',
-            'duration' => 'required|date_format:H:i',
+            'duration' => 'required|date_format:H:i|after:00:00',
         ];
 
         // Attributes replace the field name with a more readable name

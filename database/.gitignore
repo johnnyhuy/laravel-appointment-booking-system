@@ -1,4 +1,3 @@
-dev-database.sqlite
-test-database.sqlite
-dusk-database.sqlite
-*.sqlite
+dev.database.sqlite
+testing.database.sqlite
+dusk.database.sqlite

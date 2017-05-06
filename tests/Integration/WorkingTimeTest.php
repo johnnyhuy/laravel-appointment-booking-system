@@ -11,10 +11,30 @@ use App\Customer;
 use App\Employee;
 use App\WorkingTime;
 
-use Carbon\Carbon;
+use Carbon\Carbon as Time;
 
 class WorkingTimeTest extends TestCase
 {
+    /**
+     * Calls functions before executing tests
+     */
+    public function setUp()
+    {
+        // Continue to run the rest of the test
+        parent::setUp();
+
+        // Create models
+        $this->bo = factory(BusinessOwner::class)->create();
+        $this->customer = factory(Customer::class)->create();
+        $this->employee = factory(Employee::class)->create();
+        $this->activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Date is tomorrow
+        $this->date = Time::now()->addDay()->toDateString();
+    }
+
     /**
      * Get available working times of an employee on a date
      * A booking exists and is during a working time of an employee
@@ -24,85 +44,73 @@ class WorkingTimeTest extends TestCase
      */
     public function testAvailableWorkingTimesForAnEmployeePerDate()
     {
-        // Date is tomorrow
-        $date = Carbon::now()->addDay()->toDateString();
-
-        // Create employee, customer
-        $employee = factory(Employee::class)->create();
-        $customer = factory(Customer::class)->create();
-
-        // Create an activity for two hours
-        $activity = factory(Activity::class)->create([
-            'duration' => '02:00'
-        ]);
-
         // Create a working time tomorrow from 09:00 AM to 10:00 PM
         $workingTime = WorkingTime::create([
-            'employee_id' => $employee->id,
+            'employee_id' => $this->employee->id,
             'start_time' => '09:00',
             'end_time' => '22:00',
-            'date' => $date
+            'date' => $this->date
         ]);
 
         // Create Bookings for tomorrow
 
         // 09:00 AM to 12:00 PM
         Booking::create([
-            'customer_id' => $customer->id,
-            'activity_id' => $activity->id,
-            'employee_id' => $employee->id,
+            'customer_id' => $this->customer->id,
+            'activity_id' => $this->activity->id,
+            'employee_id' => $this->employee->id,
             'start_time' => '09:00',
             'end_time' => '12:00',
-            'date' => $date
+            'date' => $this->date
         ]);
 
         // 01:30 PM to 03:00 PM
         Booking::create([
-            'customer_id' => $customer->id,
-            'activity_id' => $activity->id,
-            'employee_id' => $employee->id,
+            'customer_id' => $this->customer->id,
+            'activity_id' => $this->activity->id,
+            'employee_id' => $this->employee->id,
             'start_time' => '13:30',
             'end_time' => '15:00',
-            'date' => $date
+            'date' => $this->date
         ]);
 
         // 04:00 PM to 05:00 PM
         Booking::create([
-            'customer_id' => $customer->id,
-            'activity_id' => $activity->id,
-            'employee_id' => $employee->id,
+            'customer_id' => $this->customer->id,
+            'activity_id' => $this->activity->id,
+            'employee_id' => $this->employee->id,
             'start_time' => '16:00',
             'end_time' => '17:00',
-            'date' => $date
+            'date' => $this->date
         ]);
 
         // 07:21 PM to 09:00 PM
         Booking::create([
-            'customer_id' => $customer->id,
-            'activity_id' => $activity->id,
-            'employee_id' => $employee->id,
+            'customer_id' => $this->customer->id,
+            'activity_id' => $this->activity->id,
+            'employee_id' => $this->employee->id,
             'start_time' => '19:21',
             'end_time' => '21:00',
-            'date' => $date
+            'date' => $this->date
         ]);
 
-        $avaTimes = $employee->availableTimes($date);
+        $avaTimes = $this->employee->availableTimes($this->date);
 
         // There should be a available time from 12:00 PM to 01:00 PM
-        $this->assertEquals($avaTimes[0]['start_time'], '12:00');
-        $this->assertEquals($avaTimes[0]['end_time'], '13:30');
+        $this->assertEquals($avaTimes[1]['start_time'], '12:00');
+        $this->assertEquals($avaTimes[1]['end_time'], '13:30');
 
         // There should be a available time from 03:00 PM to 04:00 PM
-        $this->assertEquals($avaTimes[1]['start_time'], '15:00');
-        $this->assertEquals($avaTimes[1]['end_time'], '16:00');
+        $this->assertEquals($avaTimes[2]['start_time'], '15:00');
+        $this->assertEquals($avaTimes[2]['end_time'], '16:00');
 
         // There should be a available time from 05:00 PM to 07:21 PM
-        $this->assertEquals($avaTimes[2]['start_time'], '17:00');
-        $this->assertEquals($avaTimes[2]['end_time'], '19:21');
+        $this->assertEquals($avaTimes[3]['start_time'], '17:00');
+        $this->assertEquals($avaTimes[3]['end_time'], '19:21');
 
         // There should be a available time from 09:00 PN to 10:00 PM
-        $this->assertEquals($avaTimes[3]['start_time'], '21:00');
-        $this->assertEquals($avaTimes[3]['end_time'], '22:00');
+        $this->assertEquals($avaTimes[4]['start_time'], '21:00');
+        $this->assertEquals($avaTimes[4]['end_time'], '22:00');
     }
 
     /**
@@ -126,16 +134,16 @@ class WorkingTimeTest extends TestCase
      */
     public function testEmployeeHasManyWorkingTimes()
     {
-        // Given there is aan employee
+        // Given there is an employee
         $employee = factory(Employee::class)->create();
 
-        // and there are 20 working times from the employee
-        $workingTimes = factory(WorkingTime::class, 20)->create([
-            'employee_id' => $employee->id,
+        // and there are 4 working times from the employee
+        $workingTimes = factory(WorkingTime::class, 4)->create([
+            'employee_id' => $this->employee->id,
         ]);
 
         // Working time must have only one employee
-        $this->assertEquals(20, count($employee->workingTimes));
+        $this->assertEquals(4, count($this->employee->workingTimes));
     }
 
     /**
@@ -145,27 +153,24 @@ class WorkingTimeTest extends TestCase
      */
     public function testAddWorkingTimeForEmployee()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
     	// Create employee
     	$employee = factory(Employee::class)->create();
 
     	// Create working time data
     	// and add a two hour shift next week
     	$workingTimeData = [
-    		'employee_id' => $employee->id,
-    		'start_time' => Carbon::now('Australia/Melbourne')
+    		'employee_id' => $this->employee->id,
+    		'start_time' => Time::now('Australia/Melbourne')
     			->startOfDay()
     			->addHours(13)
     			// Format time to 24 hour HH:MM
     			->format('H:i'),
-    		'end_time' => Carbon::now('Australia/Melbourne')
+    		'end_time' => Time::now('Australia/Melbourne')
     			->startOfDay()
     			->addHours(15)
     			// Format time to 24 hour HH:MM
     			->format('H:i'),
-    		'date' => Carbon::now('Australia/Melbourne')
+    		'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
     			->addWeek()
     			->startOfWeek()
@@ -174,7 +179,7 @@ class WorkingTimeTest extends TestCase
     	];
 
     	// Send a POST request to /admin/roster with working time data
-    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Check for a session message
         $response->assertSessionHas('message', 'New working time has been added.');
@@ -193,43 +198,41 @@ class WorkingTimeTest extends TestCase
      */
     public function testEditWorkingTimeSuccessful()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Create a working time from 09:00 AM to 05:00 PM today
-        $workingTime = factory(WorkingTime::class)->create([
-            'start_time' => '09:00',
-            'end_time' => '17:00',
-            'date' => Carbon::now('Australia/Melbourne')
+        $wTime = WorkingTime::create([
+            'employee_id' => $this->employee->id,
+            'start_time' => '09:00:00',
+            'end_time' => '17:00:00',
+            'date' => Time::now('Australia/Melbourne')
                 ->toDateString(),
         ]);
 
         // Create a booking that starts at 11:00 AM to 2:00 PM today
         $booking = factory(Booking::class)->create([
-            'employee_id' => $workingTime->employee_id,
-            'start_time' => '11:00',
-            'end_time' => '14:00',
-            'date' => Carbon::now('Australia/Melbourne')
+            'employee_id' => $wTime->employee_id,
+            'start_time' => '11:00:00',
+            'end_time' => '14:00:00',
+            'date' => Time::now('Australia/Melbourne')
                 ->toDateString(),
         ]);
 
         // Build working time data
-        $workingTimeData = [
-            'employee_id' => $workingTime->employee_id,
-            'start_time' => $workingTime->start_time,
-            'end_time' => $workingTime->end_time,
-            'date' => $workingTime->date,
+        $wTimeData = [
+            'employee_id' => $wTime->employee_id,
+            'start_time' => $wTime->start_time,
+            'end_time' => $wTime->end_time,
+            'date' => $wTime->date,
         ];
 
         // Send a PUT request to /admin/roster/{id} with working time data
-        $response = $this->actingAs($bo, 'web_admin')
-            ->json('PUT', '/admin/roster/' . $workingTime->employee_id, $workingTimeData);
+        $response = $this->actingAs($this->bo, 'web_admin')
+            ->json('PUT', '/admin/roster/' . $wTime->employee_id, $wTimeData);
 
         // Check for a session message
         $response->assertSessionHas('message', 'Edited working time has been successful.');
 
         // Booking employee ID should be null after edit
-        $this->assertEquals(null, Booking::find($booking->id)->employee_id);
+        $this->assertEquals(null, Booking::find($booking->id));
     }
 
     /**
@@ -239,9 +242,6 @@ class WorkingTimeTest extends TestCase
      */
     public function testAllFieldsThatAreRequired()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Build working time data
         $workingTimeData = [
             'employee_id' => '',
@@ -251,7 +251,7 @@ class WorkingTimeTest extends TestCase
         ];
 
     	// Send a POST request to /admin/roster with nothing
-    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Check if errors occured
         $response->assertJson([
@@ -269,9 +269,6 @@ class WorkingTimeTest extends TestCase
      */
     public function testStartTimeAndEndTimeFieldsMustBeATimeFormat()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
     	// When time fields are not in time format
     	$workingTimeData = [
     		'start_time' => 'johndoe',
@@ -279,7 +276,7 @@ class WorkingTimeTest extends TestCase
     	];
 
     	// Send a POST request to /admin/roster with nothing
-    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Find in JSON response for error
         $response->assertJsonFragment(['The start time field must be in the correct time format.']);
@@ -293,24 +290,21 @@ class WorkingTimeTest extends TestCase
      */
     public function testErrorIfStartTimeIsLaterThanEndTime()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
     	// Create working time data
     	// and add a one hour shift
     	$workingTimeData = [
-    		'start_time' => Carbon::now('Australia/Melbourne')
+    		'start_time' => Time::now('Australia/Melbourne')
     			->startOfDay()
     			->addHours(16)
     			->format('H:i'),
-    		'end_time' => Carbon::now('Australia/Melbourne')
+    		'end_time' => Time::now('Australia/Melbourne')
     			->startOfDay()
     			->addHours(15)
     			->format('H:i'),
     	];
 
     	// Send a POST request to /admin/roster with working time data
-    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
 
     	// Find in JSON response for error
         $response->assertJsonFragment([
@@ -328,17 +322,8 @@ class WorkingTimeTest extends TestCase
      */
     public function testErrorIfEmployeeDoesNotExist()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
-    	// Create working time data
-    	// and set employee ID to 1 (non-existant)
-    	$workingTimeData = [
-    		'employee_id' => 1
-    	];
-
     	// Send a POST request to /admin/roster with working time data
-    	$response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+    	$response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', ['employee_id' => 1337]);
 
     	// Find in JSON response for error
         $response->assertJsonFragment([
@@ -354,24 +339,24 @@ class WorkingTimeTest extends TestCase
     public function testGetRosterIsSortedByStartTime()
     {
         // Create a working time at the start of the month
-        // and add two hours
+        // and add two minutes
         $laterWorkingTime = factory(WorkingTime::class)->create([
-            'start_time' => Carbon::now('Australia/Melbourne')
-                ->addHours(2)
+            'start_time' => Time::now('Australia/Melbourne')
+                ->addMinutes(2)
                 ->toTimeString(),
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->startOfMonth()
                 ->toDateString(),
         ]);
 
         // Create a working time at the start of the month
-        // and add one hour
+        // and add one minute
         $earlierWorkingTime = factory(WorkingTime::class)->create([
-            'start_time' => Carbon::now('Australia/Melbourne')
-                ->addHour()
+            'start_time' => Time::now('Australia/Melbourne')
+                ->addMinute()
                 ->toTimeString(),
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->startOfMonth()
                 ->toDateString(),
@@ -390,7 +375,7 @@ class WorkingTimeTest extends TestCase
     {
         // Create a working time at the start of next month
         factory(WorkingTime::class)->create([
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->startOfMonth()
                 ->toDateString(),
@@ -398,7 +383,7 @@ class WorkingTimeTest extends TestCase
 
         // Create a working time at the end of the month
         factory(WorkingTime::class)->create([
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->endOfMonth()
                 ->toDateString(),
@@ -415,24 +400,21 @@ class WorkingTimeTest extends TestCase
      */
     public function testEmployeeCanOnlyHaveOneWorkingTimePerDay()
     {
-        // Login as a business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Create a working time
         // Two hour shift 1:00PM - 3:00PM
         // Date is within next month from today
         $workingTime = factory(WorkingTime::class)->create([
-            'start_time' => Carbon::now('Australia/Melbourne')
+            'start_time' => Time::now('Australia/Melbourne')
                 ->startOfDay()
                 ->addHours(13)
                 // Format time to 24 hour HH:MM
                 ->format('H:i'),
-            'end_time' => Carbon::now('Australia/Melbourne')
+            'end_time' => Time::now('Australia/Melbourne')
                 ->startOfDay()
                 ->addHours(15)
                 // Format time to 24 hour HH:MM
                 ->format('H:i'),
-            'date' => Carbon::now('Australia/Melbourne')
+            'date' => Time::now('Australia/Melbourne')
                 ->addMonth()
                 ->toDateString(),
         ]);
@@ -441,14 +423,14 @@ class WorkingTimeTest extends TestCase
         // Assign to the same employee
         // Two hour shift 1:00PM - 3:00PM
         // Use the same working time date as the factory
-        $response = $this->actingAs($bo, 'web_admin')->json('POST', '/admin/roster', [
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', [
             'employee_id' => $workingTime->employee->id,
-            'start_time' => Carbon::now('Australia/Melbourne')
+            'start_time' => Time::now('Australia/Melbourne')
                 ->startOfDay()
                 ->addHours(13)
                 // Format time to 24 hour HH:MM
                 ->format('H:i'),
-            'end_time' => Carbon::now('Australia/Melbourne')
+            'end_time' => Time::now('Australia/Melbourne')
                 ->startOfDay()
                 ->addHours(15)
                 // Format time to 24 hour HH:MM

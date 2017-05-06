@@ -13,7 +13,7 @@ return [
 		    |
 	*/
 
-	'default' => env('DB_CONNECTION', 'mysql'),
+	'default' => env('DB_CONNECTION', 'sqlite'),
 
 	/*
 		    |--------------------------------------------------------------------------
@@ -35,19 +35,25 @@ return [
 
 		'sqlite' => [
 			'driver' => 'sqlite',
-			'database' => env('DB_DATABASE', database_path('database.sqlite')),
+			'database' => env('DB_DATABASE', database_path('dev.database.sqlite')),
+			'prefix' => '',
+		],
+
+		'sqlite-production' => [
+			'driver' => 'sqlite',
+			'database' => env('DB_DATABASE', database_path('production.database.sqlite')),
 			'prefix' => '',
 		],
 
 		'sqlite-testing' => [
 			'driver' => 'sqlite',
-			'database' => env('DB_DATABASE', database_path('test-database.sqlite')),
+			'database' => env('DB_DATABASE', database_path('test.database.sqlite')),
 			'prefix' => '',
 		],
 
 		'sqlite-dusk' => [
 			'driver' => 'sqlite',
-			'database' => env('DB_DATABASE', database_path('dusk-database.sqlite')),
+			'database' => env('DB_DATABASE', database_path('dusk.database.sqlite')),
 			'prefix' => '',
 		],
 

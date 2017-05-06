@@ -11,7 +11,6 @@
 @import 'node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
 @import 'dashboard';
-@import 'customer_bookings';
 
 body {
 	background-color: $body-bg;
@@ -32,18 +31,59 @@ footer {
 }
 
 .btn {
-	font-family: $font-secondary;
+	font-family: $font-family-second;
 
 	@include m('margin-top') {
 		margin-top: 20px;
 	}
 }
 
+.btn-lg, .btn-group-lg > .btn {
+	border-radius: $border-radius-base;
+}
+
+.loading {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+
+	@include e('message') {
+		color: $gray-dark;
+		text-align: center;
+		position: absolute;
+		z-index: 200;
+		opacity: 1.0;
+		left: 0;
+		right: 0;
+		margin: 50px auto;
+		font-family: $font-family-second;
+		font-weight: 800;
+	}
+
+	@include e('icon') {
+		font-size: 70px;
+	}
+
+	@include e('bg') {
+		background-color: $body-bg;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 100;
+		opacity: 0.6;
+	}
+}
+
 .block {
 	background: white;
-	padding: $padding-base $padding-base 0 $padding-base;
+	padding: 15px;
 	border: 1px solid $border-color;
-	border-radius: 5px;
+	box-shadow: 0 2px 4px #d2d2d2;
 
 	@include m('no-padding') {
 		padding: 0px !important;
@@ -54,73 +94,197 @@ footer {
 	margin-bottom: $margin-base;
 }
 
+.no-margin {
+	margin: 0;
+}
+
+// Calendar
+
+.calendar {
+	border: 1px solid $border-color;
+
+	@include e('week') {
+		border-right: 1px solid $gray-light;
+		min-width: 60px;
+
+		@include m('label') {
+			padding-top: 60px !important;
+			font-family: $font-family-second;
+			font-weight: bold;
+		}
+	}
+
+	@include e('day') {
+		color: $gray;
+
+		@include m('block') {
+			background: white;
+			position: relative;
+			height: 150px;
+			min-width: 110px;
+			border: 1px solid $border-color;
+		}
+
+		@include m('disabled') {
+			background-color: $gray-lightest;
+		}
+	}
+
+	@include e('day-label') {
+		position: absolute;
+		top: 6px;
+		right: 10px;
+		color: $gray-lighter;
+	}
+
+	// Working time
+
+	.item {
+		text-align: left;
+
+		@include e('block') {
+			margin-right: 25px;
+			padding: 4px;
+			background-color: $brand-primary;
+			border-radius: $border-radius-base;
+			color: $white;
+			margin-bottom: $margin-base;
+			position: relative;
+			min-width: 110px;
+
+			@include m('padding') {
+				padding: 4px 24px 4px 4px;
+			}
+		}
+
+		@include e('text') {
+			margin-bottom: 0;
+		}
+
+		@include e('time') {
+			margin-bottom: 0;
+			font-family: $font-family-second;
+		}
+
+		@include e('name') {
+			font-family: $font-family-base;
+		}
+
+		@include e('edit') {
+			position: absolute;
+			top: 6px;
+			right: 8px;
+			color: $brand-light;
+			font-size: 14px;
+		}
+
+		@include e-hover('edit') {
+			color: white;
+		}
+	}
+
+	.item:last-child {
+		margin: 0;
+	}
+}
+
 .table {
+	border: 1px solid $border-color;
+	box-shadow: 0 2px 4px #d2d2d2;
+
 	th {
-		border-bottom: 1px solid $border-color;
-		font-family: $font-secondary;
+		font-family: $font-family-second;
 		font-size: 18px;
 		text-align: center;
-		color: $gray-dark;
+		border-bottom: 1px solid $border-color;
+		background: white;
 	}
 
 	td {
 		text-align: center;
 		font-size: 16px;
+		border-bottom: 1px solid $border-color;
+		background: white;
+	}
+
+	thead > tr > th, thead > tr > td, tbody > tr > th, tbody > tr > td, tfoot > tr > th, tfoot > tr > td {
+		border-top: none;
 	}
 
 	// General modifiers
 
-	@include m('no-margin') {
-		margin: 0 !important;
+	@include m('margin-top') {
+		margin-top: $margin-base;
 	}
 
-	@include m('red') {
-		color: red;
+	@include e('right-solid') {
+		border-right: $dash-table-border solid $border-color;
 	}
 
-	@include m('right-solid') {
-		border-right: $dash-table-border solid $dash-table-color;
+	@include e('right-dotted') {
+		border-right: $dash-table-border dotted $border-color;
 	}
 
-	@include m('right-dotted') {
-		border-right: $dash-table-border dotted $gray-lighter;
+	@include e('right-dashed') {
+		border-right: $dash-table-border dashed $border-color;
 	}
 
-	@include m('right-dashed') {
-		border-right: $dash-table-border dashed $gray-lighter;
+	@include e('left-solid') {
+		border-left: $dash-table-border solid $border-color;
 	}
 
-	@include m('left-solid') {
-		border-left: $dash-table-border solid $dash-table-color;
+	@include e('left-dotted') {
+		border-left: $dash-table-border dotted $border-color;
 	}
 
-	@include m('left-dotted') {
-		border-left: $dash-table-border dotted $gray-lighter;
+	@include e('left-dashed') {
+		border-left: $dash-table-border dashed $border-color;
 	}
 
-	@include m('left-dashed') {
-		border-left: $dash-table-border dashed $gray-lighter;
+	@include e-last-child('right-solid') {
+		border-right: none;
+	}
+
+	@include e-last-child('right-dotted') {
+		border-right: none;
+	}
+
+	@include e-last-child('right-dashed') {
+		border-right: none;
+	}
+
+	@include e-first-child('left-solid') {
+		border-left: none;
+	}
+
+	@include e-first-child('left-dotted') {
+		border-left: none;
+	}
+
+	@include e-first-child('left-dashed') {
+		border-left: none;
 	}
 
 	// Field specific modifiers
 
-	@include m('id') {
+	@include e('id') {
 		width: 80px;
 	}
 
-	@include m('description') {
+	@include e('description') {
+		min-width: 120px;
+	}
+
+	@include e('time') {
+		min-width: 80px;
+		max-width: 150px;
+	}
+
+	@include e('name') {
 		min-width: 100px;
 	}
 
-	@include m('time') {
-		max-width: 40px;
-	}
-
-	@include m('name') {
-		min-width: 100px;
-	}
-
-	@include m('date') {
+	@include e('date') {
 		min-width: 60px;
 		max-width: 120px;
 	}
@@ -150,7 +314,7 @@ footer {
 }
 
 .request {
-	margin-bottom: $margin-large;
+	position: relative;
 
 	@include e('input') {
 		margin-bottom: 0;
@@ -191,7 +355,7 @@ footer {
 	text-align: center;
 
 	@include e('title') {
-		font-family: $font-secondary;
+		font-family: $font-family-second;
 	}
 
 	@include e-hover('title') {
@@ -217,12 +381,12 @@ footer {
 /* No media query since this is the default in Bootstrap */
 
 /* Small devices (tablets, 768px and up) */
-@media (min-width: $screen-sm-min) {
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
 
 }
 
 /* Medium devices (desktops, 992px and up) */
-@media (min-width: $screen-md-min) {
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
 	.container {
 		width: 1100px;
 	}

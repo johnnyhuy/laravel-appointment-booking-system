@@ -31,11 +31,13 @@ Route::get('/register', 'CustomerController@register');
 // POST
 Route::post('/login', 'Auth\SessionController@login');
 Route::post('/register', 'CustomerController@create');
-Route::post('/bookings', 'BookingController@storeCustomerBooking');
+Route::post('/bookings', 'BookingController@store');
 
 // Bookings
 Route::get('/bookings', 'BookingController@indexCustomer');
-Route::get('/bookings/new', 'BookingController@newCustomerBooking');
+Route::get('/bookings/new', function() { return redirect('/bookings/' . toMonthYear(getNow()) . '/new'); });
+Route::get('/bookings/{month_year}/new', 'BookingController@newCustomer');
+Route::get('/bookings/{month_year}/new/{employee_id}', 'BookingController@showCustomer');
 
 
 /**
@@ -47,7 +49,7 @@ Route::get('/bookings/new', 'BookingController@newCustomerBooking');
 // Admin views
 Route::get('/admin', 'BusinessOwnerController@index');
 Route::get('/admin/register', 'BusinessOwnerController@register');
-Route::get('/admin/summary', 'BusinessOwnerController@summary');
+Route::get('/admin/summary', 'BookingController@summary');
 Route::get('/admin/history', 'BookingController@history');
 
 // Employees
@@ -57,22 +59,20 @@ Route::get('/admin/employees/assign/{employee_id}', 'EmployeeController@assign')
 Route::post('/admin/employees/assign', 'BookingController@assignEmployee');
 
 // Roster
-Route::get('/admin/roster', function() {
-	return redirect('/admin/roster/' . Carbon\Carbon::now('Australia/Melbourne')->format('m-Y'));
-});
-Route::get('/admin/roster/{monthYear}', 'WorkingTimeController@index');
-Route::get('/admin/roster/{id}/edit', 'WorkingTimeController@edit');
+Route::get('/admin/roster', function() { return redirect('/admin/roster/' . toMonthYear(getNow())); });
+Route::get('/admin/roster/{month_year}', 'WorkingTimeController@index');
+Route::get('/admin/roster/{month_year}/{employee_id}', 'WorkingTimeController@show');
+Route::get('/admin/roster/{month_year}/{employee_id}/{working_time_id}/edit', 'WorkingTimeController@edit');
 Route::put('/admin/roster/{id}', 'WorkingTimeController@update');
 Route::post('/admin/roster', 'WorkingTimeController@create');
-Route::post('/admin/roster/{monthYear}', 'WorkingTimeController@create');
+Route::post('/admin/roster/{month_year}', 'WorkingTimeController@create');
 
 // Booking
-Route::get('/admin/booking', function() {
-    return redirect('/admin/booking/' . Carbon\Carbon::now('Australia/Melbourne')->format('m-Y'));
-});
-Route::get('/admin/booking/{monthYear}', 'BookingController@indexAdmin');
-Route::post('/admin/booking/{monthYear}', 'BookingController@storeAdminBooking');
-Route::post('/admin/booking', 'BookingController@storeAdminBooking');
+Route::get('/admin/bookings', function() { return redirect('/admin/bookings/' . toMonthYear(getNow())); });
+Route::get('/admin/bookings/{month_year}', 'BookingController@indexAdmin');
+Route::get('/admin/bookings/{month_year}/{employee_id}', 'BookingController@showAdmin');
+Route::post('/admin/bookings/{month_year}', 'BookingController@store');
+Route::post('/admin/bookings', 'BookingController@store');
 
 // Admin form submission handling
 Route::post('/admin/register', 'BusinessOwnerController@create');
