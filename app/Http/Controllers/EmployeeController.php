@@ -46,14 +46,14 @@ class EmployeeController extends Controller
         ]);
 
         // Create employee
-        Employee::create([
+        $employee = Employee::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'title' => $request->title,
             'phone' => $request->phone,
         ]);
 
-        Log::notice("A new employee was created with name: " . $request->firstname . " " . $request->lastname);
+        Log::notice("Employee was created with name: " . $request->firstname . " " . $request->lastname, $employee->toArray());
 
         // Session flash
         session()->flash('message', 'New Employee Added');

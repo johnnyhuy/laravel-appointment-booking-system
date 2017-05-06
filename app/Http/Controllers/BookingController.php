@@ -26,6 +26,7 @@ class BookingController extends Controller
         $this->middleware('auth:web_user', [
             'only' => [
                 'indexCustomer',
+                'newCustomer',
                 'showCustomer',
             ]
         ]);
@@ -276,6 +277,8 @@ class BookingController extends Controller
             'end_time' => 'end time',
         ];
 
+        Log::debug("Validating Business Owner input");
+
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
 
@@ -301,18 +304,21 @@ class BookingController extends Controller
             'date' => $request->date,
         ]);
 
-        Log::notice("A booking was created from the Business Owner Dashboard", $booking->toArray());
-
-        // Session flash
-        session()->flash('message', 'Booking has successfully been created.');
-
+        // Check if user is an admin or user
         if (isAdmin()) {
             // Redirect to the business owner admin page
             $url = '/admin/bookings/' . toMonthYear(getNow());
+            $user = 'Business Owner';
         }
         else {
-            $url = '/bookings/' . toMonthYear(getNow());
+            $url = '/bookings';
+            $user = 'Customer';
         }
+
+        Log::notice("Booking was created by " . $user . " ID " . Auth::id(), $booking->toArray());
+
+        // Session flash
+        session()->flash('message', 'Booking has successfully been created.');
 
         return redirect($url);
     }
