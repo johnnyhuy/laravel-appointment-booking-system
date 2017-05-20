@@ -52,6 +52,10 @@ Route::get('/admin/register', 'BusinessOwnerController@register');
 Route::get('/admin/summary', 'BookingController@summary');
 Route::get('/admin/history', 'BookingController@history');
 
+//Business Info
+Route::get('/admin/edit', 'BusinessOwnerController@edit');
+Route::post('/admin/edit', 'BusinessOwnerController@update');
+
 // Business Times
 Route::resource('admin/times', 'BusinessTimeController');
 
