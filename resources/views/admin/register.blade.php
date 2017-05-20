@@ -46,8 +46,8 @@
 					<input name="address" type="text" id="inputAddress" class="form-control request__input" placeholder="Address" value="{{ old('address') }}" autofocus>
 				</div>
 				<div class="form-group">
-					<label for="inputTempPassword">Password <span class="request__validate">(sent to business owner on purchase of domain)</span></label>
-					<input name="input_password" type="password" id="inputTempPassword" class="form-control request__input" placeholder="Password" autofocus>
+					<label for="inputTempPassword">Temp Password <span class="request__validate">(sent to business owner on purchase of domain)</span></label>
+					<input name="temp_password" type="password" id="inputTempPassword" class="form-control request__input" placeholder="Password" autofocus>
 				</div>
 			</div>
 			<button class="btn btn-lg btn-primary btn-block" href="/register">Register</button>
