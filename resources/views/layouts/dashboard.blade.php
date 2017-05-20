@@ -67,6 +67,7 @@
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
 					<li class="{{ Request::is('admin') ? 'active' : null }}"><a title="Show Business Information" href="/admin">Information</a></li>
+					<li class="{{ Request::is('admin/times') ? 'active' : null }}"><a title="Show open hours for the business" href="/admin/times">Business Times</a></li>
 					<li class="{{ Request::is('admin/summary') ? 'active' : null }}"><a title="Show a summary of bookings" href="/admin/summary">Summary</a></li>
 					<li class="{{ Request::is('admin/history') ? 'active' : null }}"><a title="Show a history of bookings" href="/admin/history">History</a></li>
 					<li class="{{ Request::is('admin/roster/*') ? 'active' : null }}"><a title="Show a roster" href="/admin/roster/{{ Time::now('Australia/Melbourne')->format('m-Y') }}">Roster</a></li>

@@ -22,7 +22,7 @@
                                 @if ($employeeID)
                                     @if ($items = $employee->availableTimes($cDate->toDateString()))
                                         @foreach ($items as $item)
-                                            <section class="item__block">
+                                            <section class="item__block item__block--calendar">
                                                 <div class="item__name">{{ firstChar($employee->firstname, true) }} {{ $employee->lastname }}</div>
                                                 <div class="item__time">{{ toTime($item['start_time'], false) }} - {{ toTime($item['end_time'], false) }}</div>
                                             </section>
@@ -32,7 +32,7 @@
                                     @foreach (Employee::all() as $employee)
                                         @if ($items = $employee->availableTimes($cDate->toDateString()))
                                             @foreach ($items as $item)
-                                                <section class="item__block">
+                                                <section class="item__block item__block--calendar">
                                                     <div class="item__name">{{ firstChar($employee->firstname, true) }} {{ $employee->lastname }}</div>
                                                     <div class="item__time">{{ toTime($item['start_time'], false) }} - {{ toTime($item['end_time'], false) }}</div>
                                                 </section>
@@ -45,7 +45,7 @@
                             <div class="item">
                                 @foreach ($items as $item)
                                     @if ($item->date == $cDate->toDateString())
-                                        <section class="item__block item__block--padding" data-toggle="tooltip" data-placement="top" title="{{ $item->employee->firstname }} {{ $item->employee->lastname }} - {{ $item->employee->title }}">
+                                        <section class="item__block  item__block--calendar item__block--padding" data-toggle="tooltip" data-placement="top" title="{{ $item->employee->firstname }} {{ $item->employee->lastname }} - {{ $item->employee->title }}">
                                             <a title="Edit this working time" href="/admin/roster/{{ $pDate->format('m-Y') }}/{{ $item->employee->id }}/{{ $item->id }}/edit" class="item__edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
                                             <div class="item__name">
                                                 {{ substr($item->employee->firstname, 0, 1) . '. ' . $item->employee->lastname }}

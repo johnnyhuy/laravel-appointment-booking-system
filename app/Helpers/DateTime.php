@@ -167,6 +167,7 @@ function getNow()
  * Convert month year to carbon
  *
  * @param  string $string
+ *
  * @return Carbon
  */
 function monthYearToDate($string)
@@ -188,6 +189,7 @@ function monthYearToDate($string)
  * Return a list of Carbon dates
  *
  * @param  string $string
+ *
  * @return Carbon[]
  */
 function getMonthList($string)
@@ -207,4 +209,59 @@ function getMonthList($string)
     }
 
     return $monthList;
+}
+
+/**
+ * Return an array of all days within the week
+ *
+ * @return  array  $days
+ */
+function getDaysOfWeek($upper = false)
+{
+    // List of days in first uppercase
+    $days = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];
+
+    // If day is uppercase
+    if ($upper) {
+        foreach ($days as $key => $day) {
+            $days[$key] = strtoupper($day);
+        }
+    }
+
+    return $days;
+}
+
+/**
+ * Return a day according by number
+ * starting from Monday
+ *
+ * @param  integer $number
+ *
+ * @return string
+ */
+function getDayOfWeek($number = 0, $upper = false)
+{
+    $days = getDaysOfWeek();
+
+    // Check if number is in between 1 - 7
+    // Otherwise default to 1
+    $number = $number > 0 && $number < 8 && is_numeric($number) ? $number : 1;
+
+    // If day is uppercase
+    if ($upper) {
+        foreach ($days as $key => $day) {
+            $days[$key] = strtoupper($day);
+        }
+    }
+
+    // Get the acutal index
+    return $days[$number - 1];
 }

@@ -231,6 +231,7 @@ return [
         'Customer' => App\Customer::class,
         'Employee' => App\Employee::class,
         'WorkingTime' => App\WorkingTime::class,
+        'BusinessTime' => App\BusinessTime::class,
     ],
 
 ];

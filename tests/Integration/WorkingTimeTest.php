@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Activity;
 use App\Booking;
 use App\BusinessOwner;
+use App\BusinessTime;
 use App\Customer;
 use App\Employee;
 use App\WorkingTime;
@@ -33,6 +34,15 @@ class WorkingTimeTest extends TestCase
 
         // Date is tomorrow
         $this->date = Time::now()->addDay()->toDateString();
+
+        // Add working times to all days
+        foreach (getDaysOfWeek(true) as $day) {
+            BusinessTime::create([
+                'start_time' => '08:00:00',
+                'end_time' => '17:00:00',
+                'day' => $day,
+            ]);
+        }
     }
 
     /**
@@ -192,6 +202,90 @@ class WorkingTimeTest extends TestCase
     }
 
     /**
+     * See if an employee working time
+     * is witin the business times
+     *
+     * @return void
+     */
+    public function testEmployeeWorkingTimeIsNotInBusinessTime()
+    {
+        // Create employee
+        $employee = factory(Employee::class)->create();
+
+        // Create working time data
+        // working start time is before business start time
+        // working end time is before business end time
+        $workingTimeData = [
+            'employee_id' => $this->employee->id,
+            'start_time' => '00:00',
+            'end_time' => '01:00',
+            'date' => $this->date
+        ];
+
+        // Send a POST request to /admin/roster with working time data
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+
+        // Check for a validation error
+        $response->assertJsonFragment([
+            'The date field be within open business times.'
+        ]);
+
+        // Create working time data
+        // working start time is before business start time
+        // working end time is after business start time
+        $workingTimeData = [
+            'employee_id' => $this->employee->id,
+            'start_time' => '00:00',
+            'end_time' => '09:00',
+            'date' => $this->date
+        ];
+
+        // Send a POST request to /admin/roster with working time data
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+
+        // Check for a validation error
+        $response->assertJsonFragment([
+            'The date field be within open business times.'
+        ]);
+
+        // Create working time data
+        // working start time is after business start time
+        // working end time is after business end time
+        $workingTimeData = [
+            'employee_id' => $this->employee->id,
+            'start_time' => '08:00',
+            'end_time' => '22:00',
+            'date' => $this->date
+        ];
+
+        // Send a POST request to /admin/roster with working time data
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+
+        // Check for a validation error
+        $response->assertJsonFragment([
+            'The date field be within open business times.'
+        ]);
+
+        // Create working time data
+        // working start time is after business end time
+        // working end time is after business end time
+        $workingTimeData = [
+            'employee_id' => $this->employee->id,
+            'start_time' => '17:00',
+            'end_time' => '22:00',
+            'date' => $this->date
+        ];
+
+        // Send a POST request to /admin/roster with working time data
+        $response = $this->actingAs($this->bo, 'web_admin')->json('POST', '/admin/roster', $workingTimeData);
+
+        // Check for a validation error
+        $response->assertJsonFragment([
+            'The date field be within open business times.'
+        ]);
+    }
+
+    /**
      * Working time edit success
      *
      * @return void
@@ -310,6 +404,7 @@ class WorkingTimeTest extends TestCase
         $response->assertJsonFragment([
         	'The start time must be a date before end time.'
         ]);
+
         $response->assertJsonFragment([
         	'The end time must be a date after start time.'
         ]);

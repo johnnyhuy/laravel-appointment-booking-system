@@ -168,5 +168,30 @@ class DatabaseSeeder extends Seeder
             'end_time' => Booking::calcEndTime($activityTwo->duration, '12:30'),
             'date' => Time::now()->endOfMonth()->toDateString()
         ]);
+
+        // Create business hours
+        BusinessTime::create([
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'day' => 'MONDAY',
+        ]);
+
+        BusinessTime::create([
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'day' => 'TUESDAY',
+        ]);
+
+        BusinessTime::create([
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'day' => 'WEDNESDAY',
+        ]);
+
+        BusinessTime::create([
+            'start_time' => '12:00:00',
+            'end_time' => '17:00:00',
+            'day' => 'SATURDAY',
+        ]);
     }
 }

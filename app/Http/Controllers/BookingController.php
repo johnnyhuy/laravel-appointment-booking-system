@@ -223,7 +223,7 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info("An attempt to create a booking from the Business Owner Dashboard was made", $request->all());
+        Log::info("An attempt to create a booking from the Business Owner Dashboard", $request->all());
 
         // If month year format requested
         if ($request->month_year) {
@@ -244,6 +244,18 @@ class BookingController extends Controller
         $request->merge([
             'start_time' => toTime($request->start_time)
         ]);
+
+        // If end time is requested then do not calculate
+        if ($request->end_time) {
+            $request->merge([
+                'end_time' => toTime($request->end_time)
+            ]);
+        }
+        else {
+            $request->merge([
+                'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time)
+            ]);
+        }
 
         // Validation error messages
         $messages = [
@@ -282,19 +294,7 @@ class BookingController extends Controller
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
 
-        // If end time is requested then do not calculate
-        if ($request->end_time) {
-            $request->merge([
-                'end_time' => toTime($request->end_time)
-            ]);
-        }
-        else {
-            $request->merge([
-                'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time)
-            ]);
-        }
-
-        // Create customer
+        // Create booking
         $booking = Booking::create([
             'customer_id' => $request->customer_id,
             'employee_id' => $request->employee_id,

@@ -141,4 +141,71 @@ class DateTimeHelperTest extends TestCase
     public function testHelperGetDateTimeNow() {
         $this->assertEquals(Carbon::now('AEST')->toDateTimeString(), getDateTimeNow());
     }
+
+    /**
+     * Return an array of all days within a week
+     *
+     * @return void
+     */
+    public function testHelperGetDaysOfWeekArray() {
+        $this->assertEquals('Monday', getDaysOfWeek()[0]);
+        $this->assertEquals('Tuesday', getDaysOfWeek()[1]);
+        $this->assertEquals('Wednesday', getDaysOfWeek()[2]);
+        $this->assertEquals('Thursday', getDaysOfWeek()[3]);
+        $this->assertEquals('Friday', getDaysOfWeek()[4]);
+        $this->assertEquals('Saturday', getDaysOfWeek()[5]);
+        $this->assertEquals('Sunday', getDaysOfWeek()[6]);
+    }
+
+    /**
+     * Return an array of all days within a week
+     * all in uppercase
+     *
+     * @return void
+     */
+    public function testHelperGetDaysOfWeekIsUppercase() {
+        $this->assertEquals('MONDAY', getDaysOfWeek(true)[0]);
+        $this->assertEquals('TUESDAY', getDaysOfWeek(true)[1]);
+        $this->assertEquals('WEDNESDAY', getDaysOfWeek(true)[2]);
+        $this->assertEquals('THURSDAY', getDaysOfWeek(true)[3]);
+        $this->assertEquals('FRIDAY', getDaysOfWeek(true)[4]);
+        $this->assertEquals('SATURDAY', getDaysOfWeek(true)[5]);
+        $this->assertEquals('SUNDAY', getDaysOfWeek(true)[6]);
+    }
+
+    /**
+     * All error parameters get the first day of week
+     * Includes no parameter
+     *
+     * @return void
+     */
+    public function testHelperGetFirstDayOfWeekIfError() {
+        $this->assertEquals('Monday', getDayOfWeek());
+        $this->assertEquals('Monday', getDayOfWeek(null));
+        $this->assertEquals('Monday', getDayOfWeek('first'));
+        $this->assertEquals('Monday', getDayOfWeek('@#!@%$'));
+        $this->assertEquals('Monday', getDayOfWeek(111));
+    }
+
+    /**
+     * Make day of week uppercase
+     *
+     * @return void
+     */
+    public function testHelperGetFirstDayOfWeekIsUppercase() {
+        $this->assertEquals('MONDAY', getDayOfWeek(1, true));
+        $this->assertEquals('MONDAY', getDayOfWeek(null, true));
+        $this->assertEquals('MONDAY', getDayOfWeek(-1, true));
+        $this->assertEquals('MONDAY', getDayOfWeek(8, true));
+    }
+
+    /**
+     * Get day 4 of week, which is Friday
+     *
+     * @return void
+     */
+    public function testHelperGetDayFourOfWeek() {
+        $this->assertEquals('Thursday', getDayOfWeek(4));
+        $this->assertNotEquals('Thursday', getDayOfWeek('four'));
+    }
 }

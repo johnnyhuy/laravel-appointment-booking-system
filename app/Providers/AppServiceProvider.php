@@ -11,6 +11,7 @@ use Laravel\Dusk\DuskServiceProvider;
 use App\Activity;
 use App\Booking;
 use App\WorkingTime;
+use App\BusinessTime;
 
 use Carbon\Carbon;
 
@@ -25,6 +26,17 @@ class AppServiceProvider extends ServiceProvider
     {
 		// Additional code to fix php artisan migrate error for (unique key too long on certain systems)
         Schema::defaultStringLength(191);
+
+        // Validator that checks if value is a day of the week
+        Validator::extend('is_day_of_week', function ($attribute, $value, $parameters, $validator) {
+            foreach (getDaysOfWeek() as $day) {
+                if (strcasecmp($value, $day) == 0) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
 
         // Create a validator to check if an employee is free when adding a booking
         Validator::extend('is_on_booking', function ($attribute, $value, $parameters, $validator) {
@@ -69,6 +81,46 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return true;
+        });
+
+        // Check if date is in open times of the business
+        Validator::extend('is_business_open', function ($attribute, $value, $parameters, $validator) {
+            // Get request data
+            $request = $validator->getData();
+
+            // If request data is not provided then return false
+            if (!isset($request['start_time']) or !isset($request['end_time'])) {
+                return false;
+            }
+
+            // Parameter variables
+            $pStartTime = toTime($request['start_time']);
+            $pEndTime = toTime($request['end_time']);
+
+            // Get the day value from attribute
+            // Convert to enum day
+            // e.g. MONDAY, TUESDAY
+            $day = strtoupper(parseDateTime($value)->format('l'));
+
+            // Get business time of the date
+            $btTime = BusinessTime::where('day', $day)->first();
+
+            // If not found, then return false
+            if ($btTime == null) {
+                return false;
+            }
+
+            // Time alias
+            $btStartTime = $btTime->start_time;
+            $btEndTime = $btTime->end_time;
+
+            // Check if booking is in between employee working time
+            if ($pStartTime >= $btStartTime and $pEndTime <= $btEndTime) {
+                return true;
+            }
+
+            // If anything unexpected happens, return false
+            return false;
         });
 
         // Create a validator to check if an employee is free when adding a booking

@@ -111,7 +111,8 @@ class WorkingTimeController extends Controller
 			'start_time.date_format' => 'The :attribute field must be in the correct time format.',
             'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'date.unique' => 'The employee can only have one working time per day.',
-			'date.date_format' => 'The :attribute field must be in the correct date format.',
+            'date.date_format' => 'The :attribute field must be in the correct date format.',
+			'date.is_business_open' => 'The :attribute field be within open business times.',
 		];
 
 		// Validation rules
@@ -126,7 +127,7 @@ class WorkingTimeController extends Controller
             'end_time' => 'required|after:start_time|date_format:H:i',
 
         	// Date must be unique where employee ID is unique
-            'date' => 'required|date_format:Y-m-d|unique:working_times,date,NULL,id,employee_id,' . $request->employee_id,
+            'date' => 'required|date_format:Y-m-d|unique:working_times,date,NULL,id,employee_id,' . $request->employee_id . '|is_business_open',
         ];
 
         // Attributes replace the field name with a more readable name
@@ -137,11 +138,17 @@ class WorkingTimeController extends Controller
 		// Validate form
         $this->validate($request, $rules, $messages, $attributes);
 
+        // Convert start time to proper time format
+        $request->merge([
+            'start_time' => toTime($request->start_time),
+            'end_time' => toTime($request->end_time)
+        ]);
+
         // Create a working time
         $workingTime = WorkingTime::create([
             'employee_id' => $request->employee_id,
-            'start_time' => toTime($request->start_time),
-            'end_time' => toTime($request->end_time),
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
             'date' => $date,
         ]);
 
