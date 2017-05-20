@@ -93,6 +93,7 @@ class BusinessOwnerController extends Controller
             'password' => 'required|min:6|max:32|confirmed',
             'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
             'address' => 'required|min:6|max:32',
+            'temp_password' => 'required|exists:temp_password,password',
         ];
 
         // Attributes replace the field name with a more readable name
@@ -116,6 +117,9 @@ class BusinessOwnerController extends Controller
             'phone' => $request->phone,
         ]);
 
+        //Set the temporary password to used
+        DB::update('update temp_password set used = 1 where password= ?', [$request->temp_password]);
+
         // Log business owner creation
         Log::notice("Business Owner was registered with username " . $businessOwner->username, $businessOwner->toArray());
 
@@ -124,5 +128,66 @@ class BusinessOwnerController extends Controller
 
         //Redirect to the business owner admin page
         return redirect('/login');
+    }
+
+    /**
+     * Show the edit business information page
+     */
+    public function edit()
+    {
+        return view('admin.edit', [
+            'business' => BusinessOwner::first(),
+        ]);
+    }
+
+    /**
+     * Update the business information
+     */
+    public function update(Request $request)
+    {
+        // Validation error messages
+        $messages = [
+            'businessname.regex' => 'The :attribute is invalid, do not use special characters except "." and "-".',
+            'firstname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
+            'lastname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
+            'phone.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
+        ];
+
+        // Validation rules
+        $rules = [
+            'businessname' => 'required|min:2|max:32|regex:/^[A-z0-9\-\.\s ]+$/',
+            'firstname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
+            'lastname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
+            'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
+            'address' => 'required|min:6|max:32',
+        ];
+
+        // Attributes replace the field name with a more readable name
+        $attributes = [
+            'businessname' => 'business name',
+            'firstname' => 'first name',
+            'lastname' => 'last name',
+        ];
+
+        // Validate form
+        $this->validate($request, $rules, $messages, $attributes);
+
+        // Create customer
+        DB::table('business_owners')->update([
+            'business_name' => $request->businessname,
+            'firstname' => ucfirst($request->firstname),
+            'lastname' => ucfirst($request->lastname),
+            'address' => $request->address,
+            'phone' => $request->phone,
+        ]);
+
+        // Log business owner creation
+        Log::notice("Business Owner was updated successfully");
+
+        // Session flash
+        session()->flash('message', 'Business Owner information updated.');
+
+        //Redirect to the business owner admin page
+        return redirect('/admin/edit');
     }
 }
