@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
+<div class="dash__block">
 	<div class="container">
 		@if (count($errors))
 			<div class="alert alert-danger">
@@ -44,8 +45,13 @@
 					<label for="inputAddress">Address <span class="request__validate">(at least 6 characters)</span></label>
 					<input name="address" type="text" id="inputAddress" class="form-control request__input" placeholder="Address" value="{{ old('address') }}" autofocus>
 				</div>
+				<div class="form-group">
+					<label for="inputTempPassword">Password <span class="request__validate">(sent to business owner on purchase of domain)</span></label>
+					<input name="input_password" type="password" id="inputTempPassword" class="form-control request__input" placeholder="Password" autofocus>
+				</div>
 			</div>
-			<button class="btn btn-lg btn-primary btn-block" href="/register">Register</a>
+			<button class="btn btn-lg btn-primary btn-block" href="/register">Register</button>
 		</form>
 	</div>
+</div>
 @endsection
