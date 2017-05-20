@@ -52,6 +52,9 @@ Route::get('/admin/register', 'BusinessOwnerController@register');
 Route::get('/admin/summary', 'BookingController@summary');
 Route::get('/admin/history', 'BookingController@history');
 
+// Business Times
+Route::resource('admin/times', 'BusinessTimeController');
+
 // Employees
 Route::get('/admin/employees', 'EmployeeController@index');
 Route::get('/admin/employees/assign', 'EmployeeController@assign');

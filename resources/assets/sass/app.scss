@@ -98,6 +98,10 @@ footer {
 	margin: 0;
 }
 
+.text-center {
+	text-align: center;
+}
+
 // Calendar
 
 .calendar {
@@ -136,25 +140,54 @@ footer {
 		right: 10px;
 		color: $gray-lighter;
 	}
+}
 
-	// Working time
+.table {
+	border: 1px solid $border-color;
+	box-shadow: 0 2px 4px #d2d2d2;
+
+	th {
+		font-family: $font-family-second;
+		font-size: 18px;
+		text-align: center;
+		border-bottom: 1px solid $border-color;
+		background: white;
+	}
+
+	td {
+		text-align: center;
+		font-size: 16px;
+		border-bottom: 1px solid $border-color;
+		background: white;
+	}
+
+	thead > tr > th, thead > tr > td, tbody > tr > th, tbody > tr > td, tfoot > tr > th, tfoot > tr > td {
+		border-top: none;
+	}
 
 	.item {
 		text-align: left;
 
 		@include e('block') {
-			margin-right: 25px;
 			padding: 4px;
 			background-color: $brand-primary;
 			border-radius: $border-radius-base;
 			color: $white;
-			margin-bottom: $margin-base;
 			position: relative;
 			min-width: 110px;
+			margin-bottom: $margin-base;
+
+			@include m('calendar') {
+				margin-right: 25px;
+			}
 
 			@include m('padding') {
 				padding: 4px 24px 4px 4px;
 			}
+		}
+
+		@include e-last-child('block') {
+			margin-bottom: 0;
 		}
 
 		@include e('text') {
@@ -185,30 +218,6 @@ footer {
 
 	.item:last-child {
 		margin: 0;
-	}
-}
-
-.table {
-	border: 1px solid $border-color;
-	box-shadow: 0 2px 4px #d2d2d2;
-
-	th {
-		font-family: $font-family-second;
-		font-size: 18px;
-		text-align: center;
-		border-bottom: 1px solid $border-color;
-		background: white;
-	}
-
-	td {
-		text-align: center;
-		font-size: 16px;
-		border-bottom: 1px solid $border-color;
-		background: white;
-	}
-
-	thead > tr > th, thead > tr > td, tbody > tr > th, tbody > tr > td, tfoot > tr > th, tfoot > tr > td {
-		border-top: none;
 	}
 
 	// General modifiers
@@ -265,8 +274,6 @@ footer {
 		border-left: none;
 	}
 
-	// Field specific modifiers
-
 	@include e('id') {
 		width: 80px;
 	}
@@ -282,6 +289,12 @@ footer {
 
 	@include e('name') {
 		min-width: 100px;
+	}
+
+	@include e('day') {
+		min-width: 140px;
+		max-width: 200px;
+		vertical-align: middle !important;
 	}
 
 	@include e('date') {
