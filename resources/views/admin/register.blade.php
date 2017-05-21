@@ -49,8 +49,8 @@
 					<label for="inputTempPassword">Temp Password <span class="request__validate">(sent to business owner on purchase of domain)</span></label>
 					<input name="temp_password" type="password" id="inputTempPassword" class="form-control request__input" placeholder="Password" autofocus>
 				</div>
+				<button class="btn btn-lg btn-primary btn-block margin-top-two" href="/register">Register</button>
 			</div>
-			<button class="btn btn-lg btn-primary btn-block" href="/register">Register</button>
 		</form>
 	</div>
 </div>

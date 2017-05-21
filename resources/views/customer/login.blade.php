@@ -23,7 +23,7 @@
 				<label for="inputPassword">Password</label>
 				<input type="password" name="password" id="inputPassword" class="form-control request__input" placeholder="Password" >
 			</div>
-			<button class="btn btn-lg btn-primary btn-block request__button" type="submit">Sign in</button>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 		</form>
 	</div>
 	<hr>

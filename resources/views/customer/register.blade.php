@@ -33,7 +33,7 @@
 				<label for="inputAddress">Address <span class="request__validate">(at least 6 characters)</span></label>
 				<input name="address" type="text" id="inputAddress" class="form-control request__input" placeholder="Address" value="{{ old('address') }}" autofocus>
 			</div>
+			<button class="btn btn-lg btn-primary btn-block margin-top-two" href="/register">Register</a>
 		</div>
-		<button class="btn btn-lg btn-primary btn-block" href="/register">Register</a>
 	</form>
 @endsection
