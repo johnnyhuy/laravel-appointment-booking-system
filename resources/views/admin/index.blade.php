@@ -1,7 +1,9 @@
+
 @extends('layouts.dashboard')
 
 @section('content')
 	<div class="dash__block">
+		<a href="/admin/edit/"><button class="btn btn-lg btn-primary pull-right">Edit...</button></a>
 		<h2 class="dash__header">Business Information</h2>
 		<h4 class="main_description">Details of the business</h4>
 		<h2>Full Name </h2>
