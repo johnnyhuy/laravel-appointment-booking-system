@@ -33,7 +33,7 @@
 	@else
 		@include('shared.error_message_thumbs_down', [
 			'message' => 'No bookings found for the next 7 days.',
-			'subMessage' => 'Add a new booking <a href="/admin/booking">here</a>.'
+			'subMessage' => 'Add a new booking <a href="/admin/bookings">here</a>.'
 		])
 	@endif
 @endsection

@@ -125,7 +125,7 @@ class BusinessTimeController extends Controller
         $bTime = $time;
         $business = BusinessOwner::first();
 
-        return view('admin.edit_business_time', compact(['bTime', 'business']));
+        return view('admin.edit.business_time', compact(['bTime', 'business']));
     }
 
     /**

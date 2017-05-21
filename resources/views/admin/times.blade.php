@@ -4,18 +4,8 @@
     <div class="dash__block">
         <h1 class="dash__header">Business Times</h1>
         <h4 class="dash__description">Add a new business time for the week. There must be only one time per day.</h4>
-        @if ($flash = session('message'))
-            <div class="alert alert-success">
-                {{ $flash }}
-            </div>
-        @endif
-        @if (count($errors))
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    {{ $error }}<br>
-                @endforeach
-            </div>
-        @endif
+        @include('shared.session_message')
+        @include('shared.error_message')
         <form class="request" method="POST" action="/admin/times">
             {{ csrf_field() }}
             <div class="form-group">
@@ -33,7 +23,7 @@
                 </div>
                 <div class="request__flex request__flex--right">
                     <label for="times_end_time">End Time</label>
-                    <input name="end_time" type="time" id="times_end_time" class="form-control request__input" value="{{ old('end_time') ? old('end_time') : '17:00' }}" autofocus>
+                    <input name="end_time" type="text" id="time" class="form-control request__input" placeholder="hh:mm" value="{{ old('end_time') ? old('end_time') : '17:00' }}">
                 </div>
             </div>
             <button class="btn btn-lg btn-primary btn-block btn--margin-top">Create Business Time</button>

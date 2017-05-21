@@ -33,7 +33,7 @@ class EmployeeController extends Controller
     }
 
     // Create a new employee
-    public function create(Request $request)
+    public function store(Request $request)
     {
         Log::info("An attempt was made to create a new employee", $request->all());
 
