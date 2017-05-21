@@ -239,9 +239,6 @@ class BusinessTimeTest extends TestCase
      */
     public function testEditBusinessTime()
     {
-        // Set date to a Monday
-        $date = Time::now()->startOfWeek()->toDateString();
-
         // Set date to the previous Monday
         $beforeDate = Time::now()->subWeek()->startOfWeek()->toDateString();
 
@@ -257,14 +254,6 @@ class BusinessTimeTest extends TestCase
         // Activity
         $activity = factory(Activity::class)->create([
             'duration' => '02:00'
-        ]);
-
-        // Create a working time on Monday
-        WorkingTime::create([
-            'employee_id' => $employee->id,
-            'start_time' => '08:00:00',
-            'end_time' => '17:00:00',
-            'date' => $date
         ]);
 
         // Create a working time before Monday
@@ -290,16 +279,6 @@ class BusinessTimeTest extends TestCase
             'end_time' => '17:00:00',
         ]);
 
-        // Create a booking on Monday
-        Booking::create([
-            'customer_id' => $customer->id,
-            'employee_id' => $employee->id,
-            'activity_id' => $activity->id,
-            'start_time' => '09:00:00',
-            'end_time' => '11:00:00',
-            'date' => $date
-        ]);
-
         // Create a booking before Monday
         Booking::create([
             'customer_id' => $customer->id,
@@ -310,7 +289,7 @@ class BusinessTimeTest extends TestCase
             'date' => $beforeDate
         ]);
 
-        // Create a booking before Monday
+        // Create a booking after Monday
         Booking::create([
             'customer_id' => $customer->id,
             'employee_id' => $employee->id,
@@ -341,11 +320,11 @@ class BusinessTimeTest extends TestCase
 
         // Check to see if only one working time exists after edit
         // Removes the working time contained in business time after today
-        $this->assertCount(2, WorkingTime::all());
+        $this->assertCount(1, WorkingTime::all());
 
         // Check to see if only one booking exists after edit
         // Removes the booking contained in business time after today
-        $this->assertCount(2, Booking::all());
+        $this->assertCount(1, Booking::all());
     }
 
     /**
@@ -355,9 +334,6 @@ class BusinessTimeTest extends TestCase
      */
     public function testRemoveBusinessTime()
     {
-        // Set date to a Monday
-        $date = Time::now()->startOfWeek()->toDateString();
-
         // Set date to the previous Monday
         $beforeDate = Time::now()->subWeek()->startOfWeek()->toDateString();
 
@@ -373,14 +349,6 @@ class BusinessTimeTest extends TestCase
         // Activity
         $activity = factory(Activity::class)->create([
             'duration' => '02:00'
-        ]);
-
-        // Create a working time on Monday
-        WorkingTime::create([
-            'employee_id' => $employee->id,
-            'start_time' => '08:00:00',
-            'end_time' => '17:00:00',
-            'date' => $date
         ]);
 
         // Create a working time before Monday
@@ -406,16 +374,6 @@ class BusinessTimeTest extends TestCase
             'end_time' => '17:00:00',
         ]);
 
-        // Create a booking on Monday
-        Booking::create([
-            'customer_id' => $customer->id,
-            'employee_id' => $employee->id,
-            'activity_id' => $activity->id,
-            'start_time' => '09:00:00',
-            'end_time' => '11:00:00',
-            'date' => $date
-        ]);
-
         // Create a booking before Monday
         Booking::create([
             'customer_id' => $customer->id,
@@ -426,7 +384,7 @@ class BusinessTimeTest extends TestCase
             'date' => $beforeDate
         ]);
 
-        // Create a booking before Monday
+        // Create a booking after Monday
         Booking::create([
             'customer_id' => $customer->id,
             'employee_id' => $employee->id,
@@ -444,10 +402,10 @@ class BusinessTimeTest extends TestCase
 
         // Check to see if only one working time exists after edit
         // Removes the working time contained in business time after today
-        $this->assertCount(2, WorkingTime::all());
+        $this->assertCount(1, WorkingTime::all());
 
         // Check to see if only one booking exists after edit
         // Removes the booking contained in business time after today
-        $this->assertCount(2, Booking::all());
+        $this->assertCount(1, Booking::all());
     }
 }

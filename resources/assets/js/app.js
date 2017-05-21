@@ -30,5 +30,6 @@ $(document).ready(function() {
     // Enable anchor method to create PUT DELETE anchor tags
     anchorMethod.init();
 
-    $('#time').mask('99:99', {placeholder: 'hh:mm'})
+    $('input[masked-time]').mask('99:99', {placeholder: 'hh:mm'})
+    $('input[masked-date]').mask('99/99/9999', {placeholder: 'dd/mm/yyyy'})
 });

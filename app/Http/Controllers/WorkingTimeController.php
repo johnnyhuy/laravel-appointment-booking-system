@@ -30,6 +30,36 @@ class WorkingTimeController extends Controller
                 'create',
             ]
         ]);
+
+        // Custom error messages
+        $this->messages = [
+            'employee_id.exists' => 'The :attribute does not exist.',
+            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'date.unique' => 'The employee can only have one working time per day.',
+            'date.after' => 'The :attribute must be before today ' . toDate(getNow(), true) . '.',
+            'date.is_business_open' => 'The :attribute field be within open business times.',
+        ];
+
+        // Validation rules
+        $this->rules = [
+            // Employee ID is required and must exist in employees table
+            'employee_id' => 'required|exists:employees,id',
+
+            // Start time is required
+            'start_time' => 'required|before:end_time|date_format:H:i',
+
+            // End time is required and must be AFTER the start time (they can't be the same either)
+            'end_time' => 'required|after:start_time|date_format:H:i',
+
+            // Date must be unique where employee ID is unique
+            'date' => 'required|date|after:' . getDateNow() . '|is_business_open',
+        ];
+
+        // Attributes replace the field name with a more readable name
+        $this->attributes = [
+            'employee_id' => 'employee',
+        ];
     }
 
     /**
@@ -105,38 +135,11 @@ class WorkingTimeController extends Controller
             $date = toDate($request->date);
         }
 
-		// Custom error messages
-		$messages = [
-			'employee_id.exists' => 'The :attribute does not exist.',
-			'start_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'date.unique' => 'The employee can only have one working time per day.',
-            'date.after' => 'The :attribute must be before today ' . toDate(getNow(), true) . '.',
-			'date.is_business_open' => 'The :attribute field be within open business times.',
-		];
-
-		// Validation rules
-		$rules = [
-            // Employee ID is required and must exist in employees table
-            'employee_id' => 'required|exists:employees,id',
-
-            // Start time is required
-            'start_time' => 'required|before:end_time|date_format:H:i',
-
-            // End time is required and must be AFTER the start time (they can't be the same either)
-            'end_time' => 'required|after:start_time|date_format:H:i',
-
-        	// Date must be unique where employee ID is unique
-            'date' => 'required|date|after:' . getDateNow() . '|unique:working_times,date,NULL,id,employee_id,' . $request->employee_id . '|is_business_open',
-        ];
-
-        // Attributes replace the field name with a more readable name
-        $attributes = [
-            'employee_id' => 'employee',
-        ];
+        // Add date rule here since it depends on request
+        $this->rules['date'] .= '|unique:working_times,date,NULL,id,employee_id,' . $request->employee_id;
 
 		// Validate form
-        $this->validate($request, $rules, $messages, $attributes);
+        $this->validate($request, $this->rules, $this->messages, $this->attributes);
 
         // Convert start time to proper time format
         $request->merge([
@@ -181,35 +184,11 @@ class WorkingTimeController extends Controller
      */
     public function update(Request $request, WorkingTime $wTime)
     {
-        // Custom error messages
-        $messages = [
-            'employee_id.exists' => 'The :attribute does not exist.',
-            'date.unique' => 'The employee can only have one working time per day.',
-            'date.date_format' => 'The :attribute field must be in the correct date format.',
-        ];
-
-        // Validation rules
-        $rules = [
-            // Employee ID is required and must exist in employees table
-            'employee_id' => 'required|exists:employees,id',
-
-            // Start time is required
-            'start_time' => 'required|before:end_time',
-
-            // End time is required and must be AFTER the start time (they can't be the same either)
-            'end_time' => 'required|after:start_time',
-
-            // Date must be unique where employee ID is unique
-            'date' => 'required|date_format:Y-m-d',
-        ];
-
-        // Attributes replace the field name with a more readable name
-        $attributes = [
-            'employee_id' => 'employee',
-        ];
+        // Overwrite rules from default
+        unset($this->rules['date']);
 
         // Validate form
-        $this->validate($request, $rules, $messages, $attributes);
+        $this->validate($request, $this->rules, $this->messages, $this->attributes);
 
         // Unassign employee that was previously working on a booking
         Booking::where('start_time', '>=', $wTime->start_time)
@@ -220,7 +199,7 @@ class WorkingTimeController extends Controller
         $wTime->employee_id = $request->employee_id;
         $wTime->start_time = toTime($request->start_time);
         $wTime->end_time = toTime($request->end_time);
-        $wTime->date = toDate($request->date);
+        $wTime->updated_at = getDateTimeNow();
         $wTime->save();
 
         // Session flash
