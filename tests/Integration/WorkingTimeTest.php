@@ -323,7 +323,7 @@ class WorkingTimeTest extends TestCase
             ->json('PUT', '/admin/roster/' . $wTime->employee_id, $wTimeData);
 
         // Check for a session message
-        $response->assertSessionHas('message', 'Edited working time has been successful.');
+        $response->assertSessionHas('message', 'Working time successfully edited.');
 
         // Booking employee ID should be null after edit
         $this->assertEquals(null, Booking::find($booking->id));

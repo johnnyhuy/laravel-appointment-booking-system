@@ -57,6 +57,23 @@ class BusinessTimeTest extends TestCase
     }
 
     /**
+     * Business owner visits business time page
+     *
+     * @return void
+     */
+    public function testShowEditBusinessTimes()
+    {
+        // Create an existing business time
+        $bTime = factory(BusinessTime::class)->create();
+
+        // Send a GET response
+        $response = $this->actingAs($this->bo, 'web_admin')->get('admin/times/' . $bTime->id . '/edit');
+
+        // Check if page successfully loaded
+        $response->assertStatus(200);
+    }
+
+    /**
      * Business owner adds business times
      *
      * @return void
@@ -222,16 +239,215 @@ class BusinessTimeTest extends TestCase
      */
     public function testEditBusinessTime()
     {
+        // Set date to a Monday
+        $date = Time::now()->startOfWeek()->toDateString();
 
+        // Set date to the previous Monday
+        $beforeDate = Time::now()->subWeek()->startOfWeek()->toDateString();
+
+        // Set date to the next Monday
+        $afterDate = Time::now()->addWeek()->startOfWeek()->toDateString();
+
+        // Customer
+        $customer = factory(Customer::class)->create();
+
+        // Employee
+        $employee = factory(Employee::class)->create();
+
+        // Activity
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Create a working time on Monday
+        WorkingTime::create([
+            'employee_id' => $employee->id,
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'date' => $date
+        ]);
+
+        // Create a working time before Monday
+        WorkingTime::create([
+            'employee_id' => $employee->id,
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'date' => $beforeDate
+        ]);
+
+        // Create a working time after Monday
+        WorkingTime::create([
+            'employee_id' => $employee->id,
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'date' => $afterDate
+        ]);
+
+        // Create a business time
+        $bTime = BusinessTime::create([
+            'day' => 'MONDAY',
+            'start_time' => '06:00:00',
+            'end_time' => '17:00:00',
+        ]);
+
+        // Create a booking on Monday
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $date
+        ]);
+
+        // Create a booking before Monday
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $beforeDate
+        ]);
+
+        // Create a booking before Monday
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $afterDate
+        ]);
+
+        // Build business time data from edited business time data
+        $btData = [
+            'start_time'    => '08:00',
+            'end_time'      => '12:00',
+        ];
+
+        // Send PUT/PATCH request to admin/activity/{activity}
+        $response = $this->actingAs($this->bo, 'web_admin')->json('PUT', 'admin/times/' . $bTime->id, $btData);
+
+        // Check edit activity success message
+        $response->assertSessionHas('message', 'Business time successfully edited.');
+
+        // Check if activity has been edited in the database
+        $this->assertDatabaseHas('business_times', [
+            'id'            => $bTime->id,
+            'start_time'    => $btData['start_time'],
+            'end_time'      => $btData['end_time'],
+        ]);
+
+        // Check to see if only one working time exists after edit
+        // Removes the working time contained in business time after today
+        $this->assertCount(2, WorkingTime::all());
+
+        // Check to see if only one booking exists after edit
+        // Removes the booking contained in business time after today
+        $this->assertCount(2, Booking::all());
     }
 
     /**
-     * Business owner edit business times
+     * Business owner remove business times
      *
      * @return void
      */
     public function testRemoveBusinessTime()
     {
+        // Set date to a Monday
+        $date = Time::now()->startOfWeek()->toDateString();
 
+        // Set date to the previous Monday
+        $beforeDate = Time::now()->subWeek()->startOfWeek()->toDateString();
+
+        // Set date to the next Monday
+        $afterDate = Time::now()->addWeek()->startOfWeek()->toDateString();
+
+        // Customer
+        $customer = factory(Customer::class)->create();
+
+        // Employee
+        $employee = factory(Employee::class)->create();
+
+        // Activity
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        // Create a working time on Monday
+        WorkingTime::create([
+            'employee_id' => $employee->id,
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'date' => $date
+        ]);
+
+        // Create a working time before Monday
+        WorkingTime::create([
+            'employee_id' => $employee->id,
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'date' => $beforeDate
+        ]);
+
+        // Create a working time after Monday
+        WorkingTime::create([
+            'employee_id' => $employee->id,
+            'start_time' => '08:00:00',
+            'end_time' => '17:00:00',
+            'date' => $afterDate
+        ]);
+
+        // Create a business time
+        $bTime = BusinessTime::create([
+            'day' => 'MONDAY',
+            'start_time' => '06:00:00',
+            'end_time' => '17:00:00',
+        ]);
+
+        // Create a booking on Monday
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $date
+        ]);
+
+        // Create a booking before Monday
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $beforeDate
+        ]);
+
+        // Create a booking before Monday
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $afterDate
+        ]);
+
+        // Send PUT/PATCH request to admin/activity/{activity}
+        $response = $this->actingAs($this->bo, 'web_admin')->json('DELETE', 'admin/times/' . $bTime->id);
+
+        // Check edit activity success message
+        $response->assertSessionHas('message', 'Business time successfully removed.');
+
+        // Check to see if only one working time exists after edit
+        // Removes the working time contained in business time after today
+        $this->assertCount(2, WorkingTime::all());
+
+        // Check to see if only one booking exists after edit
+        // Removes the booking contained in business time after today
+        $this->assertCount(2, Booking::all());
     }
 }

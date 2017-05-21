@@ -43,6 +43,10 @@
     <div class="dash__block">
         <h1 class="dash__header dash__header--margin-top">Open Business Times</h1>
         <h4 class="dash__description">A table of all activities within the business.</h4>
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Warning!</strong> Editing/deleting a business time will remove future working times and bookings of that day.
+        </div>
         <table class="table no-margin calender">
             <tr>
                 @foreach (getDaysOfWeek() as $day)
@@ -52,10 +56,12 @@
             <tr>
                 @foreach (getDaysOfWeek(true) as $day)
                     <td class="table__day table__right-dotted">
-                        @if ($time = $times->where('day', $day)->first())
+                        @if ($bTime = $bTimes->where('day', $day)->first())
                             <div class="item">
-                                <section class="item__block">
-                                    <div class="text-center">{{ toTime($time->start_time, false) }} - {{ toTime($time->end_time, false) }}</div>
+                                <section class="item__block item__block--no-margin">
+                                    <div class="item__message">{{ toTime($bTime->start_time, false) }} - {{ toTime($bTime->end_time, false) }}</div>
+                                    <a title="Edit this business time" href="/admin/times/{{ $bTime->id }}/edit" class="item__edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                    <a title="Delete this business time" href="/admin/times/{{ $bTime->id }}" class="item__remove" data-method="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                                 </section>
                             </div>
                         @else
