@@ -3,20 +3,10 @@
 @section('content')
 
 <div class="dash__block">
-	<h1 class="dash__header">Add Employee</h1>
+	<h1 class="dash__header">Create Employee</h1>
 	<h4 class="dash__description">Add a new employee to the system</h4>
-	@if ($flash = session('message'))
-		<div class="alert alert-success">
-			{{ $flash }}
-		</div>
-	@endif
-	@if (count($errors))
-		<div class="alert alert-danger">
-			@foreach ($errors->all() as $error)
-				{{ $error }}<br>
-			@endforeach
-		</div>
-	@endif
+	@include('shared.session_message')
+	@include('shared.error_message')
 	<form class="request" method="POST" action="/admin/employees">
 		{{ csrf_field() }}
 		<div class="form-group">
@@ -35,7 +25,7 @@
 			<label for="inputPhone">Phone <span class="request__validate">(at least 10 characters)</span></label>
 			<input name="phone" type="text" id="inputPhone" class="form-control request__input" placeholder="Phone" value="{{ old('phone') }}" autofocus>
 		</div>
-		<button class="btn btn-lg btn-primary btn-block btn--margin-top">Add Employee</button>
+		<button class="btn btn-lg btn-primary btn-block btn--margin-top">Create Employee</button>
 	</form>
 </div>
 <hr>

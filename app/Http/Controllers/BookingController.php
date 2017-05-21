@@ -217,27 +217,9 @@ class BookingController extends Controller
             $request->merge(['customer_id' => Auth::id()]);
         }
 
-        // Convert start time to proper time format
-        $request->merge([
-            'start_time' => toTime($request->start_time)
-        ]);
-
-        // If end time is requested then do not calculate
-        if ($request->end_time) {
-            $request->merge([
-                'end_time' => toTime($request->end_time)
-            ]);
-        }
-        else {
-            $request->merge([
-                'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time)
-            ]);
-        }
-
         // Validation error messages
         $messages = [
             'start_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'customer_id.exists' => 'The :attribute does not exist.',
             'customer_id.is_on_booking' => 'The :attribute is already set on at that time.',
             'employee_id.exists' => 'The :attribute does not exist.',
@@ -253,7 +235,7 @@ class BookingController extends Controller
             'activity_id' => 'required|exists:activities,id|is_end_time_valid',
             'customer_id' => 'required|exists:customers,id|is_on_booking',
             'employee_id' => 'required|exists:employees,id|is_employee_working|is_on_booking',
-            'start_time' => 'required|date_format:H:i:s',
+            'start_time' => 'required|date_format:H:i',
             'date' => 'required|date|after:' . getDateNow(),
         ];
 
@@ -263,13 +245,29 @@ class BookingController extends Controller
             'employee_id' => 'employee',
             'activity_id' => 'activity',
             'start_time' => 'start time',
-            'end_time' => 'end time',
         ];
 
         Log::debug("Validating Business Owner input");
 
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
+
+        // If end time is requested then do not calculate
+        if ($request->end_time) {
+            $request->merge([
+                'end_time' => toTime($request->end_time)
+            ]);
+        }
+        else {
+            $request->merge([
+                'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time)
+            ]);
+        }
+
+        // Convert start time to proper time format
+        $request->merge([
+            'start_time' => toTime($request->start_time)
+        ]);
 
         // Create booking
         $booking = Booking::create([
