@@ -50,7 +50,7 @@
             </div>
             <div class="form-group">
                 <label for="input_start_time">Start Time <span class="request__validate">(24 hour format)</span></label>
-                <input name="start_time" type="time" id="input_start_time" class="form-control request__input" value="{{ old('start_time') ? old('start_time') : '09:00' }}" autofocus>
+                <input name="start_time" type="text" id="time" class="form-control request__input" placeholder="hh:mm" value="{{ old('start_time') ? old('start_time') : '09:00' }}">
             </div>
             <button class="btn btn-lg btn-primary btn-block btn--margin-top">Add Booking</button>
         </form>

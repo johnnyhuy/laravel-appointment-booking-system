@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
             }
 
             // Set time
-            $reqStartTime = $request['start_time'];
+            $reqStartTime = toTime($request['start_time']);
             $reqEndTime = Booking::calcEndTime($activity->duration, $reqStartTime);
 
             // Get bookings of the date

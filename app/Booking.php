@@ -22,8 +22,13 @@ class Booking extends Model
 		// Set duration
 		$duration = Time::parse($pDuration);
 
-		// Set start time
-		$startTime = Time::parse($pStartTime);
+		try {
+			// Set start time
+			$startTime = Time::parse($pStartTime);
+		}
+		catch (\Exception $e) {
+			return false;
+		}
 
 	    // Calculate end time
 	    return Time::createFromTime($startTime->hour, $startTime->minute)

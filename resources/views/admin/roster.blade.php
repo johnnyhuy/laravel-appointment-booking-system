@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="dash__block">
-	<h1 class="dash__header">Add Working Times</h1>
+	<h1 class="dash__header">Create Working Time</h1>
 	<h4 class="dash__description">Add Business Hours for the month.</h4>
 	<form class="request" method="POST" action="/admin/roster/{{ $dateString }}">
 		{{ csrf_field() }}
@@ -32,16 +32,16 @@
 		<div class="form-group request__flex-container">
 			<div class="request__flex request__flex--left">
 				<label for="input_start_time">Start Time <span class="request__validate">(24 hour format)</span></label>
-				<input name="start_time" type="time" id="input_start_time" class="form-control request__input" value="{{ old('start_time') ? old('start_time') : '09:00' }}" autofocus>
+				<input name="start_time" type="text" id="time" class="form-control request__input" placeholder="hh:mm" value="{{ old('start_time') ? old('start_time') : '09:00' }}">
 			</div>
 			<div class="request__flex request__flex--right">
 				<label for="input_end_time">End Time <span class="request__validate">(24 hour format)</span></label>
-				<input name="end_time" type="time" id="input_end_time" class="form-control request__input" value="{{ old('end_time') ? old('end_time') : '17:00' }}" autofocus>
+				<input name="end_time" type="text" id="time" class="form-control request__input" placeholder="hh:mm" value="{{ old('end_time') ? old('end_time') : '17:00' }}">
 			</div>
 		</div>
 		<div class="form-group request__flex-container">
 			<div class="request__flex request__flex--left">
-				<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
+				<label for="input_month_year">Month & Year <span class="request__validate">(select to go to month)</span></label>
 			    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="showRedirect('.loading', '/admin/roster/' + this.value + '{{ $employeeID ? '/' . $employeeID : null }}')">
 			        @foreach ($months as $month)
 			            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
@@ -49,7 +49,7 @@
 			    </select>
 			</div>
 			<div class="request__flex request__flex--right">
-				<label for="inputDay">Day <span class="request__validate"></span></label>
+				<label for="inputDay">Day <span class="request__validate">(day of month)</span></label>
 			    <select name="day" id="inputMonthYear" class="form-control request__input">
 			        @for ($day = 1; $day <= $date->endOfMonth()->day; $day++)
 			            <option value="{{ $day }}" {{ old('day') == $day ? 'selected' : null }}>{{ $day }}</option>

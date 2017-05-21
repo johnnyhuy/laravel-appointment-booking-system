@@ -19,10 +19,10 @@
             <div class="form-group request__flex-container">
                 <div class="request__flex request__flex--left">
                     <label for="times_start_time">Start Time <span class="request__validate">(24 hour format e.g. 17:00 = 05:00 PM)</span></label>
-                    <input name="start_time" type="time" id="times_start_time" class="form-control request__input" value="{{ old('start_time') ? old('start_time') : '09:00' }}" autofocus>
+                    <input name="start_time" type="text" id="time" class="form-control request__input" placeholder="hh:mm" value="{{ old('start_time') ? old('start_time') : '09:00' }}">
                 </div>
                 <div class="request__flex request__flex--right">
-                    <label for="times_end_time">End Time</label>
+                    <label for="times_end_time">End Time <span class="request__validate">(24 hour format)</span></label>
                     <input name="end_time" type="text" id="time" class="form-control request__input" placeholder="hh:mm" value="{{ old('end_time') ? old('end_time') : '17:00' }}">
                 </div>
             </div>
