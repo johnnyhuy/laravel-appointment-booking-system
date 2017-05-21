@@ -24,6 +24,22 @@ footer {
 	text-align: center;
 }
 
+input[type="radio"], input[type="checkbox"] {
+	margin: 6px 0 0;
+}
+
+.logo {
+	height: 200px;
+
+	@include m('large') {
+		height: 350px;
+	}
+
+	@include m('small') {
+		height: 50px;
+	}
+}
+
 .alert {
 	margin-bottom: 15px;
 }
@@ -132,11 +148,11 @@ footer {
 		}
 
 		@include m('now') {
-			background-color: $brand-lighter;
+			background-color: $brand-lighter !important;
 		}
 
 		@include m('disabled') {
-			background-color: $gray-lightest;
+			background-color: $gray-lightest !important;
 		}
 	}
 
@@ -164,6 +180,7 @@ footer {
 		text-align: center;
 		font-size: 16px;
 		border-bottom: 1px solid $border-color;
+		background-color: white;
 	}
 
 	thead > tr > th, thead > tr > td, tbody > tr > th, tbody > tr > td, tfoot > tr > th, tfoot > tr > td {

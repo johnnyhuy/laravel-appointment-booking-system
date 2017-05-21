@@ -4,18 +4,8 @@
     <div class="dash__block">
         <h1 class="dash__header">Edit Business Time</h1>
         <h4 class="dash__description">Edit an existing business time below.</h4>
-        @if ($flash = session('message'))
-            <div class="alert alert-success">
-                {{ $flash }}
-            </div>
-        @endif
-        @if (count($errors))
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    {{ $error }}<br>
-                @endforeach
-            </div>
-        @endif
+        @include('shared.session_message')
+        @include('shared.error_message')
         <form class="request" method="POST" action="/admin/times/{{ $bTime->id }}">
             {{ method_field('PUT') }}
             {{ csrf_field() }}

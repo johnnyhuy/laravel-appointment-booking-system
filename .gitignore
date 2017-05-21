@@ -19,6 +19,7 @@ storage/*.key
 .env
 .env.backup
 .env.testing
+.env.production
 .env.dusk
 .env.dusk.local
 .env.dusk.testing

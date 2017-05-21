@@ -1,7 +1,13 @@
 @include('head.html')
 
 <head>
-	<title>Appointment Booking System</title>
+	<title>
+		@if ($business = BusinessOwner::first())
+			{{ $business->business_name }}: Booking System
+		@else
+			Business Placeholder
+		@endif
+	</title>
 	@include('head.meta')
 	@include('head.css')
 	@include('head.js')
@@ -11,13 +17,12 @@
 <body>
 	<div class="container">
 		@if (Auth::check())
-		<ul class="nav nav-pills pull-left">
-			@if (Auth::check())
-				<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
-				<li role="presentation" class="{{ Request::is('bookings/*') ? 'active' : null }}"><a href="/bookings/{{ toMonthYear(getNow()) }}/new">Create Booking</a></li>
-			@endif
-		</ul>
-
+			<ul class="nav nav-pills pull-left">
+				@if (Auth::check())
+					<li role="presentation" class="{{ Request::is('bookings') ? 'active' : null }}"><a href="/bookings">Bookings</a></li>
+					<li role="presentation" class="{{ Request::is('bookings/*') ? 'active' : null }}"><a href="/bookings/{{ toMonthYear(getNow()) }}/new">Create Booking</a></li>
+				@endif
+			</ul>
 			<div class="pull-right user">
 				Logged in as {{ Auth::user()->username }}
 				<a href="/logout">Logout</a>
@@ -26,17 +31,15 @@
 		<div class="clearfix"></div>
 		<div class="header">
 			<a class="header__title" href="/">
-				<h1>
-				@if(asset("/storage/logo/logo.jpg"))
-					<img style="width: 840px; height: 240px" src="/storage/logo/logo.jpg"></img>
-				@else
-					@if (\App\BusinessOwner::first())
-						{{ \App\BusinessOwner::first()->business_name }}
+				@if ($business = BusinessOwner::first())
+					@if ($business->logo)
+						<img class="logo logo--large padding-bottom-three padding-top-three" alt="" src="{{ asset('storage/' . $business->logo) }}">
 					@else
-						Business Placeholder
+						<h1>{{ BusinessOwner::first()->business_name }}</h1>
 					@endif
+				@else
+					<h1>Business Placeholder</h1>
 				@endif
-				</h1>
 			</a>
 			@php
 				// Dynamic page titles
@@ -67,14 +70,9 @@
 		</div>
 	</div>
 	<div class="container">
-		@if ($flash = session('message'))
-			<div class="alert alert-success">
-				{{ $flash }}
-			</div>
-		@endif
+		@include('shared.session_message')
 		@yield('content')
 	</div>
-	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 	<footer>
 		LCJJ Development Team
 	</footer>

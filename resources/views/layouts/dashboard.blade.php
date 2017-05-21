@@ -29,6 +29,9 @@
 					elseif (Request::is('admin/summary')) {
 						$title .= "Summary of Bookings";
 					}
+					elseif (Request::is('admin/times')) {
+						$title .= "Business Times";
+					}
 					elseif (Request::is('admin/history')) {
 						$title .= "History";
 					}
@@ -52,7 +55,13 @@
 						$title = "";
 					}
 				@endphp
-				<a title="Redirect back to business information" class="navbar-brand" href="/admin">{{ $business->business_name . $title }}</a>
+				@if ($business->logo)
+					<a title="Redirect back to business information" class="navbar-brand navbar-brand--logo" href="/admin">
+						<img class="logo logo--small" alt="" src="{{ asset('storage/' . $business->logo) }}">
+					</a>
+				@else
+					<a title="Redirect back to business information" class="navbar-brand" href="/admin">{{ $business->business_name . $title }}</a>
+				@endif
 			</div>
 			<div id="navbar" class="collapse navbar-collapse">
 				<ul class="nav navbar-nav navbar-right">
