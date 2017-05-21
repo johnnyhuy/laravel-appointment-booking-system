@@ -111,7 +111,7 @@ class WorkingTimeController extends Controller
 			'start_time.date_format' => 'The :attribute field must be in the correct time format.',
             'end_time.date_format' => 'The :attribute field must be in the correct time format.',
             'date.unique' => 'The employee can only have one working time per day.',
-            'date.date_format' => 'The :attribute field must be in the correct date format.',
+            'date.after' => 'The :attribute must be before today ' . toDate(getNow(), true) . '.',
 			'date.is_business_open' => 'The :attribute field be within open business times.',
 		];
 
@@ -127,7 +127,7 @@ class WorkingTimeController extends Controller
             'end_time' => 'required|after:start_time|date_format:H:i',
 
         	// Date must be unique where employee ID is unique
-            'date' => 'required|date_format:Y-m-d|unique:working_times,date,NULL,id,employee_id,' . $request->employee_id . '|is_business_open',
+            'date' => 'required|date|after:' . getDateNow() . '|unique:working_times,date,NULL,id,employee_id,' . $request->employee_id . '|is_business_open',
         ];
 
         // Attributes replace the field name with a more readable name
@@ -179,7 +179,7 @@ class WorkingTimeController extends Controller
      * Update a working time by ID
      * Sent by PUT/PATCH request
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, WorkingTime $wTime)
     {
         // Custom error messages
         $messages = [
@@ -211,25 +211,43 @@ class WorkingTimeController extends Controller
         // Validate form
         $this->validate($request, $rules, $messages, $attributes);
 
-        // Find working time
-        $workingTime = WorkingTime::find($id);
-
         // Unassign employee that was previously working on a booking
-        Booking::where('start_time', '>=', $workingTime->start_time)
-            ->where('end_time', '<=', $workingTime->end_time)
+        Booking::where('start_time', '>=', $wTime->start_time)
+            ->where('end_time', '<=', $wTime->end_time)
             ->delete();
 
         // Save data
-        $workingTime->employee_id = $request->employee_id;
-        $workingTime->start_time = toTime($request->start_time);
-        $workingTime->end_time = toTime($request->end_time);
-        $workingTime->date = toDate($request->date);
-        $workingTime->save();
+        $wTime->employee_id = $request->employee_id;
+        $wTime->start_time = toTime($request->start_time);
+        $wTime->end_time = toTime($request->end_time);
+        $wTime->date = toDate($request->date);
+        $wTime->save();
 
         // Session flash
         session()->flash('message', 'Working time successfully edited.');
 
         // Redirect to the business owner employee page
-        return redirect('/admin/roster/' . Time::parse($request->date)->format('m-Y'));
+        return redirect('/admin/roster/' . getMonthYearNow());
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\WorkingTime  $wTime
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(WorkingTime $wTime)
+    {
+        // Remove selected working time
+        $wTime->delete();
+
+        // Delete future bookings
+        $wTime->deleteBookings();
+
+        // Session flash
+        session()->flash('message', 'Working time successfully removed.');
+
+        // Redirect to activity page
+        return redirect('/admin/roster/' . getMonthYearNow());
     }
 }

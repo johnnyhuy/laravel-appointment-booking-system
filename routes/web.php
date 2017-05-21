@@ -56,9 +56,10 @@ Route::get('/admin/roster', function() { return redirect('/admin/roster/' . toMo
 Route::get('/admin/roster/{month_year}', 'WorkingTimeController@index');
 Route::get('/admin/roster/{month_year}/{employee_id}', 'WorkingTimeController@show');
 Route::get('/admin/roster/{month_year}/{employee_id}/{working_time_id}/edit', 'WorkingTimeController@edit');
-Route::put('/admin/roster/{id}', 'WorkingTimeController@update');
+Route::put('/admin/roster/{wTime}', 'WorkingTimeController@update');
 Route::post('/admin/roster', 'WorkingTimeController@store');
 Route::post('/admin/roster/{month_year}', 'WorkingTimeController@store');
+Route::delete('/admin/roster/{wTime}', 'WorkingTimeController@destroy');
 
 // Booking
 Route::get('/admin/summary', 'BookingController@summary');
@@ -73,7 +74,7 @@ Route::post('/admin/bookings', 'BookingController@store');
 Route::post('/admin/employees', 'EmployeeController@store');
 
 // Business registration for
-Route::post('/admin/register', 'BusinessOwnerController@create');
+Route::post('/admin/register', 'BusinessOwnerController@store');
 
 // Activity management
 // Custom modified resourceful controller using CRUD routes

@@ -14,7 +14,7 @@
                 @php
                     $cDate = Time::parse($pDate->toDateString())->startOfMonth()->startOfWeek()->addDays($days)->addWeeks($weeks);
                 @endphp
-                <td class="calendar__day calendar__day--block {{ $cDate->month != $pDate->month ? 'calendar__day--disabled' : null }}">
+                <td class="calendar__day calendar__day--block {{ $cDate->month != $pDate->month ? 'calendar__day--disabled' : null }} {{ $cDate->toDateString() == getDateNow() ? 'calendar__day--now' : null }}">
                     @if ($cDate->month == $pDate->month)
                         <div class="calendar__day-label">{{ $cDate->format('d') }}</div>
                         @if ($type == 'customer')
@@ -47,6 +47,7 @@
                                     @if ($item->date == $cDate->toDateString())
                                         <section class="item__block  item__block--calendar item__block--padding" data-toggle="tooltip" data-placement="top" title="{{ $item->employee->firstname }} {{ $item->employee->lastname }} - {{ $item->employee->title }}">
                                             <a title="Edit this working time" href="/admin/roster/{{ $pDate->format('m-Y') }}/{{ $item->employee->id }}/{{ $item->id }}/edit" class="item__edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                            <a title="Delete this working time" href="/admin/roster/{{ $item->id }}" class="item__remove" data-method="delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                                             <div class="item__name">
                                                 {{ substr($item->employee->firstname, 0, 1) . '. ' . $item->employee->lastname }}
                                             </div>

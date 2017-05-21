@@ -43,6 +43,14 @@ class WorkingTimeTest extends TestCase
                 'day' => $day,
             ]);
         }
+
+        // Predefined data
+        $this->wtData = [
+            'employee_id' => $this->employee->id,
+            'start_time' => '09:00',
+            'end_time' => '11:00',
+            'date' => $this->date
+        ];
     }
 
     /**
@@ -198,6 +206,69 @@ class WorkingTimeTest extends TestCase
         $this->assertDatabaseHas('working_times', [
         	// Choose ID 1 since there must be only one working time in the table
         	'id' => 1
+        ]);
+    }
+
+    /**
+     * Business Owner add booking validation rules
+     *
+     * @return void
+     */
+    public function testAdminCreateWorkingTimeValidation()
+    {
+        // User selects no employee
+        // Build booking data
+        $this->wtData['employee_id'] = '';
+
+        // Send POST request to admin/bookings
+        $response = $this->actingAs($this->bo, 'web_admin')
+            ->json('POST', 'admin/roster', $this->wtData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The employee field is required.'
+        ]);
+
+
+        // User inputs invalid start time
+        // Build booking data
+        $this->wtData['start_time'] = '@#@#___2323:00';
+
+        // Send POST request to admin/bookings
+        $response = $this->actingAs($this->bo, 'web_admin')
+            ->json('POST', 'admin/roster', $this->wtData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The start time field must be in the correct time format.'
+        ]);
+
+
+        // User inputs invalid end time
+        // Build booking data
+        $this->wtData['end_time'] = '@#@#___2323:00';
+
+        // Send POST request to admin/bookings
+        $response = $this->actingAs($this->bo, 'web_admin')
+            ->json('POST', 'admin/roster', $this->wtData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The end time field must be in the correct time format.'
+        ]);
+
+
+        // Working time is 3 days before today
+        // Build booking data
+        $this->wtData['date'] = Time::now()->subDays(3)->toDateString();
+
+        // Send POST request to admin/bookings
+        $response = $this->actingAs($this->bo, 'web_admin')
+            ->json('POST', 'admin/roster', $this->wtData);
+
+        // Check response for an error message
+        $response->assertJsonFragment([
+            'The date must be before today ' . Time::now()->format('d/m/Y') . '.'
         ]);
     }
 
@@ -544,5 +615,76 @@ class WorkingTimeTest extends TestCase
 
         // There must be only 1 working time (no duplicates)
         $this->assertCount(1, WorkingTime::all());
+    }
+
+    /**
+     * Business owner remove working time
+     *
+     * @return void
+     */
+    public function testRemoveWorkingTime()
+    {
+        // Set date to tomorrow
+        $date = Time::now()->addDay()->toDateString();
+
+        // Set date before
+        $dateBefore = Time::now()->subDays(4)->toDateString();
+
+        // Customer
+        $customer = factory(Customer::class)->create();
+
+        // Employee
+        $employee = factory(Employee::class)->create();
+
+        // Activity
+        $activity = factory(Activity::class)->create([
+            'duration' => '02:00'
+        ]);
+
+        $wTime = WorkingTime::create([
+            'employee_id' => $employee->id,
+            'start_time' => '09:00:00',
+            'end_time' => '17:00:00',
+            'date' => $date
+        ]);
+
+        // Create a booking tomorrow
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '09:00:00',
+            'end_time' => '11:00:00',
+            'date' => $date
+        ]);
+
+        // Create a booking tomorrow
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '11:00:00',
+            'end_time' => '13:00:00',
+            'date' => $date
+        ]);
+
+        // Create a booking tomorrow
+        Booking::create([
+            'customer_id' => $customer->id,
+            'employee_id' => $employee->id,
+            'activity_id' => $activity->id,
+            'start_time' => '11:00:00',
+            'end_time' => '13:00:00',
+            'date' => $dateBefore
+        ]);
+
+        // Send PUT/PATCH request to admin/activity/{activity}
+        $response = $this->actingAs($this->bo, 'web_admin')->json('DELETE', 'admin/roster/' . $wTime->id);
+
+        // Check edit activity success message
+        $response->assertSessionHas('message', 'Working time successfully removed.');
+
+        // There should be one booking from before
+        $this->assertCount(1, Booking::all());
     }
 }

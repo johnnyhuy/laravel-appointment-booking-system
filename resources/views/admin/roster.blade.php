@@ -64,6 +64,10 @@
 <div class="dash__block">
 	<h1 class="dash__header dash__header--margin-top">Roster {{ $employee ? ' for ' . $employee->firstname . ' ' . $employee->lastname : null }}</h1>
 	<h4 class="dash__description">Show the roster of a given month.</h4>
+	<div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Warning!</strong> Editing/deleting a working time will remove bookings on that date.
+    </div>
 	<h1>{{ $date->format('F Y') }}</h1>
 	@include('shared.calendar', [
 		'pDate' => $date,

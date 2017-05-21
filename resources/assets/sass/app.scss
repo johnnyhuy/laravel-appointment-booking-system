@@ -131,6 +131,10 @@ footer {
 			border: 1px solid $border-color;
 		}
 
+		@include m('now') {
+			background-color: $brand-lighter;
+		}
+
 		@include m('disabled') {
 			background-color: $gray-lightest;
 		}
@@ -160,7 +164,6 @@ footer {
 		text-align: center;
 		font-size: 16px;
 		border-bottom: 1px solid $border-color;
-		background: white;
 	}
 
 	thead > tr > th, thead > tr > td, tbody > tr > th, tbody > tr > td, tfoot > tr > th, tfoot > tr > td {

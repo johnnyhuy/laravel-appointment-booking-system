@@ -94,7 +94,7 @@ class BusinessOwnerController extends Controller
      * Creates Business Owner
      * Includes all business information
      */
-    public function create(Request $request)
+    public function store(Request $request)
     {
         //Check a business owner doesn't already exist
         if (count(BusinessOwner::all()) > 1) {
