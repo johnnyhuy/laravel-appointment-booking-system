@@ -3,7 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
+use App\Booking;
+use App\Employee;
 use App\WorkingTime;
 
 use Carbon\Carbon as Time;
@@ -12,6 +15,11 @@ class WorkingTime extends Model
 {
     protected $guarded = [];
 
+    /**
+     * Get the roster
+     *
+     * @return WorkingTime
+     */
     public static function getRoster()
     {
     	// Start of week in the month
@@ -37,9 +45,9 @@ class WorkingTime extends Model
     }
 
     /**
-     *
      * Get the working times of an employee for a given amount of days
      *
+     * @return WorkingTime
      */
     public static function getWorkingTmesForEmployee($employeeID, $days)
     {
@@ -59,14 +67,32 @@ class WorkingTime extends Model
         return $workingTimes;
     }
 
-
     /**
-	 *
 	 * Get employee from working time
-	 *
+     *
+	 * @return Employee
 	 */
 	public function employee()
 	{
 		return $this->belongsTo(Employee::class);
 	}
+
+    /**
+     * Removes all future bookings.
+     *
+     * @return void
+     */
+    public function deleteBookings()
+    {
+        // Count the amount of bookings removed
+        $bookingCount = 0;
+
+        // Delete remaining booking after today on a day of week
+        foreach (Booking::where('date', $this->date)->where('employee_id', $this->employee_id)->get() as $booking) {
+            $booking->delete();
+            $bookingCount++;
+        }
+
+        Log::notice("Deleted " . $bookingCount . " previous booking(s)");
+    }
 }

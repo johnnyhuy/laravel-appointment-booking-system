@@ -164,6 +164,16 @@ function getNow()
 }
 
 /**
+ * Get month year now
+ *
+ * @return string
+ */
+function getMonthYearNow()
+{
+    return toMonthYear(getNow());
+}
+
+/**
  * Convert month year to carbon
  *
  * @param  string $string
