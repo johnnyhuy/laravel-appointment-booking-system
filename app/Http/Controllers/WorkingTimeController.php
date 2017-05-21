@@ -227,7 +227,7 @@ class WorkingTimeController extends Controller
         $workingTime->save();
 
         // Session flash
-        session()->flash('message', 'Edited working time has been successful.');
+        session()->flash('message', 'Working time successfully edited.');
 
         // Redirect to the business owner employee page
         return redirect('/admin/roster/' . Time::parse($request->date)->format('m-Y'));

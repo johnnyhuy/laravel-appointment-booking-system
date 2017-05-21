@@ -107,6 +107,10 @@ footer {
 .calendar {
 	border: 1px solid $border-color;
 
+	tbody > tr > td {
+		padding: 8px 8px 0 8px;
+	}
+
 	@include e('week') {
 		border-right: 1px solid $gray-light;
 		min-width: 60px;
@@ -177,6 +181,10 @@ footer {
 			min-width: 110px;
 			margin-bottom: $margin-base;
 
+			@include m('no-margin') {
+				margin-bottom: 0;
+			}
+
 			@include m('calendar') {
 				margin-right: 25px;
 			}
@@ -184,10 +192,6 @@ footer {
 			@include m('padding') {
 				padding: 4px 24px 4px 4px;
 			}
-		}
-
-		@include e-last-child('block') {
-			margin-bottom: 0;
 		}
 
 		@include e('text') {
@@ -203,6 +207,10 @@ footer {
 			font-family: $font-family-base;
 		}
 
+		@include e('message') {
+			padding-left: 4px;
+		}
+
 		@include e('edit') {
 			position: absolute;
 			top: 6px;
@@ -211,13 +219,21 @@ footer {
 			font-size: 14px;
 		}
 
+		@include e('remove') {
+			position: absolute;
+			top: 6px;
+			right: 28px;
+			color: $brand-light;
+			font-size: 14px;
+		}
+
 		@include e-hover('edit') {
 			color: white;
 		}
-	}
 
-	.item:last-child {
-		margin: 0;
+		@include e-hover('remove') {
+			color: white;
+		}
 	}
 
 	// General modifiers
