@@ -25,7 +25,7 @@ class EmployeeController extends Controller
         // Check auth, if not auth then redirect to login
         $this->middleware('auth:web_admin', [
             'only' => [
-                'create',
+                'store',
                 'index',
                 'assign',
             ]
