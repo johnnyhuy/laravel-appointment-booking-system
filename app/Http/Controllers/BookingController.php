@@ -128,10 +128,10 @@ class BookingController extends Controller
      * Show booking by employee ID
      *
      * @param  String $monthYear    month year string from URL (mm-yyyy)
-     * @param  String $employeeID   employee ID
+     * @param  Employee $employee   employee
      * @return view
      */
-    public function showCustomer($monthYear, $employeeID)
+    public function createCustomer($monthYear, Employee $employee = null)
     {
         // Set date string
         $date = monthYearToDate($monthYear);
@@ -142,49 +142,26 @@ class BookingController extends Controller
             ->get()
             ->sortBy('date');
 
-        // Find working time by employee ID
-        $workingTimes = WorkingTime::where('employee_id', $employeeID);
+        if ($employee) {
+            // Find working time by employee ID
+            $workingTimes = WorkingTime::where('employee_id', $employee->id);
+            $employeeID = $employee->id;
+        }
+        else {
+            // Get working times within the month
+            $workingTimes = WorkingTime::all();
+            $employeeID = null;
+        }
 
-        // Get working times within the month
         $workingTimes = $workingTimes
             ->where('date', '<=', $date->endOfMonth()->toDateString())
             ->where('date', '>=', $date->startOfMonth()->toDateString())
             ->get();
 
-        return view('customer.create_bookings', [
+        return view('customer.create.bookings', [
             'business'      => BusinessOwner::first(),
             'employeeID'    => $employeeID,
-            'employee'      => Employee::find($employeeID),
-            'roster'        => $workingTimes,
-            'date'          => $date,
-            'dateString'    => $date->format('m-Y'),
-            'months'        => getMonthList($monthYear)
-        ]);
-    }
-
-    /**
-     * Show booking by employee ID
-     *
-     * @param  String $monthYear    month year string from URL (mm-yyyy)
-     * @return view
-     */
-    public function newCustomer($monthYear)
-    {
-        // Set date string
-        $date = monthYearToDate($monthYear);
-
-        // Else get all working times
-        $workingTimes = WorkingTime::all();
-
-        // Get working times within the month
-        $workingTimes = $workingTimes
-            ->where('date', '<=', $date->endOfMonth()->toDateString())
-            ->where('date', '>=', $date->startOfMonth()->toDateString());
-
-        return view('customer.create_bookings', [
-            'business'      => BusinessOwner::first(),
-            'employeeID'    => null,
-            'employee'      => null,
+            'employee'      => $employee,
             'roster'        => $workingTimes,
             'date'          => $date,
             'dateString'    => $date->format('m-Y'),
@@ -335,13 +312,5 @@ class BookingController extends Controller
             ->sortBy('date');
 
         return view('customer.bookings', compact('bookings'));
-    }
-
-    /**
-     * Shows the create booking page
-     */
-    public function newCustomerBooking()
-    {
-        return view('customer.create_bookings');
     }
 }

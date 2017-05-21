@@ -11,13 +11,7 @@
 				{{ $flash }}
 			</div>
 		@endif
-		@if (count($errors))
-			<div class="alert alert-danger">
-				@foreach ($errors->all() as $error)
-					{{ $error }}<br>
-				@endforeach
-			</div>
-		@endif
+		@include('shared.error_message')
 		@if (!Employee::first())
 			@include('shared.error_message_custom', [
 				'title' => 'Employees do not exist.',

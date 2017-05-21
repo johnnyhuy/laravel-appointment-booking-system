@@ -38,6 +38,33 @@ class BusinessOwnerController extends Controller
                 'register',
             ]
         ]);
+
+        // Validation error messages
+        $this->messages = [
+            'businessname.regex' => 'The :attribute is invalid, do not use special characters except "." and "-".',
+            'firstname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
+            'lastname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
+            'phone.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
+        ];
+
+        // Validation rules
+        $this->rules = [
+            'businessname' => "required|min:2|max:32|regex:/^[A-z0-9\-\.\s\']+$/",
+            'firstname' => "required|min:2|max:32|regex:/^[A-z\'\-]+$/",
+            'lastname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
+            'username' => 'required|min:6|max:24|alpha_num|unique:customers,username',
+            'password' => 'required|min:6|max:32|confirmed',
+            'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
+            'address' => 'required|min:6|max:32',
+            'temp_password' => 'required|exists:temp_password,password',
+        ];
+
+        // Attributes replace the field name with a more readable name
+        $this->attributes = [
+            'businessname' => 'business name',
+            'firstname' => 'first name',
+            'lastname' => 'last name',
+        ];
     }
 
     /**
@@ -76,35 +103,8 @@ class BusinessOwnerController extends Controller
             return 0;
         }
 
-        // Validation error messages
-        $messages = [
-            'businessname.regex' => 'The :attribute is invalid, do not use special characters except "." and "-".',
-            'firstname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
-            'lastname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
-            'phone.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
-        ];
-
-        // Validation rules
-        $rules = [
-            'businessname' => 'required|min:2|max:32|regex:/^[A-z0-9\-\.\s ]+$/',
-            'firstname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
-            'lastname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
-            'username' => 'required|min:6|max:24|alpha_num|unique:customers,username',
-            'password' => 'required|min:6|max:32|confirmed',
-            'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
-            'address' => 'required|min:6|max:32',
-            'temp_password' => 'required|exists:temp_password,password',
-        ];
-
-        // Attributes replace the field name with a more readable name
-        $attributes = [
-            'businessname' => 'business name',
-            'firstname' => 'first name',
-            'lastname' => 'last name',
-        ];
-
     	// Validate form
-        $this->validate($request, $rules, $messages, $attributes);
+        $this->validate($request, $this->rules, $this->messages, $this->attributes);
 
     	// Create customer
         $businessOwner = BusinessOwner::create([
@@ -135,7 +135,7 @@ class BusinessOwnerController extends Controller
      */
     public function edit()
     {
-        return view('admin.edit', [
+        return view('admin.edit.business', [
             'business' => BusinessOwner::first(),
         ]);
     }
@@ -145,32 +145,11 @@ class BusinessOwnerController extends Controller
      */
     public function update(Request $request)
     {
-        // Validation error messages
-        $messages = [
-            'businessname.regex' => 'The :attribute is invalid, do not use special characters except "." and "-".',
-            'firstname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
-            'lastname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
-            'phone.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
-        ];
-
-        // Validation rules
-        $rules = [
-            'businessname' => 'required|min:2|max:32|regex:/^[A-z0-9\-\.\s ]+$/',
-            'firstname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
-            'lastname' => "required|min:2|max:32|regex:/^[A-z" . "\'" . '\-' . " ]+$/",
-            'phone' => 'required|min:10|max:24|regex:/^[0-9\-\+\.\s\(\)x]+$/',
-            'address' => 'required|min:6|max:32',
-        ];
-
-        // Attributes replace the field name with a more readable name
-        $attributes = [
-            'businessname' => 'business name',
-            'firstname' => 'first name',
-            'lastname' => 'last name',
-        ];
+        // Unset certain rules from default
+        unset($this->rules['temp_password'], $this->rules['username'], $this->rules['password']);
 
         // Validate form
-        $this->validate($request, $rules, $messages, $attributes);
+        $this->validate($request, $this->rules, $this->messages, $this->attributes);
 
         // Create customer
         DB::table('business_owners')->update([
@@ -188,6 +167,6 @@ class BusinessOwnerController extends Controller
         session()->flash('message', 'Business Owner information updated.');
 
         //Redirect to the business owner admin page
-        return redirect('/admin/edit');
+        return redirect('/admin');
     }
 }

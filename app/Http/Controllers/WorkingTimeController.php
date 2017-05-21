@@ -92,7 +92,7 @@ class WorkingTimeController extends Controller
     }
 
     // Create a new working time
-	public function create(Request $request, $monthYear = null)
+	public function store(Request $request, $monthYear = null)
 	{
         Log::info("An attempt was made to create a new working time", $request->all());
 
@@ -172,7 +172,7 @@ class WorkingTimeController extends Controller
 
         $business = BusinessOwner::first();
 
-        return view('admin.edit_working_time', compact(['workingTime', 'business']));
+        return view('admin.edit.working_time', compact(['workingTime', 'business']));
     }
 
     /**

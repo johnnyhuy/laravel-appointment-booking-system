@@ -2,7 +2,7 @@
 
 @section('content')
 	<div class="dash__block">
-		<h1 class="dash__header">Add Activity</h1>
+		<h1 class="dash__header">Create Activity</h1>
 		<h4 class="dash__description">Add a new employee to the system.</h4>
 		@if ($flash = session('message'))
 			<div class="alert alert-success">
@@ -28,9 +28,9 @@
 			</div>
 			<div class="form-group">
 				<label for="input_duration">Duration <span class="request__validate">(24 hour format)</span></label>
-				<input name="duration" type="time" id="input_duration" class="form-control request__input" value="{{ old('duration') }}" autofocus>
+				<input name="duration" type="text" id="time" class="form-control request__input" placeholder="hh:mm" value="{{ old('duration') }}">
 			</div>
-			<button class="btn btn-lg btn-primary btn-block btn--margin-top">Add Activity</button>
+			<button class="btn btn-lg btn-primary btn-block btn--margin-top">Create</button>
 		</form>
 	</div>
 	<hr>

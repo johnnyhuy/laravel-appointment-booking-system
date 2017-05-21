@@ -3,41 +3,14 @@
 @section('content')
 
 <div class="dash__block">
-	@if ($flash = session('message'))
-		<div class="alert alert-success">
-			{{ $flash }}
-		</div>
-	@endif
-	@if (!Customer::first())
-		@include('shared.error_message_custom', [
-			'title' => 'Customers do not exist.',
-			'message' => 'Register as a customer when you logout.',
-			'type' => 'danger'
-		])
-	@endif
-	@if (!Employee::first())
-		@include('shared.error_message_custom', [
-			'title' => 'Employees do not exist.',
-			'message' => 'Create an employee <a href="/admin/employees">here</a>.',
-			'type' => 'danger'
-		])
-	@endif
-	@if (!Activity::first())
-		@include('shared.error_message_custom', [
-			'title' => 'Activities do not exist.',
-			'message' => 'Create an activity <a href="/admin/activity">here</a>.',
-			'type' => 'danger'
-		])
-	@endif
+	@include('shared.session_message')
 	@include('shared.error_message')
-
 	<ul class="nav nav-tabs" role="tablist">
 	    <li role="presentation" class="active"><a href="#bookings" aria-controls="bookings" role="tab" data-toggle="tab">Bookings</a></li>
 	    <li role="presentation"><a href="#roster" aria-controls="roster" role="tab" data-toggle="tab">Roster</a></li>
   	</ul>
 
   	<div class="tab-content">
-  		<!--<br><br><br>-->
     	<div role="tabpanel" class="tab-pane active" id="bookings">
     		<div class="block request">
     		<h1 class="dash__header">Add Booking</h1>
@@ -132,7 +105,7 @@
 			@else
 				@include('shared.error_message_thumbs_down', [
 					'message' => 'No bookings found.',
-					'subMessage' => 'Try add an employee using the form above.'
+					'subMessage' => 'Try add a booking using the form above.'
 				])
 			@endif
 			</div>
@@ -160,7 +133,7 @@
 			</div>
 			</div>
 		</div>
-		
+
     </div>
 </div>
 <hr>
