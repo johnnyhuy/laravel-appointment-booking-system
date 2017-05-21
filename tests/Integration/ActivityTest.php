@@ -86,19 +86,17 @@ class ActivityTest extends TestCase
      */
     public function testAdminEditActivity()
     {
-        // Create an activity
         $initActivity = factory(Activity::class)->create();
-        $editedActivity = factory(Activity::class)->make();
 
         // Build activity data from edited activity data
-        $activityData = [
-            'name' => $editedActivity->name,
-            'description' => $editedActivity->description,
-            'duration' => $editedActivity->duration,
+        $actData = [
+            'name' => 'lorem',
+            'description' => 'lorem ipsum lorem lorem ipsum lorem',
+            'duration' => '04:30',
         ];
 
         // Send PUT/PATCH request to admin/activity/{activity}
-        $response = $this->actingAs($this->bo, 'web_admin')->json('PUT', 'admin/activity/' . $initActivity->id, $activityData);
+        $response = $this->actingAs($this->bo, 'web_admin')->json('PUT', 'admin/activity/' . $initActivity->id, $actData);
 
         // Check edit activity success message
         $response->assertSessionHas('message', 'Activity has successfully been edited.');
@@ -106,9 +104,9 @@ class ActivityTest extends TestCase
         // Check if activity has been edited in the database
         $this->assertDatabaseHas('activities', [
             'id' => $initActivity->id,
-            'name' => $editedActivity->name,
-            'description' => $editedActivity->description,
-            'duration' => $editedActivity->duration,
+            'name' => $actData['name'],
+            'description' => $actData['description'],
+            'duration' => $actData['duration'],
         ]);
     }
 

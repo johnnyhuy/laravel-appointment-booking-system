@@ -361,7 +361,7 @@ class WorkingTimeTest extends TestCase
      *
      * @return void
      */
-    public function testEditWorkingTimeSuccessful()
+    public function testEditWorkingTime()
     {
         // Create a working time from 09:00 AM to 05:00 PM today
         $wTime = WorkingTime::create([
@@ -384,9 +384,8 @@ class WorkingTimeTest extends TestCase
         // Build working time data
         $wTimeData = [
             'employee_id' => $wTime->employee_id,
-            'start_time' => $wTime->start_time,
-            'end_time' => $wTime->end_time,
-            'date' => $wTime->date,
+            'start_time' => '09:00',
+            'end_time' => '17:00',
         ];
 
         // Send a PUT request to /admin/roster/{id} with working time data
