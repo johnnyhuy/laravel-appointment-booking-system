@@ -59,66 +59,76 @@
 		</div>
 		<button class="btn btn-lg btn-primary btn-block btn--margin-top">Create Booking</button>
 	</form>
-	<h1 id="bookings" class="dash__header dash__header--margin-top">Bookings</h1>
-	<h4 class="main_description">A table of all bookings on {{ $date->format('F Y') }}</h4>
-	<div class="form-group">
-		<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
-	    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/bookings/' + this.value + '#bookings'">
-	        @foreach ($months as $month)
-	            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
-	        @endforeach
-	    </select>
-    </div>
-    @if ($bookings->count())
-	    <table class="table no-margin">
-	        <tr>
-				<th class="table__id table__right-solid">ID</th>
-				<th class="table__name">Customer</th>
-				<th class="table__name">Employee</th>
-				<th class="table__name">Activity</th>
-				<th class="table__time">Start</th>
-				<th class="table__time">End</th>
-				<th class="table__time">Duration</th>
-				<th class="table__date">Date</th>
-			</tr>
-			@foreach ($bookings as $booking)
-				<tr>
-					<td class="table__id table__right-solid">{{ $booking->id }}</td>
-					<td class="table__name table__right-dotted">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
-					<td class="table__name table__right-dotted">{{ $booking->employee->firstname . ' ' . $booking->employee->lastname }}</td>
-					<td class="table__name table__right-dotted">{{ $booking->activity->name }}</td>
-					<td class="table__time table__right-dotted">{{ toTime($booking->start_time, false) }}</td>
-					<td class="table__time table__right-dotted">{{ toTime($booking->end_time, false) }}</td>
-					<td class="table__time table__right-dotted">{{ $booking->activity->duration }}</td>
-					<td class="table__date">{{ toDate($booking->date, true) }}</td>
-				</tr>
-			@endforeach
-	    </table>
-	@else
-		@include('shared.error_message_thumbs_down', [
-			'message' => 'No bookings found.',
-			'subMessage' => 'Try add a booking using the form above.'
-		])
-	@endif
-</div>
-<hr>
-<div class="dash__block">
-	<h1 id="available" class="dash__header">Employee Availability {{ $employee ? ' for ' . $employee->firstname . ' ' . $employee->lastname : null }}</h1>
-	<h4 class="dash__description">Show the roster of a given month.</h4>
-	<div class="form-group">
-		<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
-	    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/bookings/' + this.value + '{{ $employee ? '/' . $employee->id : null }}#available'">
-	        @foreach ($months as $month)
-	            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
-	        @endforeach
-	    </select>
-    </div>
-   <h1>{{ $date->format('F Y') }}</h1>
-	@include('shared.calendar', [
-		'pDate' => $date,
-		'items' => $roster,
-		'type' => 'customer'
-	])
+	<hr>
+	<ul class="nav nav-pills padding-bottom-three">
+		<li role="presentation" class="active"><a href="#ava" aria-controls="ava" role="pill" data-toggle="pill">Availability</a></li>
+		<li role="presentation"><a href="#book" aria-controls="book" role="pill" data-toggle="pill">Bookings</a></li>
+	</ul>
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="ava">
+			<div class="dash__block">
+				<h1 id="available" class="dash__header">Employee Availability {{ $employee ? ' for ' . $employee->firstname . ' ' . $employee->lastname : null }}</h1>
+				<h4 class="dash__description">Show the roster of a given month.</h4>
+				<div class="form-group">
+					<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
+				    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/bookings/' + this.value + '{{ $employee ? '/' . $employee->id : null }}#available'">
+				        @foreach ($months as $month)
+				            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
+				        @endforeach
+				    </select>
+			    </div>
+			   <h1>{{ $date->format('F Y') }}</h1>
+				@include('shared.calendar', [
+					'pDate' => $date,
+					'items' => $roster,
+					'type' => 'customer'
+				])
+			</div>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="book">
+			<h1 id="bookings" class="dash__header">Bookings</h1>
+			<h4 class="main_description">A table of all bookings on {{ $date->format('F Y') }}</h4>
+			<div class="form-group">
+				<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
+			    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="location = '/admin/bookings/' + this.value + '#bookings'">
+			        @foreach ($months as $month)
+			            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
+			        @endforeach
+			    </select>
+		    </div>
+			@if ($bookings->count())
+			    <table class="table no-margin">
+			        <tr>
+						<th class="table__id table__right-solid">ID</th>
+						<th class="table__name">Customer</th>
+						<th class="table__name">Employee</th>
+						<th class="table__name">Activity</th>
+						<th class="table__time">Start</th>
+						<th class="table__time">End</th>
+						<th class="table__time">Duration</th>
+						<th class="table__date">Date</th>
+					</tr>
+					@foreach ($bookings as $booking)
+						<tr>
+							<td class="table__id table__right-solid">{{ $booking->id }}</td>
+							<td class="table__name table__right-dotted">{{ $booking->customer->firstname . ' ' . $booking->customer->lastname }}</td>
+							<td class="table__name table__right-dotted">{{ $booking->employee->firstname . ' ' . $booking->employee->lastname }}</td>
+							<td class="table__name table__right-dotted">{{ $booking->activity->name }}</td>
+							<td class="table__time table__right-dotted">{{ toTime($booking->start_time, false) }}</td>
+							<td class="table__time table__right-dotted">{{ toTime($booking->end_time, false) }}</td>
+							<td class="table__time table__right-dotted">{{ $booking->activity->duration }}</td>
+							<td class="table__date">{{ toDate($booking->date, true) }}</td>
+						</tr>
+					@endforeach
+			    </table>
+			@else
+				@include('shared.error_message_thumbs_down', [
+					'message' => 'No bookings found.',
+					'subMessage' => 'Try add a booking using the form above.'
+				])
+			@endif
+		</div>
+	</div>
 </div>
 
 @endsection

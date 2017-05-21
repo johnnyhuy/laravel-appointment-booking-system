@@ -28,6 +28,7 @@ class BusinessOwnerController extends Controller
         $this->middleware('auth:web_admin', [
             'only' => [
                 'index',
+                'update'
             ]
         ]);
 
@@ -35,14 +36,14 @@ class BusinessOwnerController extends Controller
         // Allow guests to register business
         $this->middleware('guest:web_user', [
             'only' => [
-                'create',
+                'store',
                 'register',
             ]
         ]);
 
         // Validation error messages
         $this->messages = [
-            'businessname.regex' => 'The :attribute is invalid, do not use special characters except "." and "-".',
+            'business_name.regex' => 'The :attribute is invalid, do not use special characters except "." and "-".',
             'firstname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
             'lastname.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
             'phone.regex' => 'The :attribute is invalid, field cannot contain special characters or numbers.',
@@ -50,7 +51,7 @@ class BusinessOwnerController extends Controller
 
         // Validation rules
         $this->rules = [
-            'businessname' => "required|min:2|max:32|regex:/^[A-z0-9\-\.\'\s]+$/",
+            'business_name' => "required|min:2|max:32|regex:/^[A-z0-9\-\.\'\s]+$/",
             'firstname' => "required|min:2|max:32|regex:/^[A-z\'\-']+$/",
             'lastname' => "required|min:2|max:32|regex:/^[A-z\'\-']+$/",
             'username' => 'required|min:6|max:24|alpha_num|unique:customers,username',
@@ -62,7 +63,7 @@ class BusinessOwnerController extends Controller
 
         // Attributes replace the field name with a more readable name
         $this->attributes = [
-            'businessname' => 'business name',
+            'business_name' => 'business name',
             'firstname' => 'first name',
             'lastname' => 'last name',
         ];
@@ -109,7 +110,7 @@ class BusinessOwnerController extends Controller
 
     	// Create customer
         $businessOwner = BusinessOwner::create([
-            'business_name' => $request->businessname,
+            'business_name' => $request->business_name,
             'firstname' => ucfirst($request->firstname),
             'lastname' => ucfirst($request->lastname),
             'username' => $request->username,
@@ -143,39 +144,57 @@ class BusinessOwnerController extends Controller
 
     /**
      * Update the business information
+     *
+     * @param Request $request
+     * @param BusinessOwner $bo
      */
-    public function update(Request $request)
+    public function update(Request $request, BusinessOwner $bo)
     {
+        // Unset default rules
         unset($this->rules['username'], $this->rules['password'], $this->rules['temp_password']);
+
+        // Add logo validation rules
+        $this->rules['logo'] = 'image|mimes:jpeg,png,jpg|dimensions:min_width=240,min_height=120|max:16384';
 
         // Validate form
         $this->validate($request, $this->rules, $this->messages, $this->attributes);
 
-        // Create customer
-        DB::table('business_owners')->update([
-            'business_name' => $request->businessname,
-            'firstname' => ucfirst($request->firstname),
-            'lastname' => ucfirst($request->lastname),
-            'address' => $request->address,
-            'phone' => $request->phone,
-        ]);
+        // Update business information
+        $bo->business_name = $request->business_name;
+        $bo->firstname = ucfirst($request->firstname);
+        $bo->lastname = ucfirst($request->lastname);
+        $bo->address = $request->address;
+        $bo->phone = $request->phone;
+        $bo->updated_at = getDateTimeNow();
 
+        if ($request->hasFile('logo')) {
+            // Get file from request
+            $file = $request->file('logo');
 
-        //if($request->businesslogo->extension == '.jpg') {
-        if($request->hasFile('businesslogo')) {
-            request()->file('businesslogo')->storeAs('public/logo', 'logo.jpg');
+            // Guess extension
+            $ext = $file->guessClientExtension();
+
+            // Store to
+            $dir = $file->storeAs('images', "logo.{$ext}");
+
+            // Save to DB
+            $bo->logo = $dir;
         }
-        else  {
-            session()->flash('message',  $request->businesslogo);
+
+        if ($request->remove_logo) {
+            $bo->logo = null;
         }
+
+        // Save changes
+        $bo->save();
 
         // Log business owner creation
         Log::notice("Business Owner was updated successfully");
 
         // Session flash
-        //session()->flash('message', 'Business Owner information updated.');
+        session()->flash('message', 'Business information updated.');
 
         //Redirect to the business owner admin page
-        return redirect('/admin/edit');
+        return redirect('/admin');
     }
 }

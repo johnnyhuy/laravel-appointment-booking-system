@@ -45,6 +45,36 @@ class BookingController extends Controller
                 'store',
             ]
         ]);
+
+        // Validation error messages
+        $this->messages = [
+            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
+            'customer_id.exists' => 'The :attribute does not exist.',
+            'customer_id.is_on_booking' => 'The :attribute is already set on at that time.',
+            'employee_id.exists' => 'The :attribute does not exist.',
+            'employee_id.is_employee_working' => 'The :attribute is not working on that time.',
+            'employee_id.is_on_booking' => 'The :attribute is already working on another booking at that time.',
+            'activity_id.exists' => 'The :attribute does not exist.',
+            'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
+            'date.after' => 'The :attribute must be before today ' . toDate(getNow(), true) . '.',
+        ];
+
+        // Validation rules
+        $this->rules = [
+            'activity_id' => 'required|exists:activities,id|is_end_time_valid',
+            'customer_id' => 'required|exists:customers,id|is_on_booking',
+            'employee_id' => 'required|exists:employees,id|is_employee_working|is_on_booking',
+            'start_time' => 'required|date_format:H:i',
+            'date' => 'required|date|after:' . getDateNow(),
+        ];
+
+        // Attributes replace the field name with a more readable name
+        $this->attributes = [
+            'customer_id' => 'customer',
+            'employee_id' => 'employee',
+            'activity_id' => 'activity',
+            'start_time' => 'start time',
+        ];
     }
 
     /**
@@ -200,7 +230,19 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info("An attempt to create a booking from the Business Owner Dashboard", $request->all());
+        if (isAdmin()) {
+            $user = 'business owner';
+            $url = '/admin/bookings/' . getMonthYearNow();
+        }
+        else {
+            $user = 'customer';
+            $url = '/bookings';
+
+            // Use logged in customer ID
+            $request->merge(['customer_id' => Auth::id()]);
+        }
+
+        Log::info("Attempting to create a booking from the {$user}", $request->all());
 
         // If month year format requested
         if ($request->month_year) {
@@ -211,46 +253,6 @@ class BookingController extends Controller
         else {
             $date = $request->date;
         }
-
-        // If customer is logged in, user their customer ID
-        if (isUser()) {
-            $request->merge(['customer_id' => Auth::id()]);
-        }
-
-        // Validation error messages
-        $messages = [
-            'start_time.date_format' => 'The :attribute field must be in the correct time format.',
-            'customer_id.exists' => 'The :attribute does not exist.',
-            'customer_id.is_on_booking' => 'The :attribute is already set on at that time.',
-            'employee_id.exists' => 'The :attribute does not exist.',
-            'employee_id.is_employee_working' => 'The :attribute is not working on that time.',
-            'employee_id.is_on_booking' => 'The :attribute is already working on another booking at that time.',
-            'activity_id.exists' => 'The :attribute does not exist.',
-            'activity_id.is_end_time_valid' => 'The :attribute duration added on start time is invalid. Please add a start time that does not go to the next day.',
-            'date.after' => 'The :attribute must be before today ' . toDate(getNow(), true) . '.',
-        ];
-
-        // Validation rules
-        $rules = [
-            'activity_id' => 'required|exists:activities,id|is_end_time_valid',
-            'customer_id' => 'required|exists:customers,id|is_on_booking',
-            'employee_id' => 'required|exists:employees,id|is_employee_working|is_on_booking',
-            'start_time' => 'required|date_format:H:i',
-            'date' => 'required|date|after:' . getDateNow(),
-        ];
-
-        // Attributes replace the field name with a more readable name
-        $attributes = [
-            'customer_id' => 'customer',
-            'employee_id' => 'employee',
-            'activity_id' => 'activity',
-            'start_time' => 'start time',
-        ];
-
-        Log::debug("Validating Business Owner input");
-
-        // Validate form
-        $this->validate($request, $rules, $messages, $attributes);
 
         // If end time is requested then do not calculate
         if ($request->end_time) {
@@ -263,6 +265,11 @@ class BookingController extends Controller
                 'end_time' => Booking::calcEndTime(Activity::find($request->activity_id)->duration, $request->start_time)
             ]);
         }
+
+        Log::debug("Validating booking input via Customer");
+
+        // Validate form
+        $this->validate($request, $this->rules, $this->messages, $this->attributes);
 
         // Convert start time to proper time format
         $request->merge([
@@ -279,18 +286,7 @@ class BookingController extends Controller
             'date' => $request->date,
         ]);
 
-        // Check if user is an admin or user
-        if (isAdmin()) {
-            // Redirect to the business owner admin page
-            $url = '/admin/bookings/' . toMonthYear(getNow());
-            $user = 'Business Owner';
-        }
-        else {
-            $url = '/bookings';
-            $user = 'Customer';
-        }
-
-        Log::notice("Booking was created by " . $user . " ID " . Auth::id(), $booking->toArray());
+        Log::notice("Booking was created by {$user} ID " . Auth::id(), $booking->toArray());
 
         // Session flash
         session()->flash('message', 'Booking has successfully been created.');

@@ -36,7 +36,7 @@ Route::get('/admin/register', 'BusinessOwnerController@register');
 
 // Business Info
 Route::get('/admin/edit', 'BusinessOwnerController@edit');
-Route::post('/admin/edit', 'BusinessOwnerController@update');
+Route::put('/admin/{bo}', 'BusinessOwnerController@update');
 
 // Business Times
 Route::resource('admin/times', 'BusinessTimeController', [
