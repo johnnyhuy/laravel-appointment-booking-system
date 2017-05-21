@@ -21,7 +21,8 @@ class CreateBusinessOwnersTable extends Migration
 			$table->string('username');
 			$table->string('password');
 			$table->string('address');
-			$table->string('phone');
+            $table->string('phone');
+			$table->string('logo')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

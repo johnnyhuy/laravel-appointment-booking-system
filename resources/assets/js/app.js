@@ -8,6 +8,9 @@
 window.Laravel = { csrfToken: $('meta[name=csrf-token]').attr("content") };
 
 require('./bootstrap');
+require('./maskedinput')
+require('./anchormethod')
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -23,4 +26,10 @@ require('./bootstrap');
 
 $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
+
+    // Enable anchor method to create PUT DELETE anchor tags
+    anchorMethod.init();
+
+    $('input[masked-time]').mask('99:99', {placeholder: 'hh:mm'})
+    $('input[masked-date]').mask('99/99/9999', {placeholder: 'dd/mm/yyyy'})
 });

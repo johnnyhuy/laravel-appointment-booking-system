@@ -25,9 +25,11 @@
 			@endforeach
 		</table>
 	@else
-		@include('shared.error_message_thumbs_down', [
-			'message' => 'No Bookings Found.',
-			'subMessage' => 'Create a new booking <a href="/bookings/new">here</a>'
-		])
+		<div class="block">
+			@include('shared.error_message_thumbs_down', [
+				'message' => 'No Bookings Found.',
+				'subMessage' => 'Create a new booking <a href="/bookings/new">here</a>'
+			])
+		</div>
 	@endif
 @endsection

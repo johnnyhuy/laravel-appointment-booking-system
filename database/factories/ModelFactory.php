@@ -17,6 +17,7 @@ use App\Customer;
 use App\Employee;
 use App\Availability;
 use App\BusinessOwner;
+use App\BusinessTime;
 use App\WorkingTime;
 use App\Activity;
 
@@ -113,6 +114,19 @@ $factory->define(Customer::class, function (Generator $faker) {
         'phone' => $faker->phoneNumber,
         'created_at' => Carbon::now('Australia/Melbourne')->toDateTimeString(),
         'updated_at' => Carbon::now('Australia/Melbourne')->toDateTimeString(),
+    ];
+});
+
+/**
+ *
+ * Generating dummy data for Business Time
+ *
+ */
+$factory->define(BusinessTime::class, function (Generator $faker) {
+    return [
+        'day' => 'MONDAY',
+        'start_time' => '06:00:00',
+        'end_time' => '17:00:00',
     ];
 });
 

@@ -26,7 +26,6 @@ class CreateBusinessTimesTable extends Migration
                 'SATURDAY',
                 'SUNDAY',
             ]);
-            $table->timestamps();
             $table->unique('day');
         });
     }
