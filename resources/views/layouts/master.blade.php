@@ -27,10 +27,14 @@
 		<div class="header">
 			<a class="header__title" href="/">
 				<h1>
-				@if (\App\BusinessOwner::first())
-					{{ \App\BusinessOwner::first()->business_name }}
+				@if(asset("/storage/logo/logo.jpg"))
+					<img style="width: 840px; height: 240px" src="/storage/logo/logo.jpg"></img>
 				@else
-					Business Placeholder
+					@if (\App\BusinessOwner::first())
+						{{ \App\BusinessOwner::first()->business_name }}
+					@else
+						Business Placeholder
+					@endif
 				@endif
 				</h1>
 			</a>
