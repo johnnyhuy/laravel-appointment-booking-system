@@ -7,8 +7,16 @@ use Tests\DuskTestCase;
 use App\BusinessOwner;
 use App\Employee;
 
-class AddEmployeeTest extends DuskTestCase
+class CreateEmployeeTest extends DuskTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        // Creates business owner
+        $this->bo = factory(BusinessOwner::class)->create();
+    }
+
     /**
      * A test to determine whether the admin employees page exists
      *
@@ -16,18 +24,15 @@ class AddEmployeeTest extends DuskTestCase
      */
     public function testAddEmployeeExists()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
-        $this->browse(function ($browser) use ($bo) {
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
-                //Go to employees page
+        $this->browse(function ($browser) {
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
+                // Go to employees page
                 ->visit('/admin/employees')
-                //Verify you are on employees page
+                // Verify you are on employees page
                 ->assertPathIs('/admin/employees')
-                //Verify that Add Employee title exists on page
-                ->assertSee('Add Employee');
+                // Verify that Add Employee title exists on page
+                ->assertSee('Create Employee');
         });
     }
 
@@ -38,20 +43,17 @@ class AddEmployeeTest extends DuskTestCase
      */
     public function testShowAllValidationErrors()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Start browser
-        $this->browse(function ($browser) use ($bo) {
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
-            // Visit register page
-               ->visit('/admin/employees')
+        $this->browse(function ($browser) {
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
+                // Visit register page
+                ->visit('/admin/employees')
 
                 // Add employee with no data in form
-                ->press('Add Employee')
+                ->press('Create Employee')
 
-                // Get the validation alerts after adding employee 
+                // Get the validation alerts after adding employee
                 ->assertSee('The firstname field is required.')
                 ->assertSee('The lastname field is required.')
                 ->assertSee('The title field is required.')
@@ -66,13 +68,10 @@ class AddEmployeeTest extends DuskTestCase
      */
     public function testNoEmployeesMessageAppears()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Start browser
-        $this->browse(function ($browser) use ($bo) {
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+        $this->browse(function ($browser) {
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                ->visit('/admin/employees')
 
@@ -80,7 +79,7 @@ class AddEmployeeTest extends DuskTestCase
                 ->assertSee('No employees found');
         });
     }
-    
+
     /**
      * Test when admin registers an employee with valid data it works
      *
@@ -88,13 +87,10 @@ class AddEmployeeTest extends DuskTestCase
      */
     public function testAddEmployeeValid()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Start browser
-        $this->browse(function ($browser) use ($bo) {
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+        $this->browse(function ($browser) {
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                ->visit('/admin/employees')
 
@@ -103,9 +99,9 @@ class AddEmployeeTest extends DuskTestCase
                 ->type('firstname', 'John')
                 ->type('lastname', 'Doe')
                 ->type('phone', '0400000000')
-                ->press('Add Employee')
+                ->press('Create Employee')
 
-                // Get the alert after adding employee 
+                // Get the alert after adding employee
                 ->assertSee('New Employee Added')
 
                 //See if employee added to employees list
@@ -117,71 +113,68 @@ class AddEmployeeTest extends DuskTestCase
 
     /**
      * Testing the input of the title input
-     * 
+     *
      * @return void
      */
     public function testTitleInputValidate()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
-        $this->browse(function ($browser) use ($bo) {
+        $this->browse(function ($browser) {
             // If title is required
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The title field is required.')
                 ->assertSee('No employees found');
 
             // If title is correct
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('title', 'Doctor')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertDontSee('The title format is invalid.')
                 ->assertSee('No employees found');
 
             // If title contains numbers or special characters throw an error
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('title', 'Doctor123@#$%')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The title format is invalid.')
                 ->assertSee('No employees found');
 
             // If title contains a ' symbol
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('title', "Doc'")
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertDontSee('The title format is invalid.')
                 ->assertSee('No employees found');
 
             // If title is less than 2 characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('title', "a")
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The title must be at least 2 characters.')
                 ->assertSee('No employees found');
 
             // If title is less than 32 characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('title', "LoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLorem")
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The title may not be greater than 32 characters.')
                 ->assertSee('No employees found');
         });
@@ -190,71 +183,68 @@ class AddEmployeeTest extends DuskTestCase
 
     /**
      * Testing the input of the first name field
-     * 
+     *
      * @return void
      */
     public function testFirstNameInputValidate()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
-        $this->browse(function ($browser) use ($bo) {
+        $this->browse(function ($browser) {
             // If first name is required
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The firstname field is required.')
                 ->assertSee('No employees found');
 
             // If first name is correct
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('firstname', 'John')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertDontSee('The firstname format is invalid.')
                 ->assertSee('No employees found');
 
             // If first name contains numbers or special characters throw an error
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('firstname', 'John123@#$%')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The firstname format is invalid.')
                 ->assertSee('No employees found');
 
             // If first name contains a ' symbol
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('firstname', "John'O")
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertDontSee('The firstname format is invalid.')
                 ->assertSee('No employees found');
 
             // If first name is less than 2 characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('firstname', "a")
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The firstname must be at least 2 characters.')
                 ->assertSee('No employees found');
 
             // If first name is less than 32 characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('firstname', "LoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLorem")
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The firstname may not be greater than 32 characters.')
                 ->assertSee('No employees found');
         });
@@ -262,51 +252,48 @@ class AddEmployeeTest extends DuskTestCase
 
     /**
      * Testing the input of the last name field
-     * 
+     *
      * @return void
      */
     public function testLastNameInputValidate()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
-        $this->browse(function ($browser) use ($bo) {
+        $this->browse(function ($browser) {
             // If last name is required
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The lastname field is required.')
                 ->assertSee('No employees found');
 
             // If last name contains special characters and numbers
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('lastname', 'Doe123@#$%')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The lastname format is invalid.')
                 ->assertSee('No employees found');
 
             // If last name is less than 2 characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('lastname', "a")
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The lastname must be at least 2 characters.')
                 ->assertSee('No employees found');
 
             // If last name is less than 32 characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('lastname', "LoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLoremLorem")
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The lastname may not be greater than 32 characters.')
                 ->assertSee('No employees found');
         });
@@ -314,62 +301,59 @@ class AddEmployeeTest extends DuskTestCase
 
     /**
      * Testing the input of the phone field
-     * 
+     *
      * @return void
      */
     public function testPhoneInputValidate()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Start browser
-        $this->browse(function ($browser) use ($bo) {
+        $this->browse(function ($browser) {
             // When a user does not enter a phone field, alert and error
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The phone field is required.')
                 ->assertSee('No employees found');
 
             // Phone must be at least 10 characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('phone', '0000000000')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertDontSee('The phone must be at least 10 characters.')
                 ->assertSee('No employees found');
 
             // Phone must be less than 24 characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('phone', '000000000000000000000000000000000000000000000000000000000000')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The phone may not be greater than 24 characters.')
                 ->assertSee('No employees found');
 
             // Phone can contain spaces
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('phone', '000 000 000 000')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertDontSee('The phone format is invalid.')
                 ->assertSee('No employees found');
 
             // Phone contains alphabet characters
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                 ->visit('/admin/employees')
                 ->type('phone', 'abcabcabcabc')
-                ->press('Add Employee')
+                ->press('Create Employee')
                 ->assertSee('The phone format is invalid.')
                 ->assertSee('No employees found');
         });
@@ -382,13 +366,10 @@ class AddEmployeeTest extends DuskTestCase
      */
     public function testFormRetainsInput()
     {
-        //Creates business owner
-        $bo = factory(BusinessOwner::class)->create();
-
         // Start browser
-        $this->browse(function ($browser) use ($bo) {
-            //Login as Business Owner
-            $browser->loginAs($bo, 'web_admin')
+        $this->browse(function ($browser) {
+            // Login as Business Owner
+            $browser->loginAs($this->bo, 'web_admin')
             // Visit register page
                ->visit('/admin/employees')
 
@@ -397,7 +378,7 @@ class AddEmployeeTest extends DuskTestCase
                 ->type('firstname', 'First Name')
                 ->type('lastname', 'Last Name')
                 ->type('phone', 'Phone')
-                ->press('Add Employee')
+                ->press('Create Employee')
 
                 // Don't get successful alert when adding employee
                 ->assertDontSee('New Employee Added')
