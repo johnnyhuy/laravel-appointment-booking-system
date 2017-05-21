@@ -146,6 +146,8 @@ class BusinessOwnerController extends Controller
      */
     public function update(Request $request)
     {
+        unset($this->rules['username'], $this->rules['password'], $this->rules['temp_password']);
+
         // Validate form
         $this->validate($request, $this->rules, $this->messages, $this->attributes);
 
