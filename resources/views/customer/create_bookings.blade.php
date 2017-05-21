@@ -25,7 +25,7 @@
 			<div class="form-group request__flex-container">
 				<div class="request__flex request__flex--left">
 					<label for="input_month_year">Month & Year <span class="request__validate">(Select to go to month)</span></label>
-				    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="showRedirect('.loading', '/bookings/' + this.value + '{{ $employeeID ? '/new/' . $employeeID : null }}')">
+				    <select name="month_year" id="input_month_year" class="form-control request__input" onchange="showRedirect('.loading', '/bookings/' + this.value + '/new/{{ $employeeID ? $employeeID : null }}')">
 				        @foreach ($months as $month)
 				            <option value="{{ $month->format('m-Y') }}" {{ $date->format('m-Y') == $month->format('m-Y') ? 'selected' : null }}>{{ $month->format('F Y') }}</option>
 				        @endforeach
@@ -56,6 +56,7 @@
 		</form>
 	</div>
 	<hr>
+	<h1 class="text-center margin-bottom-three">{{ $date->format('F Y') }}</h1>
 	@include('shared.calendar', [
 		'pDate' => $date,
 		'items' => $roster,
