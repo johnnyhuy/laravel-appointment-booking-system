@@ -5,21 +5,11 @@
 <div class="dash__block">
     <h1 class="dash__header">Edit Working Time</h1>
     <h4 class="dash__description">Add Business Hours for the next month.</h4>
+    @include('shared.session_message')
+    @include('shared.error_message')
     <form class="request" method="POST" action="/admin/roster/{{ $workingTime->id }}">
         {{ method_field('PUT') }}
         {{ csrf_field() }}
-        @if ($flash = session('message'))
-            <div class="alert alert-success">
-                {{ $flash }}
-            </div>
-        @endif
-        @if (count($errors))
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    {{ $error }}<br>
-                @endforeach
-            </div>
-        @endif
         <div class="alert alert-warning"><strong>Warning!</strong> Once you have edited the working time of an employee, all bookings related to working time will be deleted.</div>
         <div class="form-group">
             <label for="inputEmployee">Employee <span class="request__validate">(ID - Title - Full Name)</span></label>
@@ -31,17 +21,17 @@
         </div>
         <div class="form-group request__flex-container">
             <div class="request__flex request__flex--left">
-                <label for="inputStartTime">Start Time <span class="request__validate">(24 hour format)</span></label>
-                <input name="start_time" type="time" id="inputStartTime" class="form-control request__input" value="{{ old('start_time') ? old('start_time') : $workingTime->start_time }}" autofocus>
+                <label for="roster_start_time">Start Time <span class="request__validate">(24 hour format)</span></label>
+                <input name="start_time" type="text" id="roster_start_time" class="form-control request__input" placeholder="hh:mm" value="{{ old('start_time') ? old('start_time') : $workingTime->start_time }}" masked-time>
             </div>
             <div class="request__flex request__flex--right">
-                <label for="inputEndTime">End Time <span class="request__validate">(24 hour format)</span></label>
-                <input name="end_time" type="time" id="inputEndTime" class="form-control request__input" value="{{ old('end_time') ? old('end_time') : '17:00' }}" autofocus>
+                <label for="roster_end_time">Start Time <span class="request__validate">(24 hour format)</span></label>
+                <input name="end_time" type="text" id="roster_end_time" class="form-control request__input" placeholder="hh:mm" value="{{ old('end_time') ? old('end_time') : $workingTime->end_time }}" masked-time>
             </div>
         </div>
         <div class="form-group">
-            <label for="inputDate">Date <span class="request__validate">(dd/mm/yyyy)</span></label>
-            <input name="date" type="date" id="inputDate" class="form-control request__input" value="{{ old('date') ? old('date') : Carbon\Carbon::parse($workingTime->date)->format('Y-m-d') }}" autofocus>
+            <label for="roster_date">Date <span class="request__validate">(dd/mm/yyyy)</span></label>
+            <p id="roster_date">{{ Time::parse($workingTime->date)->format('d/m/Y') }}</p>
         </div>
         <button class="btn btn-lg btn-primary btn-block btn--margin-top" href="/admin/employees">Edit Working Time</button>
     </form>

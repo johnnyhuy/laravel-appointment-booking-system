@@ -25,7 +25,7 @@ class EmployeeController extends Controller
         // Check auth, if not auth then redirect to login
         $this->middleware('auth:web_admin', [
             'only' => [
-                'create',
+                'store',
                 'index',
                 'assign',
             ]
@@ -33,7 +33,7 @@ class EmployeeController extends Controller
     }
 
     // Create a new employee
-    public function create(Request $request)
+    public function store(Request $request)
     {
         Log::info("An attempt was made to create a new employee", $request->all());
 

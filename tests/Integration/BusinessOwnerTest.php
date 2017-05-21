@@ -49,7 +49,7 @@ class BusinessOwnerTest extends TestCase
     	// When business name is empty
     	// Create business owner data
     	$businessOwnerData = [
-    		'businessname' => ''
+    		'business_name' => ''
     	];
 
     	// Send POST request to /register
@@ -64,7 +64,7 @@ class BusinessOwnerTest extends TestCase
         // When business name has less than 2 characters
     	// Create business owner data
     	$businessOwnerData = [
-    		'businessname' => 'a'
+    		'business_name' => 'a'
     	];
 
     	// Send POST request to /register
@@ -79,7 +79,7 @@ class BusinessOwnerTest extends TestCase
         // When business name has more than 32 characters
     	// Create business owner data
     	$businessOwnerData = [
-    		'businessname' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    		'business_name' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     	];
 
     	// Send POST request to /register
@@ -94,7 +94,7 @@ class BusinessOwnerTest extends TestCase
         // When business name contains special characters
     	// Create business owner data
     	$businessOwnerData = [
-    		'businessname' => 'My Bu$iness'
+    		'business_name' => 'My Bu$iness'
     	];
 
     	// Send POST request to /register

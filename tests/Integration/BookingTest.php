@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Activity;
 use App\Booking;
 use App\BusinessOwner;
+use App\BusinessTime;
 use App\Customer;
 use App\Employee;
 use App\WorkingTime;
@@ -26,7 +27,7 @@ class BookingTest extends TestCase
         // Build fake data
         $this->bo = factory(BusinessOwner::class)->create();
 
-        // Get the current date
+        // Get the tomorrow date
         $this->date = Carbon::now()->addDay()->toDateString();
 
         // Create fake data that adds to database
@@ -122,7 +123,7 @@ class BookingTest extends TestCase
      *
      * @return void
      */
-    public function testAdminAddBookingSuccessful()
+    public function testAdminCreateBookingSuccessful()
     {
         // Send POST request to /admin/bookings
         $response = $this->actingAs($this->bo, 'web_admin')
@@ -148,7 +149,7 @@ class BookingTest extends TestCase
      *
      * @return void
      */
-    public function testAdminAddBookingValidation()
+    public function testAdminCreateBookingValidation()
     {
         // User selects no customer
         // Build booking data

@@ -115,6 +115,10 @@ footer.dashboard {
 	font-family: $font-family-base;
 	font-weight: 600;
 	font-size: 24px;
+
+	@include m('logo') {
+		padding: 10px 15px;
+	}
 }
 
 .navbar-brand:hover {
