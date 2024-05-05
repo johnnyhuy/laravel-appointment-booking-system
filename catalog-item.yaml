@@ -1,0 +1,29 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: laravel-appointment-booking-system
+  title: Laravel Appointment Booking System
+  description: A simple appointment booking system written in Laravel
+  tags:
+    - laravel
+    - php
+spec:
+  type: service
+  lifecycle: experimental
+  owner: johnnyhuy
+  dependsOn:
+    - resource:laravel-appointment-booking-system-sqlite
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: laravel-appointment-booking-system-sqlite
+  description: |
+    A SQLite database for the Laravel Appointment Booking System
+  tags:
+    - sqlite
+spec:
+  type: sqlite
+  lifecycle: experimental
+  owner: johnnyhuy
