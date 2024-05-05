@@ -22,7 +22,7 @@ metadata:
   description: |
     A SQLite database for the Laravel Appointment Booking System
   tags:
-    - sqlite
+    - databases
 spec:
   type: sqlite
   lifecycle: experimental
