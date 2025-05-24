@@ -1,0 +1,44 @@
+{
+  "name": "Laravel Appointment Booking System",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "16"
+    }
+  },
+  "forwardPorts": [8000, 3000, 5173],
+  "portsAttributes": {
+    "8000": {
+      "label": "Laravel Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "MehediDracula.php-namespace-resolver",
+        "onecentlin.laravel-blade",
+        "ryannaddy.laravel-artisan",
+        "codingyu.laravel-goto-view",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "ms-vscode.vscode-json",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "php.suggest.basic": false,
+        "intelephense.files.maxSize": 5000000,
+        "files.associations": {
+          "*.blade.php": "blade"
+        }
+      }
+    }
+  },
+  "remoteUser": "vscode",
+  "workspaceFolder": "/workspaces/laravel-appointment-booking-system"
+}
