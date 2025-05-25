@@ -1,0 +1,75 @@
+// Custom Variables
+// --------------------------------------------------
+// This file contains only custom application variables
+// Bootstrap 5 variables are defined in bootstrap/scss/_variables.scss
+
+// Import fonts
+@import url('https://fonts.googleapis.com/css?family=Hind|Montserrat:600');
+
+// Custom colors
+$gray-base: #000;
+$gray-darker: lighten($gray-base, 13.5%); // #222
+$gray-dark: lighten($gray-base, 20%); // #333
+$gray: lighten($gray-base, 33.5%); // #555
+$gray-light: lighten($gray-base, 46.7%); // #777
+$gray-lighter: lighten($gray-base, 70%); // #eee
+$gray-lightest: lighten($gray-base, 93.5%); // #eee
+$white: white;
+
+// Brand colors
+$brand-primary: #2E8B57; // SeaGreen
+$brand-secondary: #6c757d; // Bootstrap 5 secondary color
+$brand-success: #5cb85c;
+$brand-info: #5bc0de;
+$brand-warning: #f0ad4e;
+$brand-danger: #d9534f;
+$brand-light: lighten($brand-primary, 30%);
+$brand-lighter: lighten($brand-primary, 45%);
+
+// Typography
+$font-family-second: 'Montserrat', sans-serif;
+
+// Spacing
+$margin-base: 1rem;
+$margin-min: 5px;
+$margin-mid: 8px;
+$margin-large: 15px;
+$margin-x-large: 2rem;
+
+$padding-base: 10px;
+$padding-min: 5px;
+$padding-mid: 8px;
+
+$sidebar-padding: 20px;
+
+// Layout dimensions
+$navbar-height: 60px;
+
+// Screen breakpoints (Bootstrap 3/4 style for compatibility)
+$screen-sm-min: 576px; // Bootstrap 5 sm breakpoint
+$screen-md-min: 768px; // Bootstrap 5 md breakpoint  
+$screen-lg-min: 992px; // Bootstrap 5 lg breakpoint
+$screen-xl-min: 1200px; // Bootstrap 5 xl breakpoint
+
+// Max breakpoints (calculated as next breakpoint - 1)
+$screen-sm-max: ($screen-md-min - 1);
+$screen-md-max: ($screen-lg-min - 1);
+$screen-lg-max: ($screen-xl-min - 1);
+
+// Borders
+$border-color: #ddd;
+$border-radius-base: 0.375rem;
+$border-radius-large: 0.5rem;
+
+// Text colors
+$text-color: #636b6f;
+
+// Input styling
+$input-border: lighten($text-color, 40%);
+
+// Dashboard table styling
+$dash-table-border: 1px;
+$dash-table-color: #ddd;
+
+// Body
+$body-bg: #f8f9fa;

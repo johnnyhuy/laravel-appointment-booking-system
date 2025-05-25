@@ -254,7 +254,7 @@ If you prefer to set up the environment manually:
 - [PHP](http://php.net/) >= 5.6.4
 - [Composer](https://getcomposer.org/) >= 1.4.1
 - Git
-- Node.js & npm (for asset compilation)
+- Node.js & yarn (for asset compilation)
 
 #### Setup Steps
 1. **Clone and setup**
@@ -267,7 +267,7 @@ If you prefer to set up the environment manually:
 2. **Install dependencies**
    ```bash
    composer install
-   npm install
+   yarn install
    ```
 
 3. **Configure database**
@@ -334,9 +334,9 @@ flowchart TD
 
 ### Asset Compilation
 ```bash
-npm run dev        # Compile assets for development
-npm run watch      # Watch files and recompile on changes  
-npm run production # Compile optimized assets for production
+yarn dev        # Compile assets for development
+yarn watch      # Watch files and recompile on changes  
+yarn production # Compile optimized assets for production
 ```
 
 ### Testing
@@ -385,7 +385,7 @@ tests/
 1. Configure `.env` for production environment
 2. Set up MySQL database
 3. Run `composer install --optimize-autoloader --no-dev`
-4. Run `npm run production`
+4. Run `yarn production`
 5. Configure web server (Apache/Nginx)
 
 ## Troubleshooting
@@ -404,8 +404,8 @@ php artisan key:generate
 
 **Asset compilation errors:**
 ```bash
-npm install
-npm run dev
+yarn install
+yarn dev
 ```
 
 **MySQL PDO extension missing:**

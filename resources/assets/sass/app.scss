@@ -1,12 +1,13 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:700|Raleway:300,400,600');
 
-@import 'variables';
+// Import Bootstrap first
+@import '~bootstrap/scss/bootstrap';
+
+// Then import custom variables, mixins and helpers
+@import 'variables-custom';
 @import 'mixins';
 @import 'helpers';
-
-// Bootstrap
-@import 'node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
 @import 'dashboard';
 
