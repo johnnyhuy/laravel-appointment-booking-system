@@ -36,5 +36,11 @@ Homestead.json
 phpunit.dusk.xml
 phpunit.xml
 
+# Compiled assets
+public/js/app.js
+public/css/app.css
+public/mix-manifest.json
+*.LICENSE.txt
+
 # Other
 .DS_Store

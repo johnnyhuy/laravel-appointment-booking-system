@@ -5,10 +5,14 @@
   },
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "16"
+      "version": "18"
     }
   },
-  "forwardPorts": [8000, 3000, 5173],
+  "forwardPorts": [
+    8000,
+    3000,
+    5173
+  ],
   "portsAttributes": {
     "8000": {
       "label": "Laravel Dev Server",

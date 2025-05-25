@@ -43,4 +43,4 @@ window.axios.defaults.headers.common = {
 //     key: 'your-pusher-key'
 // });
 
-require('bootstrap-sass');
+require('bootstrap');

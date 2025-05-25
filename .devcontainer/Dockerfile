@@ -11,18 +11,19 @@ RUN apt-get update && apt-get install -y \
     unzip \
     sqlite3 \
     libsqlite3-dev \
-    nodejs \
-    npm \
     gnupg \
     wget \
     python3 \
     python3-pip \
-    python2.7 \
     build-essential \
     sudo \
     libzip-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Configure Python environment
+RUN ln -sf /usr/bin/python3 /usr/bin/python \
+    && python3 -m pip install --upgrade pip
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd zip

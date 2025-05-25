@@ -2,14 +2,20 @@
 
 echo "🚀 Setting up Laravel development environment..."
 
-# Set up Python symlink for node-gyp (this old Laravel project needs Python 2.7)
-sudo ln -sf /usr/bin/python2.7 /usr/bin/python
+# Verify Python installation
+echo "🐍 Configuring Python environment..."
+python3 --version
+python --version
+
+# Ensure python command points to python3
+sudo ln -sf /usr/bin/python3 /usr/bin/python
+echo "✅ Python configured (python3 as default)"
 
 # Install PHP dependencies
 composer install
 
 # Install Node.js dependencies
-npm install
+yarn install
 
 # Setup environment file
 if [ ! -f .env ]; then
